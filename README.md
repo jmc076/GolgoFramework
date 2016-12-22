@@ -5,3 +5,7 @@ This framework does not force you to use those libraries, you can add your prefe
 Features:
 [TODO]
 
+
+
+Copyright (c) 2015-2016 Diego López Rivera
+
