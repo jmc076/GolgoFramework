@@ -42,7 +42,6 @@ class Router implements RouterInterface {
 	            }
 	            
 	            $pattern = "@^{$this->basePath}{$stringRoute}/?$@i";
-	            //$pattern = "@^([a-z0-9][a-z0-9\-]*\.)+[a-z0-9][a-z0-9\-]*$@i";
 	            $matches = array();
 	            
 	            if (!preg_match($pattern, $requestUrl, $matches)) {
