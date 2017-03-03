@@ -4,7 +4,7 @@ namespace Controllers;
 use Helpers\HelperUtils;
 use Controllers\Interfaces\SessionControllerInterface;
 
-class SessionController implements SessionControllerInterface {
+class SessionController {
 	
 	public function initSession() {
 		@session_start();
@@ -12,10 +12,7 @@ class SessionController implements SessionControllerInterface {
 		$sessionContainer = array(
 				'user_model' => SESSION_ANONYM,
 				'user_id' => 0,
-				'user_name' => '',
-				'user_email' => '',
 				'user_ip' => self::getIp(),
-				'password_cost' => 16,
 				'session_name' => SESSION_NAME,
 				'user_cart' => array(),
 				'user_extra' => array(),
@@ -23,11 +20,11 @@ class SessionController implements SessionControllerInterface {
 				
 		);
 		
-		self::initSessionTimings();
-		
 		if(!isset($_SESSION["sessionData"])) {
 			$_SESSION["sessionData"] = $sessionContainer;
 		}
+		
+		self::initSessionTimings();
 		self::get_token_id();
 		self::get_token();
 	}
@@ -42,12 +39,8 @@ class SessionController implements SessionControllerInterface {
 	}
 	
 	
-	public static function getSessionUserId() {
-		return $_SESSION["sessionData"]["user_id"];
-	}
-	
 	public static function regenerateSession() {
-		session_regenerate_id();
+		session_regenerate_id(true);
 		$_SESSION['CREATED'] = time();
 	}
 	
@@ -55,11 +48,15 @@ class SessionController implements SessionControllerInterface {
 		return session_id();
 	}
 	
-	public static function setSessionData($key,$value) {
+	public static function setSessionId($sessionID) {
+		session_id($sessionID);
+	}
+	
+	public static function setSessionKeyValue($key, $value = null) {
 		$_SESSION['sessionData'][$key] = $value;
 	}
-	public static function getSessionData($key) {
-		return $_SESSION['sessionData'][$key];
+	public static function getSessionValue($key) {
+		return isset($_SESSION['sessionData'][$key]) ? $_SESSION['sessionData'][$key] : null;
 	}
 	
 	public static function exitSession() {
@@ -75,38 +72,36 @@ class SessionController implements SessionControllerInterface {
 		@session_destroy();
 	}
 	
+	public static function expireSession() {
+		$_SESSION = array();
+		$_SESSION["oldSessionRedirect"] = $_SERVER['REQUEST_URI'];
+		@session_unset();
+		@session_destroy();
+	}
+	
 	public static function initSessionTimings(){
 		if (!isset($_SESSION['CREATED'])) {
 			$_SESSION['CREATED'] = time();
 		} else if (time() - $_SESSION['CREATED'] > SESSION_LENGTH) {
 			self::regenerateSession();
 		}
-		
-		if (isset($_SESSION["sessionData"]) && $_SESSION["sessionData"]["status"] && isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > SESSION_LENGTH)) {
-			// last request was more than 30 minutes ago
-			self::exitSession();
+		if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > SESSION_LENGTH)) {
+			self::expireSession();
 		}
-		$_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+		
+		$_SESSION['LAST_ACTIVITY'] = time();
 	}
 	
 	
 	public static function getCurrentUserModel() {
-		if(!isset($_SESSION["sessionData"]) || $_SESSION["sessionData"]["user_id"] == 0 || !$_SESSION["sessionData"]["status"]) {
+		$userModel = $_SESSION["sessionData"]["user_model"];
+		if (class_exists($userModel)) {
+			$model = new $userModel();
+			return $model;
+		} else {
 			$user = SESSION_ANONYM;
 			$model = new $user();
 			return $model;
-				
-		} elseif ($_SESSION["sessionData"]["user_id"] != 0) {
-			$userModel = $_SESSION["sessionData"]["user_model"];
-			if (class_exists($userModel)) {
-				$model = new $userModel();
-				$model = $model->loadById($GLOBALS['em'], $_SESSION["sessionData"]["user_id"]);
-				return $model;
-			} else {
-				$user = SESSION_ANONYM;
-				$model = new $user();
-				return $model;
-			}
 		}
 	}
 	
@@ -129,6 +124,7 @@ class SessionController implements SessionControllerInterface {
 		}
 	
 	}
+	//FOR CSRF
 	public static function check_valid($dataArray, $exception) {
 		if(isset($dataArray[self::get_token_id()])) {
 			if ($dataArray[self::get_token_id()] == self::get_token()) {

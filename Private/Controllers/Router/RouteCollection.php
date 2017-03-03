@@ -4,6 +4,16 @@ namespace Controllers\Router;
 
 class RouteCollection extends \SplObjectStorage
 {
+	private static $instancia;
+	
+	public static function getInstance()
+	{
+		if (  !self::$instancia instanceof self)
+		{
+			self::$instancia = new self;
+		}
+		return self::$instancia;
+	}
 	
 	public function attachRoute(RouteModel $routeObject) {
 		parent::attach($routeObject);

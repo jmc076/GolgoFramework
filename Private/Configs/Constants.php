@@ -7,15 +7,15 @@ if (!defined('DS')) {
 }
 define("ROOT_PATH", $_SERVER['DOCUMENT_ROOT'] . DS );
 
-define("MYSQL_HOST", 'AAAAAAA');
-define("DB_NAME", 'AAAAAAA');
-define("DB_USER", 'AAAAAAA');
-define("DB_PASS", 'AAAAAAA');
+define("MYSQL_HOST", 'DB_HOST');
+define("DB_NAME", 'DB_NAME');
+define("DB_USER", 'DB_USER');
+define("DB_PASS", 'DB_PASS');
 define("DB_PORT", '3306');
 define("DB_DRIVER", 'pdo_mysql');
 
 define("SESSION_LENGTH", 3600); //30 MINS
-define("SESSION_NAME", "AAAAAAA");
+define("SESSION_NAME", "GOLGO_FRAMEWORK");
 
 define("NEED_LOCALIZATION", true);
 define("DEFAULT_LOCALIZATION", "es");
@@ -35,12 +35,12 @@ define('SMARTY_TEMPLATE_MODULES_FOLDER', 'Private/Modules');
 
 //LOCATION CONFIG CONSTANTS
 
-define("BASE_PATH","www.hexenbytes.com/tivoli");
-define("TABLE_USERS", "um_users");
+define("BASE_PATH","www.hexenbytes.com");
+
+define("TABLE_USERS", "gf_users");
 
 
 define("TPLS_GLOBAL_DIRECTORY", ROOT_PATH . 'Private/Views/tpls');
-define("TPLS_COMMONS", ROOT_PATH . 'Private/Views/tpls/private/common');
 
 define("REDIS_CACHE_ENABLED", false);
 if(REDIS_CACHE_ENABLED)

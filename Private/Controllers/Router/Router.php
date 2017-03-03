@@ -6,23 +6,23 @@ use Controllers\Http\Response;
 use Controllers\Events\EventController;
 use Controllers\Router\Interfaces\RouterInterface;
 
-class Router implements RouterInterface {
+class Router {
 
-	private $routes = array();
+	private $routeCollection;
     private $namedRoutes = null;
     private $basePath = BASE_PATH;
     private $request;
     private $requestUrl;
     
     
-    public function __construct(RouteCollection $routes, Request $request) {
-        $this->routes = $routes;
+    public function __construct(RouteCollection $routesCollection, Request $request) {
+        $this->routeCollection = $routesCollection;
         $this->request = $request;
+        $this->requestUrl = $request->getRequestUrl();
     }
 
 
     public function parseRequest() {
-    	$this->requestUrl = $this->request->getRequestUrl();
         if (($pos = strpos($this->requestUrl, '?')) !== false) {
            $this->requestUrl = substr($this->requestUrl, 0, $pos);
         }
@@ -32,7 +32,7 @@ class Router implements RouterInterface {
 
     public function match($requestUrl) {
     	
-    	$allRoutes = $this->routes->getAllRoutes();
+    	$allRoutes = $this->routeCollection->getAllRoutes();
     	
         foreach ($allRoutes as $route) {
             if(count($route->getVerbs()) == 0 || in_array($this->request->getVerb(), $route->getVerbs())) {
@@ -68,10 +68,10 @@ class Router implements RouterInterface {
 	            return true;
        		}
         }
-       $this->request->setHasMatch(false);
-       EventController::dispatch("Router.NotMatched", array("request" => $this->request));
+       	$this->request->setHasMatch(false);
+       	EventController::dispatch("Router.NotMatched", array("request" => $this->request));
        
-       return false;
+       	return false;
     }
     
     
@@ -80,7 +80,7 @@ class Router implements RouterInterface {
         
     	if($this->namedRoutes == null) {
     		$this->namedRoutes = array();
-	    	foreach ($this->routes->getAllRoutes() as $route) {
+	    	foreach ($this->routeCollection->getAllRoutes() as $route) {
 	    		$name = $route->getName();
 	    		if (null !== $name) {
 	    			$this->namedRoutes[$name] = $route;
@@ -90,21 +90,24 @@ class Router implements RouterInterface {
     	
         if (!isset($this->namedRoutes[$routeName])) {
            return false;
+           
+        } else {
+        	$route = $this->namedRoutes[$routeName];
+        	$url = $route->getUrl();
+        	$param_keys = array();
+        	if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
+        		$param_keys = $param_keys[1];
+        		foreach ($param_keys as $key) {
+        			if (isset($params[$key])) {
+        				$url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
+        			}
+        		}
+        	}
+        	
+        	return $url;
         }
 
-        $route = $this->namedRoutes[$routeName];
-        $url = $route->getUrl();
-        $param_keys = array();
-        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
-            $param_keys = $param_keys[1];
-            foreach ($param_keys as $key) {
-                if (isset($params[$key])) {
-                    $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
-                }
-            }
-        }
-
-        return $url;
+       
     }
     
 

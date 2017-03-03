@@ -45,25 +45,28 @@ class RouteModel
     private $verbs;
 
     /**
-     * @param       $resource
-     * @param array() $config ("name","parametersToMethod","targetClassMethod","targetClass","verbs","checkCSRF")
+     * @param String $url
+     * @param array() $config ("name","targetClassMethod","targetClass","verbs","checkCSRF")
      */
     public function __construct($url, array $config)
     {
-        $this->url     = $url;
-        $this->name    = isset($config['name']) ? $config['name'] : null;
-        $this->targetClassMethod = isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
-        $this->targetClass = isset($config['targetClass']) ? $config['targetClass'] : null;
-        $this->verbs = isset($config['verbs']) ? (array) $config['verbs'] : array();
-        $this->checkCSRF = isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
+        $this->url     			 	= $url;
+        $this->name					= isset($config['name']) ? $config['name'] : null;
+        $this->targetClassMethod	= isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
+        $this->targetClass 			= isset($config['targetClass']) ? $config['targetClass'] : null;
+        $this->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
+        $this->checkCSRF			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
     }
     
-    public function updateConfig($newConfig) {
-    	$this->name    = isset($newConfig['name']) ? $newConfig['name'] : null;
-    	$this->targetClassMethod = isset($newConfig['targetClassMethod']) ? $newConfig['targetClassMethod'] : null;
-    	$this->targetClass = isset($newConfig['targetClass']) ? $newConfig['targetClass'] : null;
-    	$this->verbs = isset($newConfig['verbs']) ? (array) $newConfig['verbs'] : array();
-    	$this->checkCSRF = isset($newConfig['checkCSRF']) ? $newConfig['checkCSRF'] : true;
+    /**
+     * @param array() $config ("name","targetClassMethod","targetClass","verbs","checkCSRF")
+     */
+    public function updateConfig($config) {
+    	$this->name				= isset($config['name']) ? $config['name'] : null;
+        $this->targetClassMethod	= isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
+        $this->targetClass 			= isset($config['targetClass']) ? $config['targetClass'] : null;
+        $this->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
+        $this->checkCSRF			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
     }
     
 
@@ -71,6 +74,7 @@ class RouteModel
         return $this->url;
     }
     
+    //ADDS LAST SLASH TO URL IF NOT SET
     public function setUrl($url) {
         $url = (string)$url;
         if (substr($url, -1) !== '/') {
