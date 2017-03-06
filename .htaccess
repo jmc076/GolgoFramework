@@ -6,11 +6,11 @@ RewriteEngine on
 
 
 
-RewriteRule (css|js|images|img|fonts|vendors)/Modules/([^/.]*)?/(.+)$ Private/Modules/$2/Public/$1/$3 [NC,L]
+RewriteRule (css|js|images|img|fonts|vendors)/modules/([^/.]*)?/(.+)$ Private/modules/$2/Public/$1/$3 [NC,L]
 
 RewriteCond %{REQUEST_URI} ^((?!Private/Modules).)*$ [NC]
 RewriteCond %{REQUEST_URI} ^((?!wordpress/).)*$ [NC]
-RewriteRule (css|js|images|img|fonts|vendors)/(.+)$ Public/static/$1/$2 [NC,L]
+RewriteRule (css|js|images|img|fonts|vendors)/(.+)$ Public/$1/$2 [NC,L]
 
 
 

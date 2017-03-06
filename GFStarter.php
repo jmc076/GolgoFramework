@@ -8,64 +8,59 @@ use Controllers\Events\EventController;
 use Controllers\RedisCacheController;
 
 
-require_once __DIR__ . '/bootstrap.php';
-
 class GFStarter {
-	
+
 	private $routerCollection;
-	
+
 	function __construct(RouteCollection $routerCollection) {
-		
+
 		global $session;
 		$session = new SessionController();
 		$session->initSession();
-		
+
 		global $localization;
 		$localization = $this->getDefaultLanguage();
-		
+
 		$this->routerCollection = $routerCollection;
-		
+
 		if(REDIS_CACHE_ENABLED) {
 		    $redis = RedisCacheController::getRedisClient();
 		    $redisKey = 'Redis::GolgoFramework::Test';
 		    $redis->set($redisKey, "TEST");
 		    $redis->expire($redisKey, 60);
 		}
-		
-		
-		
+
+
+
 	}
-	
-	function start() {
+
+	protected function start($modules) {
 		$request = new Request();
 		$response = new Response();
-		
-		$this->loadModules();
-		
+
+		$this->loadModules($modules);
+
 		$router = new Router($this->routerCollection, $request);
-		
+
 		EventController::dispatch("Router.beforeParse", array("request"=>$request, "response" => $response, "router" => $router));
 		$router->parseRequest();
-		
+
 		EventController::dispatch("Router.beforeDispatch", array("request"=>$request, "response" => $response, "router" => $router));
 		$response->dispatchRequest($request);
 	}
-	
-	
-	
-	private function loadModules() {
-	
-		$moduleLoaders = array();
-		$moduleLoaders[] = 'Modules\UserManagement\Bootstrap';
-		$moduleLoaders[] = 'Modules\Tivoli\Bootstrap';
-	
-	
-		foreach ($moduleLoaders as $loader) {
+
+
+
+	protected function loadModules($modules) {
+
+		foreach ($modules as $loader) {
 			new $loader($this->routerCollection);
 		}
 	}
-	
-	function getDefaultLanguage() {
+
+
+
+	public function getDefaultLanguage() {
 		if(isset($_SESSION["lang"]) && $_SESSION["lang"] != "") {
 			return $_SESSION["lang"];
 		} else {
@@ -75,8 +70,8 @@ class GFStarter {
 					return $this->parseDefaultLanguage(NULL);
 		}
 	}
-	
-	function parseDefaultLanguage($http_accept, $deflang = "en") {
+
+	public function parseDefaultLanguage($http_accept, $deflang = "en") {
 		if(isset($http_accept) && strlen($http_accept) > 1)  {
 			# Split possible languages into array
 			$x = explode(",",$http_accept);
@@ -87,7 +82,7 @@ class GFStarter {
 					else
 						$lang[$val] = 1.0;
 			}
-	
+
 			#return default language (highest q-value)
 			$qval = 0.0;
 			foreach ($lang as $key => $value) {
@@ -99,8 +94,8 @@ class GFStarter {
 		}
 		return strtolower($deflang);
 	}
-	
-	
+
+
 }
 
 

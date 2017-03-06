@@ -1,0 +1,24 @@
+{
+  "name": "GFStarterKit",
+  "homepage": "https://github.com/Golgorz/GolgoFramework",
+  "authors": [
+    "Diego Lopez Rivera <forgin50@gmail.com>"
+  ],
+  "description": "A starter kit for GolgoFramework with Smarty and Doctrine.",
+  "main": "Bootstrap.php",
+  "license": "Apache 2.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "material-design-lite": "^1.3.0",
+    "getmdl-select": "*",
+    "sweetalert2": "^6.4.2",
+    "jquery": "^3.1.1"
+  }
+}

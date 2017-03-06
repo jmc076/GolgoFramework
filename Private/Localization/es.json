@@ -2,7 +2,7 @@
 "admin-login" : {
 	"usuario": "Usuario",
 	"contrasena" : "Contraseña",
-	"registrarse": "Entrar",
+	"login": "Entrar",
 	"seccion2": {
 		"extra-data": "extraño",
 		"extra-data2": "extra2"

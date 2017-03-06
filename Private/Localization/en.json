@@ -1,7 +1,8 @@
 {
 "admin-login" : {
 	"usuario": "User",
-	"contrasena" : "Password"
+	"contrasena" : "Password",
+	"login": "Log in"
 	}
 
 }

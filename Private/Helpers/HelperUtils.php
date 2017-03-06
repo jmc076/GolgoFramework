@@ -52,16 +52,16 @@ class HelperUtils {
 		);
 		return strtr($s, $replace);
 	}
-	
+
 	public static function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
 		$sort_col = array();
 		foreach ($arr as $key=> $row) {
 			$sort_col[$key] = $row[$col];
 		}
-	
+
 		array_multisort($sort_col, $dir, $arr);
 	}
-	
+
 	/**
 	 * Returns a random string of a specified length
 	 * @param int $length
@@ -71,19 +71,19 @@ class HelperUtils {
 	{
 		$chars = "A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6";
 		$key = "";
-	
+
 		for ($i = 0; $i < $length; $i++) {
 			$key .= $chars{mt_rand(0, strlen($chars) - 1)};
 		}
-	
+
 		return $key;
 	}
-	
+
 	public static function getFileExtension($path) {
 		$ext = pathinfo($path, PATHINFO_EXTENSION);
 		return $ext;
 	}
-	
+
 	public static function getFileMimeType($file) {
 		$ftype = 'unknown';
 		$finfo = @finfo_open(FILEINFO_MIME);
@@ -96,7 +96,7 @@ class HelperUtils {
 		}
 		return $ftype;
 	}
-	
+
 	public static function array_utf8_decoder($array)
 	{
 		array_walk_recursive($array, function(&$item, $key){
@@ -104,7 +104,7 @@ class HelperUtils {
 				$item = utf8_decode($item);
 			}
 		});
-	
+
 			return $array;
 	}
 	public static function array_utf8_encoder($array)
@@ -114,26 +114,26 @@ class HelperUtils {
 	            $item = utf8_encode($item);
 	        }
 	    });
-	
+
 	        return $array;
 	}
-	
+
 	public static function stringToUTF8($string) {
 	    if(!mb_check_encoding($string, 'UTF-8')) $string = utf8_encode($string);
 	    return $string;
 	}
-	
+
 	public static function convertArrayKeysToUtf8(array $array) {
 		$convertedArray = array();
 		foreach($array as $key => $value) {
 			if(!mb_check_encoding($key, 'UTF-8')) $key = utf8_encode($key);
 			if(is_array($value)) $value = self::convertArrayKeysToUtf8($value);
-	
+
 			$convertedArray[$key] = $value;
 		}
 		return $convertedArray;
 	}
-	
+
 	public static function formatDateTime($fecha = null){
 		if($fecha == null) {
 			$fecha = date('d/m/Y H:i:s');
@@ -147,7 +147,7 @@ class HelperUtils {
 		}
 		return $date;
 	}
-	
+
 	public static function xssafe($data,$encoding='UTF-8') {
 		if(is_array($data)){
 			foreach ($data as &$value) {
@@ -157,9 +157,9 @@ class HelperUtils {
 		} else {
 			return htmlspecialchars($data,ENT_QUOTES | ENT_HTML401, $encoding);
 		}
-	
+
 	}
-	
+
 	/**
 	 * This is the list of currently registered HTTP status codes.
 	 *
@@ -228,5 +228,5 @@ class HelperUtils {
 			510 => 'Not extended',
 			511 => 'Network Authentication Required', // RFC 6585
 	];
-	
+
 }
