@@ -18,7 +18,16 @@ interface EventControllerInterface {
 	 * @param callable $callback
 	 * @return void
 	 */
-    public static function listen($event, callable $callback);
+    public static function on($event, callable $callback);
+    
+    /**
+     * Listen to event only once
+     *
+     * @param string $event
+     * @param callable $callback
+     * @return void
+     */
+    public static function once($event, callable $callback);
     
     
     
@@ -30,7 +39,7 @@ interface EventControllerInterface {
      * @param array $params
      * @return void
      */
-    public static function dispatch($event, $params);
+    public static function dispatch($event, array $params);
     
     
     /**

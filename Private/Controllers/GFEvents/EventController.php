@@ -15,23 +15,39 @@ class EventController implements EventControllerInterface {
 
 	/**
 	 * {@inheritDoc}
-	 * @see \Controllers\Events\EventControllerInterface::listen()
+	 * @see \Controllers\Events\EventControllerInterface::on()
 	 */
-	public static function listen($event, callable $callback) {
+	public static function on($event, callable $callback) {
 		self::$listeners[$event][] = $callback;
 
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see \Controllers\Events\EventControllerInterface::once()
+	 */
+	public static function once($event, callable $callback) {
+		
+		
+		$wrapper = null;
+		$wrapper = function() use ($event, $callback, &$wrapper) {
+			self::removeListener($event, $wrapper);
+			return call_user_func_array($callback, func_get_args());
+		};
+		self::on($event, $wrapper);
+	
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * @see \Controllers\Events\EventControllerInterface::dispatch()
 	 */
-	public static function dispatch($event, $params) {
+	public static function dispatch($event, array $params) {
 		if(isset(self::$listeners[$event]) && EVENTS_SYSTEM_ENABLED) {
 			$continue = true;
 			foreach (self::$listeners[$event] as $listener ) {
 				if($continue){
-					$continue = call_user_func_array( $listener, array($params));
+					$continue = call_user_func_array( $listener, $params);
 				}	
 			}
 		}
@@ -66,13 +82,11 @@ class EventController implements EventControllerInterface {
 		if (!isset(self::$listeners[$event])) {
             return false;
         }
-        foreach (self::$listeners[$event] as $function) {
-            if ($function === $callBack) {
-                unset(self::$listeners[$event]);
-                return true;
-            }
+        $index = array_search($callBack, self::$listeners[$event], true);
+        if ($index !== false) {
+        	unset(self::$listeners[$event][$index]);
         }
-        return false;
+        return true;
 
 	}
 
