@@ -5,7 +5,7 @@ namespace Controllers\Router;
 class RouteCollection extends \SplObjectStorage
 {
 	private static $instancia;
-	
+
 	public static function getInstance()
 	{
 		if (  !self::$instancia instanceof self)
@@ -14,11 +14,16 @@ class RouteCollection extends \SplObjectStorage
 		}
 		return self::$instancia;
 	}
-	
+
+	private function __construct()
+	{
+
+	}
+
 	public function attachRoute(RouteModel $routeObject) {
 		parent::attach($routeObject);
 	}
-	
+
 	public function dettachRoute(RouteModel $routeObject){
 		if($this->contains($routeObject))
 			parent::detach($routeObject);
@@ -31,7 +36,7 @@ class RouteCollection extends \SplObjectStorage
 		}
 		return $routes;
 	}
-	
+
 	public function updateRouteConfig($urlOfRoute, $newConfig) {
 		foreach ($this as $route) {
 			if($route->getUrl() == $urlOfRoute) {
@@ -43,7 +48,7 @@ class RouteCollection extends \SplObjectStorage
 		}
 		return false;
 	}
-	
+
 	public function addOrUpdateRoute(RouteModel $routeObject) {
 		foreach ($this as $route) {
 			if($route->getUrl() == $routeObject->getUrl()) {

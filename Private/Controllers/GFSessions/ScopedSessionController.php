@@ -2,7 +2,7 @@
 namespace Controllers\GFSessions;
 
 
-class SessionController {
+class ScopedSessionController {
 
 	const GF_GLOBAL_SESSION = "gf_global";
 
@@ -21,10 +21,6 @@ class SessionController {
 		}
 	}
 
-
-	public function isSetScope($scope) {
-		return isset($_SESSION[$scope]);
-	}
 
 	public function put($key, $value) {
 		try {
@@ -59,7 +55,7 @@ class SessionController {
 		}
 	}
 
-	public function getOnce($key){
+	public function getAndDelete($key){
 		try {
 			$session = $this->getSessionScope();
 			$value = isset($session[$key]) ? $session[$key]: null;

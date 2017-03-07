@@ -3,13 +3,13 @@ namespace Controllers\GFSessions;
 
 use Helpers\HelperUtils;
 
-class CSRFChecker {
+class CSRFSessionController {
 
 	const CSRF_SCOPE = "gf_csrf";
 	private $session;
 
 	public function __construct(){
-		$sessionController = new SessionController(self::CSRF_SCOPE);
+		$sessionController = new ScopedSessionController(self::CSRF_SCOPE);
 		$this->session = $sessionController->getSession();
 	}
 

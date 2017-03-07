@@ -228,5 +228,12 @@ class HelperUtils {
 			510 => 'Not extended',
 			511 => 'Network Authentication Required', // RFC 6585
 	];
-
+	public static function getIp()
+	{
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
+			return $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+			return $_SERVER['REMOTE_ADDR'];
+		}
+	}
 }

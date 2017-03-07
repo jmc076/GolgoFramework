@@ -18,7 +18,6 @@ define("DB_DRIVER", 'pdo_mysql');
 
 //SESSION OPTIONS
 define("SESSION_LENGTH", 3600); //30 MINS
-define("SESSION_NAME", "GOLGO_FRAMEWORK");
 define("SESSION_ANONYM","BaseEntities\SessionBaseUser");
 
 define("NEED_LOCALIZATION", true);
