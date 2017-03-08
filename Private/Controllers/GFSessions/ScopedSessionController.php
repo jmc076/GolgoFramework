@@ -3,90 +3,39 @@ namespace Controllers\GFSessions;
 
 
 class ScopedSessionController {
+	
+	private static $extendedMethods = array();
+	
+	private static $extendedClasses = array();
 
-	const GF_GLOBAL_SESSION = "gf_session";
-	const GF_DEFAULT_SESSION = "gf_default";
-	const CSRF_SCOPE = "gf_csrf";
-
-	private $scope;
-
-	public function __construct($scope = self::GF_DEFAULT_SESSION) {
-		$this->scope = $scope;
-	}
-
-	public function getSession(){
-		if(isset($_SESSION[$this->scope])) {
-			return $_SESSION[$this->scope];
-		} else {
-			$_SESSION[$this->scope] = array();
-			return $_SESSION[$this->scope];
+	use ScopedSessionTrait;
+	
+	public function __call($method, $args) {
+		if(array_key_exists($method, self::$extendedMethods)) {
+			$className = self::$extendedMethods[$method];
+			$obj = new $className;
+			call_user_func_array(array($obj, $method), $args);
 		}
+		
+	}
+	
+	public static function addExtendedClass($className) {
+		self::$extendedClasses[] = $className;
+	}
+	public static function loadExtendedClass($className) {
+		$class = new $className($this);
+		return $class;
 	}
 
-
-	public function put($key, $value) {
-		try {
-			$session = $this->getSessionScope();
-			$session[$key] = $value;
-		} catch (Exception $e) {
-			return false;
-		}
-		return true;
-
+	public static function addExtendedMethod($methodName, $className) {
+		self::$extendedMethods[$methodName] = $className; 
 	}
-	public function safePut($key, $value){
-		try {
-			$session = $this->getSessionScope();
-			if(!isset($session[$key])){
-				$session[$key] = $value;
-				return true;
-			}
-			return false;
-
-		} catch (Exception $e) {
-			return false;
-		}
+	
+	public static function extendedMethodExist($methodName) {
+		return array_key_exists($methodName, self::$extendedMethods);
 	}
-
-	public function get($key) {
-		try {
-			$session = $this->getSessionScope();
-			return isset($session[$key]) ? $session[$key]: null;
-		} catch (Exception $e) {
-			return null;
-		}
+	
+	public static function removeExtendedMethod($methodName) {
+		unset(self::$extendedMethods[$methodName]);
 	}
-
-	public function getAndDelete($key){
-		try {
-			$session = $this->getSessionScope();
-			$value = isset($session[$key]) ? $session[$key]: null;
-			$this->delete($key);
-			return $value;
-		} catch (Exception $e) {
-			return null;
-		}
-	}
-
-	public function delete($key) {
-		try {
-			$session = $this->getSessionScope();
-			unset($session[$key]);
-		} catch (Exception $e) {
-			return false;
-		}
-		return  true;
-	}
-
-
-	public function getScope() {
-		return $this->scope;
-	}
-	public function setScope($scope) {
-		$this->scope = $scope;
-		return $this;
-	}
-
-
-
 }

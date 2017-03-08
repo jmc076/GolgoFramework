@@ -27,7 +27,7 @@ define("EVENTS_SYSTEM_ENABLED", true);
 
 
 //HOST CONFIGURATION
-define("BASE_PATH","localhost/GolgoFramework");
+define("BASE_PATH","localhost/GolgoFrameworkGit");
 
 
 //REDIS CACHE
