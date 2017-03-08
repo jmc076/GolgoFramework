@@ -4,10 +4,6 @@ namespace Controllers\GFSessions;
 
 trait ScopedSessionTrait {
 
-	const GF_GLOBAL_SESSION = "gf_session";
-	const GF_DEFAULT_SESSION = "gf_default";
-	const CSRF_SCOPE = "gf_csrf";
-
 	private $scope;
 
 	public function __construct($scope = self::GF_DEFAULT_SESSION) {

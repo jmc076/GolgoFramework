@@ -4,3 +4,5 @@
 .settings/org.eclipse.wst.common.project.facet.core.xml
 
 /vendor/
+
+/templates_c/

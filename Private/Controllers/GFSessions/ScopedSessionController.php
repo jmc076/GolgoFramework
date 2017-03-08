@@ -2,7 +2,7 @@
 namespace Controllers\GFSessions;
 
 
-class ScopedSessionController {
+class ScopedSessionController implements ScopedSessionInterface{
 	
 	private static $extendedMethods = array();
 	

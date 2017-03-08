@@ -1,14 +1,12 @@
 <?php
 
 use Controllers\Router\RouteCollection;
-use Doctrine\DBAL\Configuration;
 require_once __DIR__ .'/Private/Configs/Constants.php';
 require_once 'vendor/autoload.php';
 require_once 'GFStarter.php';
 require_once 'GFAutoload.php';
 
 setShowError(true);
-$config = new Configuration();
 $routerCollection = RouteCollection::getInstance();
 attachCustomRoutes($routerCollection);
 $modules = array();
