@@ -1,8 +1,10 @@
 <?php
 
-namespace Modules\Tivoli\ViewsLogic\Pages\_Public;
+namespace Modules\GFStarterKit\ViewsLogic\Pages\_Public;
 
-use ViewsLogic\Pages\_Base\PAGBasePage;
+
+
+use Modules\GFStarterKit\ViewsLogic\Pages\PAGBasePage;
 
 class PAGPublicAdminLogin extends PAGBasePage {
 
@@ -14,7 +16,7 @@ class PAGPublicAdminLogin extends PAGBasePage {
 
 
 	protected function setTplFile() {
-		$this->tpl = SMARTY_TEMPLATE_MODULES_FOLDER . '/GFStarterKit/Views/tpls/public/admin_login.tpl';
+		$this->tpl = GF_SMARTY_TEMPLATE_FOLDER . '/public/admin_login.tpl';
 
 	}
 

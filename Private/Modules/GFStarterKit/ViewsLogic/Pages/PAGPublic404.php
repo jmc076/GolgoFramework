@@ -1,6 +1,6 @@
 <?php
 
-namespace ViewsLogic\Pages\_Base;
+namespace Modules\GFStarterKit\ViewsLogic\Pages;
 
 class PAGPublic404 extends PAGBasePage {
 

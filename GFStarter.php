@@ -2,10 +2,10 @@
 use Controllers\Http\Request;
 use Controllers\Http\Response;
 use Controllers\Router\Router;
-use Controllers\SessionController;
 use Controllers\Router\RouteCollection;
-use Controllers\Events\EventController;
 use Controllers\RedisCacheController;
+use Controllers\GFSessions\GFSessionController;
+use Controllers\GFEvents\GFEventController;
 
 
 class GFStarter {
@@ -15,8 +15,7 @@ class GFStarter {
 	function __construct(RouteCollection $routerCollection) {
 
 		global $session;
-		$session = new SessionController();
-		$session->initSession();
+		$session = GFSessionController::getInstance();
 
 		global $localization;
 		$localization = $this->getDefaultLanguage();
@@ -34,7 +33,7 @@ class GFStarter {
 
 	}
 
-	protected function start($modules) {
+	public function start($modules) {
 		$request = new Request();
 		$response = new Response();
 
@@ -42,10 +41,10 @@ class GFStarter {
 
 		$router = new Router($this->routerCollection, $request);
 
-		EventController::dispatch("Router.beforeParse", array("request"=>$request, "response" => $response, "router" => $router));
+		GFEventController::dispatch("Router.beforeParse", array("request"=>$request, "response" => $response, "router" => $router));
 		$router->parseRequest();
 
-		EventController::dispatch("Router.beforeDispatch", array("request"=>$request, "response" => $response, "router" => $router));
+		GFEventController::dispatch("Router.beforeDispatch", array("request"=>$request, "response" => $response, "router" => $router));
 		$response->dispatchRequest($request);
 	}
 

@@ -9,12 +9,12 @@ class PAGPrivateGetFile extends PAGBasePage {
 		if ($this->isPrivate() == true && (!isset($_SESSION["sessionData"]) || $_SESSION["sessionData"]["status"] == false)) {
 			header("Location:/");
 		} else {
-			$upload_dir = ROOT_PATH . 'Private' .  DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR;
+			$upload_dir = ROOT_PATH . '/Private' .  DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR;
 			$file = $upload_dir . $this->getParams["ruta"];
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
 			$mime = self::getMimeType($ext);
 			if($this->getParams["type"] == "preview") {
-					
+
 				/*$contents = file_get_contents($file);
 				$base64   = base64_encode($contents);
 				echo 'data:' . $mime . ';base64,' . $base64;
@@ -22,7 +22,7 @@ class PAGPrivateGetFile extends PAGBasePage {
 			    header('Content-type: ' . $mime);  //$type = 'image/jpeg' but can be other file type
 			    header('Content-Length: ' . filesize($file));
 			    readfile($file);
-			    
+
 			} else {
 				header('Content-Description: File Transfer');
 				header('Content-Type: application/force-download');
@@ -42,7 +42,7 @@ class PAGPrivateGetFile extends PAGBasePage {
 	protected function isPrivate() {
 		return true;
 	}
-	
+
 	public static function getMimeType($extension) {
 		// MIME types array
 		$mime_types_map = array(
@@ -208,7 +208,7 @@ class PAGPrivateGetFile extends PAGBasePage {
     'zip' => 'application/x-compressed', 'zip' => 'application/x-zip-compressed', 'zip' => 'application/zip', 'zip' => 'multipart/x-zip',
     'zoo' => 'application/octet-stream', 'zsh' => 'text/x-script.zsh',
 );
-	
+
 		return $mime_types_map[$extension]; // return the array value
 	}
 

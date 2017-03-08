@@ -1,12 +1,10 @@
 Options -Indexes
 
 RewriteEngine on
-#ErrorDocument 401 error.php
-#ErrorDocument 404 error.php
 
 
-
-RewriteRule (css|js|images|img|fonts|vendors)/modules/([^/.]*)?/(.+)$ Private/modules/$2/Public/$1/$3 [NC,L]
+RewriteCond %{ENV:REDIRECT_STATUS} !200
+RewriteRule modules/([^/.]*)?/(.+)$ Private/Modules/$1/Public/$2 [NC,L]
 
 RewriteCond %{REQUEST_URI} ^((?!Private/Modules).)*$ [NC]
 RewriteCond %{REQUEST_URI} ^((?!wordpress/).)*$ [NC]

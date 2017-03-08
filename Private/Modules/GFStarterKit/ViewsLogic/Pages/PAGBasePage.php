@@ -1,13 +1,11 @@
 <?php
-namespace ViewsLogic\Pages\_Base;
+namespace Modules\GFStarterKit\ViewsLogic\Pages;
 
 use Controllers\Http\Response;
 
 use Controllers\Http\Request;
 use Controllers\i18nController;
-use Controllers\SessionController;
 
-require 'Private/Vendors/Smarty-3.1.21/libs/Smarty.class.php';
 
 class PAGBasePage {
 
@@ -21,19 +19,13 @@ class PAGBasePage {
 	protected $response;
 	protected $request;
 	protected $routeParams;
+	protected $session;
 
 	public function __construct(Request $request, Response $response) {
 		$this->response = $response;
 		$this->request = $request;
-		$this->routeParams = $this->request->getUrlRouteParams();
-		$this->em = $GLOBALS['em'];
-
-		if(isset($this->routeParams["modelId"])) {
-			$this->modelId = $this->routeParams["modelId"];
-		}
-
-		$this->getParams = $this->request->getGetParams();
-		$this->postParams = $this->request->getPostParams();
+		global $session;
+		$this->session = $session;
 		$this->init();
 	}
 
@@ -41,6 +33,17 @@ class PAGBasePage {
 		if($this->isPrivate() == true && (!isset($_SESSION["sessionData"]) || $_SESSION["sessionData"]["status"] == false)) {
 			header("Location:/");
 		} else {
+
+			$this->routeParams = $this->request->getUrlRouteParams();
+			$this->em = $GLOBALS['em'];
+
+			if(isset($this->routeParams["modelId"])) {
+				$this->modelId = $this->routeParams["modelId"];
+			}
+
+			$this->getParams = $this->request->getGetParams();
+			$this->postParams = $this->request->getPostParams();
+
 			$this->preLoad();
 			$this->smarty = new \Smarty();
 			$this->assignTplVars();
@@ -52,7 +55,7 @@ class PAGBasePage {
 	}
 
 	protected function preLoad(){
-		$this->userModel = SessionController::getCurrentUserModel();
+		//$this->userModel = SessionController::getCurrentUserModel();
 	}
 
 	public function isSuperAdmin() {
@@ -69,7 +72,7 @@ class PAGBasePage {
 			$_SESSION["errorMSG"] = "";
 			unset($_SESSION["errorMSG"]);
 		}
-		$this->smarty->assign("csrfdata", '<input id="csrf" type="hidden" name="'.SessionController::get_token_id().'" value="'.SessionController::get_token().'" />');
+		$this->smarty->assign("csrfdata", '<input id="csrf" type="hidden" name="'.$this->session->getSessionCsrfName().'" value="'.$this->session->getSessionCsrfValue().'" />');
 		if(NEED_LOCALIZATION) {
 			$this->smarty->assign("i18n", i18nController::localization());
 		}

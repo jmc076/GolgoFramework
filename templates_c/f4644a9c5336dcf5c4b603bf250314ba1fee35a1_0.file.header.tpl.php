@@ -1,3 +1,27 @@
+<?php
+/* Smarty version 3.1.31, created on 2017-03-08 16:40:25
+  from "C:\xampp\htdocs\GolgoFramework\Private\Modules\GFStarterKit\Views\tpls\public\commons\header.tpl" */
+
+/* @var Smarty_Internal_Template $_smarty_tpl */
+if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
+  'version' => '3.1.31',
+  'unifunc' => 'content_58c025e9630679_33555292',
+  'has_nocache_code' => false,
+  'file_dependency' => 
+  array (
+    'f4644a9c5336dcf5c4b603bf250314ba1fee35a1' => 
+    array (
+      0 => 'C:\\xampp\\htdocs\\GolgoFramework\\Private\\Modules\\GFStarterKit\\Views\\tpls\\public\\commons\\header.tpl',
+      1 => 1488987613,
+      2 => 'file',
+    ),
+  ),
+  'includes' => 
+  array (
+  ),
+),false)) {
+function content_58c025e9630679_33555292 (Smarty_Internal_Template $_smarty_tpl) {
+?>
 <!DOCTYPE html>
     <!--[if IE 9 ]><html class="ie9"><![endif]-->
     <head>
@@ -21,7 +45,8 @@
 
     </head>
     <body class="login-content">
-    {$csrfdata}
+    <?php echo $_smarty_tpl->tpl_vars['csrfdata']->value;?>
+
 	    <div id="loading">
 			<div class="loader">
 		 		<svg class="circular">
@@ -29,3 +54,5 @@
 	 			</svg>
 			</div>
 		</div> 
+<?php }
+}

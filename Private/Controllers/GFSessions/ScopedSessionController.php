@@ -4,11 +4,13 @@ namespace Controllers\GFSessions;
 
 class ScopedSessionController {
 
-	const GF_GLOBAL_SESSION = "gf_global";
+	const GF_GLOBAL_SESSION = "gf_session";
+	const GF_DEFAULT_SESSION = "gf_default";
+	const CSRF_SCOPE = "gf_csrf";
 
 	private $scope;
 
-	public function __construct($scope = self::GF_GLOBAL_SESSION) {
+	public function __construct($scope = self::GF_DEFAULT_SESSION) {
 		$this->scope = $scope;
 	}
 

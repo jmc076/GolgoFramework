@@ -1,8 +1,9 @@
 <?php
-namespace ViewsLogic\Pages;
-use Entities\AssignGenerator;
+namespace Modules\GFStarterKit\ViewsLogic\Pages;
 
 
+
+use Modules\GFStarterKit\Utils\AssignGenerator;
 
 class PAGAssignGenerator extends PAGBasePage{
 

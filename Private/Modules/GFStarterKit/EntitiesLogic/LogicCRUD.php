@@ -2,15 +2,13 @@
 
 namespace Modules\GFStarterKit\EntitiesLogic;
 
-use BaseEntities\Files;
 use Controllers\ExceptionController;
-use Controllers\SessionController;
-use Controllers\Events\EventController;
 use Controllers\Http\Response;
 use Controllers\Http\Request;
 use Controllers\Http\Decorators\ResponseJSONDecorator;
 use Controllers\RedisCacheController;
-use Modules\UserManagement\Entities\BaseUser;
+use Controllers\GFEvents\GFEventController;
+use Controllers\GFSessions\GFSessionController;
 
 abstract class LogicCRUD {
 
@@ -18,6 +16,7 @@ abstract class LogicCRUD {
 	protected $result;
 	protected $em;
 	protected $checkCSRF;
+	protected $gfSession;
 
 	protected $modelId;
 	protected $response;
@@ -28,7 +27,9 @@ abstract class LogicCRUD {
 	protected $redisClient;
 
 	public function __construct(Request $request, Response $response) {
-		EventController::dispatch("LogicCRUD.__construct", null);
+		GFEventController::dispatch("LogicCRUD.__construct", null);
+
+		$this->gfSession = GFSessionController::getInstance();
 
 		if(REDIS_CACHE_ENABLED) {
 		     $this->redisClient = RedisCacheController::getRedisClient();
@@ -61,11 +62,11 @@ abstract class LogicCRUD {
 			$this->preload();
 
 			if($this->checkCSRF && $this->request->getVerb() == "POST" ) {
-				SessionController::check_valid($this->dataArray);
+				//SessionController::check_valid($this->dataArray);
 			}
 
 			if($op != null) {
-			    $key = "api:".SessionController::getSessionId(). ":" . md5(serialize($this->dataArray));
+			    $key = "api:".$this->gfSession->getSessionId(). ":" . md5(serialize($this->dataArray));
 			    if(REDIS_CACHE_ENABLED) {
 			        if($this->redisClient->exists($key)) {
 			            $this->result = json_decode($this->redisClient->get($key));
@@ -95,7 +96,7 @@ abstract class LogicCRUD {
 
 			    }
 				if($this->response != null) {
-					EventController::dispatch(get_class($this)."_".$op, array("data" => $this->dataArray, "result" => $this->result));
+					GFEventController::dispatch(get_class($this)."_".$op, array("data" => $this->dataArray, "result" => $this->result));
 					$this->response->setBody($this->result);
 					$responseJSon = new ResponseJSONDecorator($this->response);
 					$responseJSon->dispatchJSONResponse();
@@ -129,24 +130,24 @@ abstract class LogicCRUD {
 				$this->response->setStatusCode(200);
 				$model = $user->loadById($this->em, $loged['id']);
 				if($model != null) {
-					SessionController::setSessionData('user_model', $model->getEntityWithNamespace($model));
-					SessionController::setSessionData('tipo_usuario', $model->getTipoUsuario());
-					SessionController::setSessionData('user_id', $model->getId());
-					SessionController::setSessionData('user_name', $model->getNombre());
-					SessionController::setSessionData('user_email', $model->getEmail());
-					SessionController::setSessionData('status', true);
-					SessionController::regenerateSession();
+					//SessionController::setSessionData('user_model', $model->getEntityWithNamespace($model));
+					//SessionController::setSessionData('tipo_usuario', $model->getTipoUsuario());
+					//SessionController::setSessionData('user_id', $model->getId());
+					//SessionController::setSessionData('user_name', $model->getNombre());
+					//SessionController::setSessionData('user_email', $model->getEmail());
+					//SessionController::setSessionData('status', true);
+					//SessionController::regenerateSession();
 				} else {
 					ExceptionController::customError("Datos de acceso incorrectos", 404);
 				}
 			} else {
 				ExceptionController::customError("Datos de acceso incorrectos2", 404);
 			}
-			$this->userModel = SessionController::getCurrentUserModel();
-			EventController::dispatch("LogicCRUD.preload.HTTP_AUTHORIZATION", array("user" => $username,"pass" => $password));
+			//$this->userModel = SessionController::getCurrentUserModel();
+			GFEventController::dispatch("LogicCRUD.preload.HTTP_AUTHORIZATION", array("user" => $username,"pass" => $password));
 		} else {
-			$this->userModel = SessionController::getCurrentUserModel();
-			EventController::dispatch("LogicCRUD.preload", null);
+			//$this->userModel = SessionController::getCurrentUserModel();
+			GFEventController::dispatch("LogicCRUD.preload", null);
 		}
 
 	}
@@ -154,15 +155,15 @@ abstract class LogicCRUD {
 
 
 	public function deletePublicFile($ruta) {
-		if(file_exists(ROOT_PATH . 'Public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR.$ruta)) {
-			return unlink(ROOT_PATH . 'Public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR.$ruta);
+		if(file_exists(ROOT_PATH . '/Public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR.$ruta)) {
+			return unlink(ROOT_PATH . '/Public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR.$ruta);
 		}
 		return false;
 	}
 
 	public function deletePrivateFile($ruta) {
-		if(file_exists( ROOT_PATH . 'Private' . DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR . $ruta)) {
-			return unlink( ROOT_PATH . 'Private' . DIRECTORY_SEPARATOR . 'Files'.DIRECTORY_SEPARATOR . $ruta);
+		if(file_exists( ROOT_PATH . '/Private' . DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR . $ruta)) {
+			return unlink( ROOT_PATH . '/Private' . DIRECTORY_SEPARATOR . 'Files'.DIRECTORY_SEPARATOR . $ruta);
 		}
 		return false;
 	}

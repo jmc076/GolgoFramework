@@ -3,13 +3,11 @@ namespace Modules\GFStarterKit;
 
 use Modules;
 use Controllers\Router\RouteCollection;
-use Modules\UserManagement\Controllers\PermissionsController;
-use Controllers\Events\EventController;
-use Controllers\Http\Request;
 use Controllers\Router\RouteModel;
+use Controllers\GFEvents\GFEventController;
 
 
-define('SMARTY_TEMPLATE_MODULES_FOLDER', 'Private/Modules/Views/tpls');
+define('GF_SMARTY_TEMPLATE_FOLDER', 'Private/Modules/GFStarterKit/Views/tpls');
 define("TABLE_USERS", "gf_users");
 
 
@@ -17,18 +15,22 @@ class Bootstrap {
 
 
 	function __construct(RouteCollection $routerCollection) {
+
+		global $em;
+		$em = GFSKEntityManager::getEntityManager();
+
 		$this->setRoutes($routerCollection);
 		$this->startEventListeners();
 	}
 
 	private function startEventListeners() {
 		$callback = function($params) { };
-		EventController::listen("Router.dispatchWithMatch", $callback);
+		GFEventController::on("Router.dispatchWithMatch", $callback);
 	}
 
 	private function setRoutes(RouteCollection $routerCollection) {
 
-		$baseNamespace = "Modules\GFStarter";
+		$baseNamespace = "Modules\GFStarterKit";
 
 
 		$config = array();

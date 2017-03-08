@@ -1,4 +1,33 @@
- {include file="./commons/header.tpl"}
+<?php
+/* Smarty version 3.1.31, created on 2017-03-08 16:48:20
+  from "C:\xampp\htdocs\GolgoFramework\Private\Modules\GFStarterKit\Views\tpls\public\admin_login.tpl" */
+
+/* @var Smarty_Internal_Template $_smarty_tpl */
+if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
+  'version' => '3.1.31',
+  'unifunc' => 'content_58c027c41deef8_82848417',
+  'has_nocache_code' => false,
+  'file_dependency' => 
+  array (
+    '5ea1cd5a7f4d857c190a6343e591e550a490d680' => 
+    array (
+      0 => 'C:\\xampp\\htdocs\\GolgoFramework\\Private\\Modules\\GFStarterKit\\Views\\tpls\\public\\admin_login.tpl',
+      1 => 1488988097,
+      2 => 'file',
+    ),
+  ),
+  'includes' => 
+  array (
+    'file:./commons/header.tpl' => 1,
+    'file:./commons/commonjs.tpl' => 1,
+    'file:./commons/footer.tpl' => 1,
+  ),
+),false)) {
+function content_58c027c41deef8_82848417 (Smarty_Internal_Template $_smarty_tpl) {
+?>
+ <?php $_smarty_tpl->_subTemplateRender("file:./commons/header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
+
 
 <div
 		class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
@@ -23,16 +52,19 @@
 							<form action="#">
 								<div class="mdl-textfield mdl-js-textfield">
 									<input class="mdl-textfield__input" type="text" id="user" name="user" />
-									<label class="mdl-textfield__label" for="username">{$i18n["admin-login"].usuario}</label>
+									<label class="mdl-textfield__label" for="username"><?php echo $_smarty_tpl->tpl_vars['i18n']->value["admin-login"]['usuario'];?>
+</label>
 								</div>
 								<div class="mdl-textfield mdl-js-textfield">
 									<input class="mdl-textfield__input" type="password" name="pass" id="userpass" />
-									<label class="mdl-textfield__label" for="userpass">{$i18n["admin-login"].contrasena}</label>
+									<label class="mdl-textfield__label" for="userpass"><?php echo $_smarty_tpl->tpl_vars['i18n']->value["admin-login"]['contrasena'];?>
+</label>
 								</div>
 							</form>
 						</div>
 						<div class="mdl-card__actions mdl-card--border">
-							<button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect js-login-button">{$i18n["admin-login"].login}</button>
+							<button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect js-login-button"><?php echo $_smarty_tpl->tpl_vars['i18n']->value["admin-login"]['login'];?>
+</button>
 						</div>
 					</div>
 				</form>
@@ -43,9 +75,12 @@
 	</div>
 
 
-{include file="./commons/commonjs.tpl"}
+<?php $_smarty_tpl->_subTemplateRender("file:./commons/commonjs.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
 
-<script type="text/javascript">
+
+<?php echo '<script'; ?>
+ type="text/javascript">
 $(window, document, undefined).ready(function() {
 	
 	 $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
@@ -136,5 +171,8 @@ function handleAjaxError(xhr) {
 	  swal("¡Error!", message, "error");   
 	
 }
-</script>
-{include file="./commons/footer.tpl"}
+<?php echo '</script'; ?>
+>
+<?php $_smarty_tpl->_subTemplateRender("file:./commons/footer.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+}
+}
