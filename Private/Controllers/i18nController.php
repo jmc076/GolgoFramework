@@ -8,7 +8,6 @@ class i18nController {
 		static $localeData = NULL;
 		if (is_null($localeData)) {
 			$localization = GFSessionController::getInstance()->getSessionModel()->getUserLang();
-			print_r($localization); die(); //TODO: Diego pre
 			$langFile = dirname( __FILE__ ).'/../Localization/' . $localization . '.json';
 			$langBase = dirname( __FILE__ ).'/../Localization/'.DEFAULT_LOCALIZATION.'.json';
 			if (!file_exists($langFile) || $localization == DEFAULT_LOCALIZATION) {

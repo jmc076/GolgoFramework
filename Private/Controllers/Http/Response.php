@@ -65,6 +65,7 @@ class Response extends HttpBase implements ResponseInterface {
 		if (is_resource($this->getBody())) {
 			fclose($this->getBody());
 		}
+		exit();
 	}
 	
 	

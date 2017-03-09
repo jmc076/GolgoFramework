@@ -19,20 +19,13 @@ class ResponseJSONDecorator extends Response {
 	
 	public function dispatchJSONResponse() {
 		$result = array();
-		$result["resources"] = $this->response->getBody();
-		if ($totalRows = DoctrineHelper::stGetTotalRows()) {
-			$result['iTotalDisplayRecords'] = $totalRows;
-		}
-		if ($limitedRows = DoctrineHelper::stGetLimitedRows()) {
-			$result['iTotalRecords'] = $limitedRows;
-		}
+		$result["result"] = $this->response->getBody();
 		
 		$result = $this->convertArrayKeysToUtf8($result);
 		
 		$this->setHeader("Content-Type", "application/json");
 		$this->setBody(json_encode($result));
 		$this->sendResponse();
-		exit();
 	}
 	
 	function convertArrayKeysToUtf8(array $array) {

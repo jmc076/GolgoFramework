@@ -117,12 +117,6 @@ class Request extends HttpBase {
 				}
 				break;
 			case "application/x-www-form-urlencoded":
-				parse_str($body, $postvars);
-				foreach($postvars as $field => $value) {
-					$this->PostParams[$field] = HelperUtils::xssafe($value);
-	
-				}
-				break;
 			case "application/x-www-form-urlencoded; charset=UTF-8":
 				parse_str($body, $postvars);
 				foreach($postvars as $field => $value) {

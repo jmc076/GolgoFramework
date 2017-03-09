@@ -62,7 +62,7 @@ class RouteModel
      * @param array() $config ("name","targetClassMethod","targetClass","verbs","checkCSRF")
      */
     public function updateConfig($config) {
-    	$this->name				= isset($config['name']) ? $config['name'] : null;
+    	$this->name					= isset($config['name']) ? $config['name'] : null;
         $this->targetClassMethod	= isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
         $this->targetClass 			= isset($config['targetClass']) ? $config['targetClass'] : null;
         $this->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
