@@ -5,6 +5,7 @@ use Controllers\i18nController;
 use Controllers\SessionController;
 use Controllers\Http\Request;
 use Controllers\Http\Response;
+use Modules\GFStarterKit\GFSKEntityManager;
 
 require 'Private/Vendors/Smarty-3.1.21/libs/Smarty.class.php';
 class ChunkBasePage {
@@ -23,7 +24,7 @@ class ChunkBasePage {
 		$this->response = $response;
 		$this->request = $request;
 		$this->routeParams = $this->request->getUrlRouteParams();
-		$this->em = $GLOBALS['em'];
+		$this->em = GFSKEntityManager::getEntityManager();
 
 		if(isset($this->routeParams["modelId"])) {
 			$this->modelId = $this->routeParams["modelId"];

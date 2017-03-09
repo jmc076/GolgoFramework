@@ -5,6 +5,8 @@ use Controllers\Http\Response;
 
 use Controllers\Http\Request;
 use Controllers\i18nController;
+use Modules\GFStarterKit\GFSKEntityManager;
+use Controllers\GFSessions\GFSessionController;
 
 
 class PAGBasePage {
@@ -24,8 +26,7 @@ class PAGBasePage {
 	public function __construct(Request $request, Response $response) {
 		$this->response = $response;
 		$this->request = $request;
-		global $session;
-		$this->session = $session;
+		$this->session = GFSessionController::getInstance();
 		$this->init();
 	}
 
@@ -35,7 +36,7 @@ class PAGBasePage {
 		} else {
 
 			$this->routeParams = $this->request->getUrlRouteParams();
-			$this->em = $GLOBALS['em'];
+			$this->em = GFSKEntityManager::getEntityManager();
 
 			if(isset($this->routeParams["modelId"])) {
 				$this->modelId = $this->routeParams["modelId"];

@@ -9,6 +9,7 @@ use Controllers\Http\Decorators\ResponseJSONDecorator;
 use Controllers\RedisCacheController;
 use Controllers\GFEvents\GFEventController;
 use Controllers\GFSessions\GFSessionController;
+use Modules\GFStarterKit\GFSKEntityManager;
 
 abstract class LogicCRUD {
 
@@ -35,7 +36,7 @@ abstract class LogicCRUD {
 		     $this->redisClient = RedisCacheController::getRedisClient();
 		}
 
-		$this->em = $GLOBALS['em'];
+		$this->em = GFSKEntityManager::getEntityManager();
 		$this->response = $response;
 		$this->request = $request;
 

@@ -4,6 +4,7 @@ namespace Modules\GFStarterKit\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\DoctrineHelper;
+use Modules\GFStarterKit\GFSKEntityManager;
 
 
 abstract Class BasicModelEmptyFields
@@ -25,7 +26,7 @@ abstract Class BasicModelEmptyFields
 
 	function getEntityWithNamespace($obj) {
 
-		$em = $GLOBALS["em"];
+		$em = GFSKEntityManager::getEntityManager();
 		$entityName = $em->getMetadataFactory()->getMetadataFor(get_class($obj))->getName();
 
 		return $entityName;

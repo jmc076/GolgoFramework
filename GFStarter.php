@@ -14,12 +14,9 @@ class GFStarter {
 
 	function __construct(RouteCollection $routerCollection) {
 
-		global $session;
 		$session = GFSessionController::getInstance();
 
-		global $localization;
-		$localization = $this->getDefaultLanguage();
-
+		$session->getSessionModel()->setUserLang($this->getDefaultLanguage())->save();
 		$this->routerCollection = $routerCollection;
 
 		if(REDIS_CACHE_ENABLED) {

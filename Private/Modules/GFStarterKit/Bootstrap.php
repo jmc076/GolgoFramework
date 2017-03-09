@@ -16,8 +16,7 @@ class Bootstrap {
 
 	function __construct(RouteCollection $routerCollection) {
 
-		global $em;
-		$em = GFSKEntityManager::getEntityManager();
+		GFSKEntityManager::getEntityManager();
 
 		$this->setRoutes($routerCollection);
 		$this->startEventListeners();

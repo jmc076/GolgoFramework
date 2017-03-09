@@ -1,6 +1,7 @@
 <?php
 namespace GFModels;
 use Helpers\HelperUtils;
+use Controllers\GFSessions\GFSessionController;
 
 class GFSessionModel {
 	protected $userModel;
@@ -9,6 +10,7 @@ class GFSessionModel {
 	protected $userCart;
 	protected $userExtra;
 	protected $status;
+	protected $userLang;
 
 
 
@@ -62,5 +64,17 @@ class GFSessionModel {
 		$this->status = $status;
 		return $this;
 	}
+	public function getUserLang() {
+		return $this->userLang;
+	}
+	public function setUserLang($userLang) {
+		$this->userLang = $userLang;
+		return $this;
+	}
+
+	public function save() {
+		GFSessionController::getInstance()->saveModel($this);
+	}
+
 
 }

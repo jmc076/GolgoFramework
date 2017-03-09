@@ -110,5 +110,16 @@ class GFSessionController {
 		return $this;
 	}
 
+	public function saveModel(GFSessionModel $model) {
+		try {
+			$this->sessionModel = $model;
+			$this->session["sessionModel"] = $this->sessionModel;
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+
+	}
+
 
 }
