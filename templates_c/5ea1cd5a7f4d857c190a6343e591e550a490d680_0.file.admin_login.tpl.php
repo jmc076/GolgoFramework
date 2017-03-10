@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.31, created on 2017-03-08 16:48:20
+/* Smarty version 3.1.31, created on 2017-03-10 11:16:06
   from "C:\xampp\htdocs\GolgoFramework\Private\Modules\GFStarterKit\Views\tpls\public\admin_login.tpl" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.31',
-  'unifunc' => 'content_58c027c41deef8_82848417',
+  'unifunc' => 'content_58c27ce67a8b20_08276809',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '5ea1cd5a7f4d857c190a6343e591e550a490d680' => 
     array (
       0 => 'C:\\xampp\\htdocs\\GolgoFramework\\Private\\Modules\\GFStarterKit\\Views\\tpls\\public\\admin_login.tpl',
-      1 => 1488988097,
+      1 => 1489140962,
       2 => 'file',
     ),
   ),
@@ -23,7 +23,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:./commons/footer.tpl' => 1,
   ),
 ),false)) {
-function content_58c027c41deef8_82848417 (Smarty_Internal_Template $_smarty_tpl) {
+function content_58c27ce67a8b20_08276809 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
  <?php $_smarty_tpl->_subTemplateRender("file:./commons/header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
@@ -92,41 +92,6 @@ $(window, document, undefined).ready(function() {
 			options.data = typeof options.data === "string" ? $('#csrf').attr('name')+"="+ $('#csrf').val()+"&"+options.data : $.extend(options.data, postData);
 		});
 
-	  $('input').blur(function() {
-	    var $this = $(this);
-	    if ($this.val())
-	      $this.addClass('used');
-	    else
-	      $this.removeClass('used');
-	  });
-	  
-	  $.each($('input'),function(i,item) {
-		  if($(this).val() != "") $(this).addClass("used");
-	  })
-
-	  var $ripples = $('.ripples');
-
-	  $ripples.on('click.Ripples', function(e) {
-
-	    var $this = $(this);
-	    var $offset = $this.parent().offset();
-	    var $circle = $this.find('.ripplesCircle');
-
-	    var x = e.pageX - $offset.left;
-	    var y = e.pageY - $offset.top;
-
-	    $circle.css({
-	      top: y + 'px',
-	      left: x + 'px'
-	    });
-
-	    $this.addClass('is-active');
-
-	  });
-
-	  $ripples.on('animationend webkitAnimationEnd mozAnimationEnd oanimationend MSAnimationEnd', function(e) {
-	  	$(this).removeClass('is-active');
-	  });
 	  
 	  $('.js-login-button').on('click',function(e) {
 		  	e.preventDefault();

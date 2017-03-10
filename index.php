@@ -7,9 +7,13 @@ require_once 'GFStarter.php';
 require_once 'GFAutoload.php';
 
 setShowError(true);
+
 $routerCollection = RouteCollection::getInstance();
 attachCustomRoutes($routerCollection);
 $modules = array();
+
+
+
 /*
  * Add your modules here
  */

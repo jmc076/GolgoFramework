@@ -4,7 +4,7 @@ namespace Controllers\Router;
 use Controllers\Http\Request;
 use Controllers\GFEvents\GFEventController;
 
-class Router {
+class Router implements RouterInterface{
 
 	private $routeCollection;
     private $namedRoutes = null;
@@ -20,16 +20,15 @@ class Router {
     }
 
 
-    public function parseRequest() {
+    public function matchRequest() {
         if (($pos = strpos($this->requestUrl, '?')) !== false) {
            $this->requestUrl = substr($this->requestUrl, 0, $pos);
         }
-        return $this->match($this->requestUrl);
+        return $this->findMatch($this->requestUrl);
     }
 
 
-    public function match($requestUrl) {
-
+    public function findMatch($requestUrl) {
     	$allRoutes = $this->routeCollection->getAllRoutes();
 
         foreach ($allRoutes as $route) {
@@ -60,14 +59,16 @@ class Router {
 	            $this->request->setNeedCheckCSRF($route->getCheckCSRF());
 	            $this->request->setHasMatch(true);
 	            $this->request->setMatchedRoute($route);
+	            $this->request->parseIncomingParams();
 
-	            GFEventController::dispatch("Router.Matched", array("request" => $this->request, "route" => $route));
+
+	            GFEventController::dispatch("Router.hasMatch", null);
 
 	            return true;
        		}
         }
        	$this->request->setHasMatch(false);
-       	GFEventController::dispatch("Router.NotMatched", array("request" => $this->request));
+       	GFEventController::dispatch("Router.noMatch", null);
        	return false;
     }
 

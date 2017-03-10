@@ -2,6 +2,19 @@
 namespace Helpers;
 
 class HelperUtils {
+
+
+	public static function convertArrayKeysToUtf8(array $array) {
+		$convertedArray = array();
+		foreach($array as $key => $value) {
+			if(!mb_check_encoding($key, 'UTF-8')) $key = utf8_encode($key);
+			if(is_array($value)) $value = $this->convertArrayKeysToUtf8($value);
+
+			$convertedArray[$key] = $value;
+		}
+		return $convertedArray;
+	}
+
 	/**
 	 * Replace language-specific characters by ASCII-equivalents.
 	 * @param string $s

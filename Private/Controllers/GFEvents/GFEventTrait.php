@@ -41,7 +41,7 @@ trait GFEventTrait {
 	 * {@inheritDoc}
 	 * @see \Controllers\Events\EventControllerInterface::dispatch()
 	 */
-	public static function dispatch($event, array $params) {
+	public static function dispatch($event, array $params = null) {
 		if(isset(self::$listeners[$event]) && EVENTS_SYSTEM_ENABLED) {
 			$continue = true;
 			foreach (self::$listeners[$event] as $listener ) {

@@ -9,98 +9,186 @@ namespace Controllers\Http;
 
 use Helpers\HelperUtils;
 use Controllers\Router\Route;
+use Controllers\ExceptionController;
+use Modules\GFStarterKit\ViewsLogic\Pages\PAGPublic404;
 
 
 class Request extends HttpBase {
-	
+
 	/**
 	 * Array of (incoming) post parameters.
 	 * @var array() $PostParams
 	 */
-	protected $PostParams = array();
-	
+	protected $postParams = array();
+
 	/**
 	 * Array of (incoming) get parameters.
 	 * @var array() $GetParams
 	 */
-	protected $GetParams = array();
-	
+	protected $getParams = array();
+
 	/**
 	 * Array of url params, those defined in the Route class url filter (example/:paramKey).
 	 * @var array() $urlRouteParams
 	 */
 	protected $urlRouteParams = array();
-	
+
 	/**
 	 * The incoming request's method (GET, PUT, POST....).
 	 * @var String $verb
 	 */
 	protected $verb;
-	
+
 	/**
 	 * The url of the request.
 	 * @var String $requestUrl
 	 */
 	protected $requestUrl;
-	
+
 	/**
 	 * If the request should check for CSRF, defined in the Route class
 	 * @var boolean $needCheckCSRF
 	 */
 	protected $needCheckCSRF;
-	
-	
+
+
 	/**
 	 * If the request is an API call, when the request url starts with "api"
 	 * example: /api/Users
 	 * @var boolean $isApi
 	 */
 	protected $isApi;
-	
+
 	/**
 	 * If the request is an Ajax call, checked if the header "xmlhttprequest" is set in request
 	 * @var boolean $isAjax
 	 */
 	protected $isAjax;
-	
+
 	/**
 	 * @var boolean
 	 */
 	protected $hasMatch = false;
-	
+
 	/**
 	 * @var Route
 	 * @see	Route
 	 */
 	protected $matchedRoute;
-	
-	
-	function __construct() {
-		
+
+
+	private static $instancia;
+
+	public static function getInstance() {
+		if ( !self::$instancia instanceof self) {
+			self::$instancia = new self;
+
+		}
+		return self::$instancia;
+	}
+
+	private function __construct() {
+
 		$this->setHeaders(getallheaders());
 		$this->verb = $_SERVER['REQUEST_METHOD'];
-		
+
 		$url =  "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 		$escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
-		
+
 		$this->requestUrl = $escaped_url;
 		$this->isApi = strpos($this->requestUrl, "/api") === 0 ? true : false;
 		$this->isAjax = strtolower(filter_input(INPUT_SERVER, 'HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest' ? true : false;
-		
-		$this->parseIncomingParams();
-	
+
+
 	}
-	
+
+	public function dispatchNoMatch() {
+		if($this->getIsApi()) {
+			ExceptionController::routeNotFound();
+		} else {
+			new PAGPublic404();
+		}
+
+	}
+
+	public function executeRequest() {
+
+		if(!$this->getHasMatch()) {
+			$this->dispatchNoMatch();
+
+		} else {
+			$matchedRoute = $this->getMatchedRoute();
+			$class = $matchedRoute->getTargetClass();
+
+			if($this->getIsApi()) {
+
+				if ($matchedRoute->getTargetClassMethod() != null) {
+					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array($this));
+				} else {
+					new $class();
+				}
+
+
+			} else {
+
+				if($matchedRoute->getTargetClassMethod() != null) {
+					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array($this));
+
+				} else {
+					new $class();
+
+				}
+			}
+		}
+	}
+
+	public function sendResponse() {
+		$this->attachHeaders();
+		if (is_null($this->getBody())) return;
+
+		$contentLength = $this->getHeaderAsString('Content-Length');
+		if ($contentLength !== null) {
+			$output = fopen('php://output', 'wb');
+			if (is_resource($this->getBody()) && get_resource_type($this->getBody()) == 'stream') {
+				stream_copy_to_stream($this->getBody(), $output, $contentLength);
+			} else {
+				fwrite($output, $this->getBody(), $contentLength);
+			}
+		} else {
+			file_put_contents('php://output', $this->getBody());
+		}
+
+		if (is_resource($this->getBody())) {
+			fclose($this->getBody());
+		}
+	}
+
+
+	private function attachHeaders() {
+		header('HTTP/' . $this->httpVersion . ' ' . $this->statusCode. ' ' . HelperUtils::$statusCodes[$this->statusCode]);
+		foreach ($this->getAllHeadersAsArray() as $key => $value) {
+
+			foreach ($value as $k => $v) {
+				if ($k === 0) {
+					header($key . ': ' . $v);
+				} else {
+					header($key . ': ' . $v, false);
+				}
+			}
+
+		}
+	}
+
 	public function parseIncomingParams() {
-		
+
 		if (isset($_SERVER['QUERY_STRING'])) {
 			parse_str($_SERVER['QUERY_STRING'], $this->GetParams);
 			foreach($this->GetParams as $field => $value) {
 				$this->GetParams[$field] = HelperUtils::xssafe($value);
-			
+
 			}
 		}
-	
+
 		$body = file_get_contents("php://input");
 		$content_type = false;
 		if(isset($_SERVER['CONTENT_TYPE'])) {
@@ -112,7 +200,7 @@ class Request extends HttpBase {
 				$body_params = json_decode($body);
 				if($body_params) {
 					foreach($body_params as $param_name => $param_value) {
-						$this->PostParams[$param_name] = HelperUtils::xssafe($param_value);
+						$this->postParams[$param_name] = HelperUtils::xssafe($param_value);
 					}
 				}
 				break;
@@ -120,24 +208,24 @@ class Request extends HttpBase {
 			case "application/x-www-form-urlencoded; charset=UTF-8":
 				parse_str($body, $postvars);
 				foreach($postvars as $field => $value) {
-					$this->PostParams[$field] = HelperUtils::xssafe($value);
-	
+					$this->postParams[$field] = HelperUtils::xssafe($value);
+
 				}
 				break;
 			default:
 				$postvars = $_POST;
 				foreach($postvars as $field => $value) {
-					$this->PostParams[$field] = HelperUtils::xssafe($value);
-	
+					$this->postParams[$field] = HelperUtils::xssafe($value);
+
 				}
 				break;
 		}
 		if($_FILES) {
-			$this->PostParams["files"] = $_FILES;
+			$this->postParams["files"] = $_FILES;
 		}
-		
+
 	}
-	
+
 	public function parseUrlParams($argument_keys, $matches) {
 		foreach ($argument_keys as $key => $name) {
 			if (isset($matches[$key])) {
@@ -145,30 +233,30 @@ class Request extends HttpBase {
 			}
 		}
 	}
-	
-	
+
+
 	public function getPostParams() {
-		return $this->PostParams;
+		return $this->postParams;
 	}
 	public function setPostParams($PostParams) {
-		$this->PostParams = $PostParams;
+		$this->postParams = $PostParams;
 	}
 	public function setPostParamsKeyValue($key,$value) {
-		$this->PostParams[$key] = $value;
+		$this->postParams[$key] = $value;
 	}
+
+
 	public function getGetParams() {
-		return $this->GetParams;
+		return $this->getParams;
 	}
 	public function setGetParams($GetParams) {
-		$this->GetParams = $GetParams;
+		$this->getParams = $GetParams;
 	}
 	public function setGetParamsKeyValue($key,$value) {
-		$this->GetParams[$key] = $value;
+		$this->getParams[$key] = $value;
 	}
-	
-	/**
-	 * @see $urlRouteParams
-	 */
+
+
 	public function getUrlRouteParams() {
 		return $this->urlRouteParams;
 	}
@@ -178,14 +266,7 @@ class Request extends HttpBase {
 	public function setUrlRouteParamsKeyValue($key,$value) {
 		$this->urlRouteParams[$key] = $value;
 	}
-	
-	public function getException() {
-		return $this->exception;
-	}
-	public function setException($exception) {
-		$this->exception = $exception;
-		return $this;
-	}
+
 	public function getVerb() {
 		return $this->verb;
 	}
@@ -193,6 +274,7 @@ class Request extends HttpBase {
 		$this->verb = $verb;
 		return $this;
 	}
+
 	public function getRequestUrl() {
 		return $this->requestUrl;
 	}
@@ -200,6 +282,7 @@ class Request extends HttpBase {
 		$this->requestUrl = $requestUrl;
 		return $this;
 	}
+
 	public function getNeedCheckCSRF() {
 		return $this->needCheckCSRF;
 	}
@@ -207,6 +290,7 @@ class Request extends HttpBase {
 		$this->needCheckCSRF = $checkCSRF;
 		return $this;
 	}
+
 	public function getIsApi() {
 		return $this->isApi;
 	}
@@ -214,6 +298,7 @@ class Request extends HttpBase {
 		$this->isApi = $isApi;
 		return $this;
 	}
+
 	public function getIsAjax() {
 		return $this->isAjax;
 	}
@@ -221,19 +306,19 @@ class Request extends HttpBase {
 		$this->isAjax = $isAjax;
 		return $this;
 	}
-	
+
 	public function getHasMatch() {
 		return $this->hasMatch;
 	}
 	public function setHasMatch($hasMatch) {
 		$this->hasMatch = (int)$hasMatch;
 	}
-	
+
 	public function getMatchedRoute() {
 		return $this->matchedRoute;
 	}
 	public function setMatchedRoute($route) {
 		$this->matchedRoute = $route;
 	}
-	
+
 }

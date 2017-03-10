@@ -1,7 +1,6 @@
 <?php
 namespace Modules\GFStarterKit\ViewsLogic\Pages;
 
-use Controllers\Http\Response;
 
 use Controllers\Http\Request;
 use Controllers\i18nController;
@@ -18,14 +17,12 @@ class PAGBasePage {
 	protected $em;
 	protected $modelId;
 	protected $userModel;
-	protected $response;
 	protected $request;
 	protected $routeParams;
 	protected $session;
 
-	public function __construct(Request $request, Response $response) {
-		$this->response = $response;
-		$this->request = $request;
+	public function __construct() {
+		$this->request = Request::getInstance();
 		$this->session = GFSessionController::getInstance();
 		$this->init();
 	}
