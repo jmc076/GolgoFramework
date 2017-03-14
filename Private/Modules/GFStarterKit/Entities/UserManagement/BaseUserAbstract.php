@@ -2,9 +2,8 @@
 
 namespace Modules\UserManagement\Entities;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Doctrine\Common\Collections\ArrayCollection;
-use BaseEntities\BasicModel;
+use Modules\GFStarterKit\Entities\BasicModel;
 
 /**
  * BaseUser
@@ -19,14 +18,14 @@ abstract class BaseUserAbstract extends BasicModel
      * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
      */
     protected $nombre;
-    
+
     /**
      * @var string $nombre
      *
      * @ORM\Column(name="user", type="string", length=255, nullable=true)
      */
     protected $user;
-    
+
     /**
      * @var string $nombre
      *
@@ -40,7 +39,7 @@ abstract class BaseUserAbstract extends BasicModel
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
     protected $email;
-    
+
     /**
      * @var string $email
      *
@@ -61,41 +60,41 @@ abstract class BaseUserAbstract extends BasicModel
      * @ORM\Column(name="isactive", type="integer")
      */
     protected $isActive;
-    
+
     /**
      * @var string $dateCreated
      *
      * @ORM\Column(name="date_created", type="datetime")
      */
     protected $dateCreated;
-    
+
     /**
      * @var string $email
      *
      * @ORM\Column(name="last_ip", type="string", length=255, nullable=true)
      */
     protected $lastIp;
-    
+
     /**
      * @var string $dateCreated
      *
      * @ORM\Column(name="last_login", type="datetime")
      */
     protected $lastLogin;
-    
+
     /**
      * @var string $email
      *
      * @ORM\Column(name="session_id", type="string", length=255, nullable=true)
      */
     protected $sessionId;
-    
+
     /*
      * protected $lastIp;
      * protected $lastLogin;
      * */
-    
-    
+
+
     /**
      * @ORM\ManyToMany(targetEntity="Modules\UserManagement\Entities\Permissions", cascade={"persist"})
      * @ORM\JoinTable(name="um_users2permissions",
@@ -104,16 +103,16 @@ abstract class BaseUserAbstract extends BasicModel
      *      )
      **/
     protected $permissions;
-    
-    
+
+
     public function __construct() {
     	$this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     public function callback($params) {
     	print_r("callback called"); die(); //TODO: Diego pre
     }
-    
+
     public function setLastLogin($disc)
     {
     	$this->lastLogin= $disc;
@@ -122,7 +121,7 @@ abstract class BaseUserAbstract extends BasicModel
     {
     	return $this->lastLogin;
     }
-    
+
     public function setLastIp($disc)
     {
     	$this->lastIp= $disc;
@@ -131,7 +130,7 @@ abstract class BaseUserAbstract extends BasicModel
     {
     	return $this->lastIp;
     }
-    
+
     public function setSessionId($disc)
     {
     	$this->sessionId= $disc;
@@ -140,7 +139,7 @@ abstract class BaseUserAbstract extends BasicModel
     {
     	return $this->sessionId;
     }
-    
+
     public function setTipoUsuario($disc)
     {
     	$this->tipoUsuario= $disc;
@@ -149,7 +148,7 @@ abstract class BaseUserAbstract extends BasicModel
     {
     	return $this->tipoUsuario;
     }
-    
+
     public function setTelefono($disc)
     {
     	$this->telefono= $disc;
@@ -158,8 +157,8 @@ abstract class BaseUserAbstract extends BasicModel
     {
     	return $this->telefono;
     }
-    
-    
+
+
     public function setPermissions($perm)
     {
     	$this->permissions[] = $perm;
@@ -168,7 +167,7 @@ abstract class BaseUserAbstract extends BasicModel
     {
     	return $this->permissions;
     }
-    
+
     public function setIsActive($tipo)
     {
     	$this->isActive = $tipo;
@@ -177,7 +176,7 @@ abstract class BaseUserAbstract extends BasicModel
     {
     	return $this->isActive;
     }
-    
+
     public function setDateCreated($tipo)
     {
     	$this->dateCreated = $tipo;
@@ -186,9 +185,9 @@ abstract class BaseUserAbstract extends BasicModel
     {
     	return $this->dateCreated;
     }
-    
-   
-    
+
+
+
     public function setUser($user)
     {
     	$this->user = $user;
@@ -209,7 +208,7 @@ abstract class BaseUserAbstract extends BasicModel
     /**
      * Get nombre
      *
-     * @ORM\return string 
+     * @ORM\return string
      */
     public function getNombre()
     {
@@ -236,7 +235,7 @@ abstract class BaseUserAbstract extends BasicModel
     /**
      * Get password
      *
-     * @ORM\return string 
+     * @ORM\return string
      */
     public function getPassword()
     {
@@ -247,96 +246,16 @@ abstract class BaseUserAbstract extends BasicModel
      *
      * @param string $telefono
      */
-    
+
     public function getPermisos() {
-    	$permisos = array();
-    	
-    	foreach ($this->getPermissions()->getValues() as $permiso) {
-    		$permisos[] = $permiso->getValue();
-    	}
-    	
-    	switch ($this->getTipoUsuario()) {
-    		case USER_ADMINISTRADOR:
-    			break;
-    		case USER_OPERADOR:
-    			$this->listaPermisosOperador($permisos);
-    			break;
-    		default:
-    			$this->listaPermisosUsuarios($permisos);
-    			break;
-    	}
-    	
-    	return $permisos;
-    
+    	return array();
     }
-    
-    
-    protected function listaPermisosOperador(&$permisos) {
-    	
-    }
-    
-    protected function listaPermisosUsuarios(&$permisos) {
-    	 
-    }
-    
-    public function loadOperadores($em, $hydrated = false) {
-    
-    	$model = null;
-    	try {
-    		$dql = "SELECT t FROM " . get_class($this) . " t WHERE t.tipoUsuario = '".USER_OPERADOR."'";
-    		$query = $em->createQuery($dql);
-    		if($hydrated) {
-    			$model = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-    		} else {
-    			$model = $query->getResult();
-    		}
-    
-    	} catch (NoResultException $ex) {
-    		$model = null;
-    	} catch (Exception $ex) {
-    		$model = null;
-    	}
-    	return $model;
-    }
-    public function loadAdmins($em, $id, $hydrated = false) {
-    
-    	$model = null;
-    	try {
-    		$dql = "SELECT t FROM " . get_class($this) . " t WHERE t.tipoUsuario = '".USER_ADMINISTRADOR."'";
-    		$query = $em->createQuery($dql);
-    		if($hydrated) {
-    			$model = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-    		} else {
-    			$model = $query->getResult();
-    		}
-    
-    	} catch (NoResultException $ex) {
-    		$model = null;
-    	} catch (Exception $ex) {
-    		$model = null;
-    	}
-    	return $model;
-    }
-    
-    public function loadClientes($em, $hydrated = false) {
-    
-    	$model = null;
-    	try {
-    		$dql = "SELECT t FROM " . get_class($this) . " t WHERE t.tipoUsuario = '".USER_USER."'";
-    		$query = $em->createQuery($dql);
-    		if($hydrated) {
-    			$model = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-    		} else {
-    			$model = $query->getResult();
-    		}
-    
-    	} catch (NoResultException $ex) {
-    		$model = null;
-    	} catch (Exception $ex) {
-    		$model = null;
-    	}
-    	return $model;
-    }
-    
+
+
+
+
+
+
+
 
 }

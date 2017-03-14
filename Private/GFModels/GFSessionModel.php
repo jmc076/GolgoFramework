@@ -15,7 +15,7 @@ class GFSessionModel {
 
 
 	public function initializeValues() {
-		$this->userModel = SESSION_ANONYM;
+		$this->userModel = null;
 		$this->userId = 0;
 		$this->userIp = HelperUtils::getIp();
 		$this->userCart = array();

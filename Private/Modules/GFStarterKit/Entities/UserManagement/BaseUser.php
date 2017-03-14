@@ -2,14 +2,11 @@
 
 namespace Modules\UserManagement\Entities;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
-use Doctrine\Common\Collections\ArrayCollection;
-use BaseEntities\BasicModel;
 
 /**
  * BaseUser
  *
- * @ORM\Table(name="um_users")
+ * @ORM\Table(name="gf_users")
  * @ORM\Entity
  */
 class BaseUser extends BaseUserAbstract
