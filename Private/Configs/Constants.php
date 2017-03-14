@@ -8,10 +8,10 @@ if (!defined('DS')) {
 define("ROOT_PATH", $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) );
 
 //MYSQL DATABASE
-define("MYSQL_HOST", 'DB_HOST');
-define("DB_NAME", 'DB_NAME');
-define("DB_USER", 'DB_USER');
-define("DB_PASS", 'DB_PASS');
+define("MYSQL_HOST", 'localhost');
+define("DB_NAME", 'golgo_framework');
+define("DB_USER", 'root');
+define("DB_PASS", '');
 define("DB_PORT", '3306');
 define("DB_DRIVER", 'pdo_mysql');
 
@@ -22,7 +22,7 @@ define("SESSION_ANONYM","BaseEntities\SessionBaseUser");
 
 define("NEED_LOCALIZATION", true);
 define("DEFAULT_LOCALIZATION", "es");
-define("EVENTS_SYSTEM_ENABLED", true);
+define("GF_EVENTS_ENABLED", true);
 
 
 

@@ -3,6 +3,11 @@ namespace Controllers;
 
 use Controllers\GFSessions\GFSessionController;
 
+/**
+ * UNDER DEVELOPMENT
+ * @author Diego Lopez Rivera <forgin50@gmail.com>
+ * @version 0.0.1
+ */
 class i18nController {
 	public static function localization() {
 		static $localeData = NULL;

@@ -2,6 +2,11 @@
 
 namespace Controllers;
 
+/**
+ * UNDER DEVELOPMENT
+ * @author Diego Lopez Rivera <forgin50@gmail.com>
+ * @version 0.0.1
+ */
 class FileController {
 
 	public static function putFilesPublic($files,$ruta,$identificador = "") {
