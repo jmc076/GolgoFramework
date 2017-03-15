@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Files
  *
- * @ORM\Table(name="files")
+ * @ORM\Table(name="gf_files")
  * @ORM\Entity
  */
 class FilesModel extends BasicModel

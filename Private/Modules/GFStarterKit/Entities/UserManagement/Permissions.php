@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\UserManagement\Entities;
+namespace Modules\GFStarterKit\Entities\UserManagement;
 use Doctrine\ORM\Mapping as ORM;
-use BaseEntities\BasicModel;
+use Modules\GFStarterKit\Entities\BasicModel;
 
 
 
 /**
  * Permissions
  *
- * @ORM\Table(name="um_permissions")
+ * @ORM\Table(name="gf_permissions")
  * @ORM\Entity
  */
 class Permissions extends BasicModel
@@ -33,18 +33,18 @@ class Permissions extends BasicModel
     public function setValue($value)
     {
         $this->value = $value;
-    
+
         return $this;
     }
 
     /**
      * Get value
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
         return $this->value;
     }
-    
+
 }

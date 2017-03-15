@@ -1,5 +1,6 @@
 <?php
 use Controllers\GFSessions\GFSessionController;
+use BaseEntities\SessionBaseUser;
 
 class UserController {
 
@@ -15,7 +16,7 @@ class UserController {
 		$sessionController = GFSessionController::getInstance();
 		$sessionModel = $sessionController->getSessionModel();
 		if($sessionModel->getStatus() == false) {
-			$model = new $user();
+			$model = new SessionBaseUser();
 			return $model;
 
 		} elseif ($_SESSION["sessionData"]["user_id"] != 0) {

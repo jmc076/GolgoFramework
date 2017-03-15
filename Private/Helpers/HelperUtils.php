@@ -243,4 +243,16 @@ class HelperUtils {
 			return $_SERVER['REMOTE_ADDR'];
 		}
 	}
+
+	public static function addTrailingSlash(&$url) {
+		if (substr($url, -1) !== '/') {
+			$url .= '/';
+		}
+	}
+
+	public static function addLeadingSlash(&$url) {
+		if (strpos($url, "\/")) {
+			$url = '/' . $url;
+		}
+	}
 }

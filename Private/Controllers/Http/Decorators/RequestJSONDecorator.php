@@ -20,12 +20,12 @@ class RequestJSONDecorator {
 
 	public function sendJSONResponse() {
 		$result = array();
-		$result["result"] = $this->request->getBody();
+		$result["result"] = $this->request->getResponseBody();
 
 		$result = HelperUtils::convertArrayKeysToUtf8($result);
 
 		$this->request->setHeader("Content-Type", "application/json");
-		$this->request->setBody(json_encode($result));
+		$this->request->setResponseBody(json_encode($result));
 		$this->request->sendResponse();
 	}
 

@@ -10,103 +10,95 @@ use Controllers\RedisCacheController;
 use Controllers\GFEvents\GFEventController;
 use Controllers\GFSessions\GFSessionController;
 use Modules\GFStarterKit\GFSKEntityManager;
+use Modules\GFStarterKit\Utils\AssignGenerator;
+use Controllers\GFSessions\CSRFSessionController;
+use Controllers\Http\Decorators\RequestJSONDecorator;
 
-abstract class LogicCRUD {
+class LogicCRUD implements CRUDInterface{
 
 	protected $userModel;
 	protected $result;
-	protected $em;
 	protected $checkCSRF;
+
+
+
+
+	protected $routeParams = array();
+	protected $dataArray = array();
+
 	protected $gfSession;
-
-	protected $modelId;
-	protected $response;
-	protected $request;
-	protected $routeParams;
-	protected $dataArray;
-
 	protected $redisClient;
+	protected $em;
+	protected $request;
 
-	public function __construct(Request $request, Response $response) {
+	public function __construct() {
+
 		GFEventController::dispatch("LogicCRUD.__construct", null);
 
 		$this->gfSession = GFSessionController::getInstance();
+		$this->request = Request::getInstance();
+		$this->em = GFSKEntityManager::getEntityManager();
 
 		if(REDIS_CACHE_ENABLED) {
-		     $this->redisClient = RedisCacheController::getRedisClient();
+			$this->redisClient = RedisCacheController::getRedisClient();
 		}
 
-		$this->em = GFSKEntityManager::getEntityManager();
-		$this->response = $response;
-		$this->request = $request;
+		$this->routeParams = $this->request->getUrlRouteParams();
 
-		if($this->request != null) {
-			$this->routeParams = $this->request->getUrlRouteParams();
+		if(count($this->request->getGetParams()) > 0) {
+			$this->dataArray = $this->request->getGetParams();
+		}
+		if(count($this->request->getPostParams()) > 0) {
+			$this->dataArray = $this->request->getPostParams();
+		}
 
+		$op = isset($this->dataArray['op']) ? $this->dataArray['op'] : null;
+		$this->checkCSRF = $this->request->getNeedCheckCSRF() ? true : false;
 
-			if(isset($this->routeParams["modelId"])) {
-				$this->modelId = $this->routeParams["modelId"];
+		$this->preload();
+
+		if($this->checkCSRF) {
+			$csrf = CSRFSessionController::getInstance();
+			if(!$csrf->isValid($this->dataArray)) {
+				ExceptionController::invalidCSRF();
+			};
+		}
+		if($op != null) {
+			$key = "api:" . $this->gfSession->getSessionId() . ":" . md5(serialize($this->dataArray));
+		    if(REDIS_CACHE_ENABLED) {
+		        if($this->redisClient->exists($key)) {
+		            $this->result = json_decode($this->redisClient->get($key));
+		        }
+		    }
+			if($this->result == null) {
+    			switch ($op) {
+    				case "create":
+    					$this->result = $this->create($this->dataArray);
+    					break;
+    				case "read":
+    					$this->result = $this->read($this->dataArray);
+    					if(REDIS_CACHE_ENABLED) {
+    						   $this->redisClient->setex($key, 100 ,json_encode($this->result));
+    					}
+    					break;
+    				case "update":
+    					$this->result = $this->update($this->dataArray);
+    					break;
+    				case "delete":
+    					$this->result = $this->delete($this->dataArray);
+    					break;
+    				default:
+    					ExceptionController::noOPFound();
+    					break;
+    			}
 			}
+			$this->request->setResponseBody($this->result);
+			GFEventController::dispatch(get_class($this)."_".$op, null);
+			$responseJSon = new RequestJSONDecorator($this->request);
+			$responseJSon->sendJSONResponse();
 
-
-			if(count($this->request->getGetParams()) > 0) {
-				$this->dataArray = $this->request->getGetParams();
-			}
-			if(count($this->request->getPostParams()) > 0) {
-				$this->dataArray = $this->request->getPostParams();
-			}
-
-			$op = isset($this->dataArray['op']) ? $this->dataArray['op'] : "read";
-			$this->checkCSRF = $this->request->getNeedCheckCSRF() ? true : false;
-
-
-			$this->preload();
-
-			if($this->checkCSRF && $this->request->getVerb() == "POST" ) {
-				//SessionController::check_valid($this->dataArray);
-			}
-
-			if($op != null) {
-			    $key = "api:".$this->gfSession->getSessionId(). ":" . md5(serialize($this->dataArray));
-			    if(REDIS_CACHE_ENABLED) {
-			        if($this->redisClient->exists($key)) {
-			            $this->result = json_decode($this->redisClient->get($key));
-			        }
-			    }
-			    if($this->result == null) {
-    				switch ($op) {
-    					case "create":
-    						$this->result = $this->create($this->dataArray);
-    						break;
-    					case "read":
-    						$this->result = $this->read($this->dataArray);
-    						if(REDIS_CACHE_ENABLED) {
-    						    $this->redisClient->setex($key, 100 ,json_encode($this->result));
-    						}
-    						break;
-    					case "update":
-    						$this->result = $this->update($this->dataArray);
-    						break;
-    					case "delete":
-    						$this->result = $this->delete($this->dataArray);
-    						break;
-    					default:
-    						ExceptionController::noOPFound();
-    						break;
-    				}
-
-			    }
-				if($this->response != null) {
-					GFEventController::dispatch(get_class($this)."_".$op, array("data" => $this->dataArray, "result" => $this->result));
-					$this->response->setBody($this->result);
-					$responseJSon = new ResponseJSONDecorator($this->response);
-					$responseJSon->dispatchJSONResponse();
-				} else {
-					return $this->result;
-				}
-			} else {
-				ExceptionController::noOPFound();
-			}
+		} else {
+			ExceptionController::noOPFound();
 		}
 	}
 
@@ -153,21 +145,6 @@ abstract class LogicCRUD {
 
 	}
 
-
-
-	public function deletePublicFile($ruta) {
-		if(file_exists(ROOT_PATH . '/Public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR.$ruta)) {
-			return unlink(ROOT_PATH . '/Public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR.$ruta);
-		}
-		return false;
-	}
-
-	public function deletePrivateFile($ruta) {
-		if(file_exists( ROOT_PATH . '/Private' . DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR . $ruta)) {
-			return unlink( ROOT_PATH . '/Private' . DIRECTORY_SEPARATOR . 'Files'.DIRECTORY_SEPARATOR . $ruta);
-		}
-		return false;
-	}
 
 	public function create($dataArray) {
 		$return = false;
@@ -241,14 +218,33 @@ abstract class LogicCRUD {
 		return $return;
 	}
 
-	protected function hasPermissions($dataArray) {
-		return !$this->needPermissions();
+
+	/**
+	 * {@inheritDoc}
+	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::isPrivate()
+	 */
+	protected function isPrivate() {
+		return true;
+
 	}
-	protected function needPermissions() {
-		return false;
+
+	/**
+	 * {@inheritDoc}
+	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::getEntity()
+	 */
+	protected function getEntity() {
+		return end(explode("/", $this->request->getRequestUrl()));
+
 	}
-	protected  function getEntity(){}
-	protected  function assignParams($dataArray, &$model){}
+
+	/**
+	 * {@inheritDoc}
+	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::assignParams()
+	 */
+	protected function assignParams($dataArray, $model) {
+		AssignGenerator::generarAsignacion($model, $dataArray);
+
+	}
 
 }
 

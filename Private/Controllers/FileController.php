@@ -2,6 +2,8 @@
 
 namespace Controllers;
 
+use Helpers\HelperUtils;
+
 /**
  * UNDER DEVELOPMENT
  * @author Diego Lopez Rivera <forgin50@gmail.com>
@@ -63,4 +65,26 @@ class FileController {
 		$t = explode(' ',microtime());
 		return ($t[0] + $t[1]);
 	}
+
+
+	public function deletePublicFile(string $ruta) {
+
+		HelperUtils::addLeadingSlash($ruta);
+
+		if(file_exists(ROOT_PATH . '/Public' . $ruta)) {
+			return unlink(ROOT_PATH . '/Public' . $ruta);
+		}
+		return false;
+	}
+
+	public function deletePrivateFile($ruta) {
+
+		HelperUtils::addLeadingSlash($ruta);
+
+		if(file_exists( ROOT_PATH . '/Private/Files' . $ruta)) {
+			return unlink( ROOT_PATH . '/Private/Files' . $ruta);
+		}
+		return false;
+	}
+
 }

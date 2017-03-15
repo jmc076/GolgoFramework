@@ -1,5 +1,6 @@
 
-<?php 
+<?php
+namespace Modules\GFStarterKit\Utils;
 
 use Doctrine\ORM\Tools\EntityGenerator;
 ini_set("display_errors", "On");
@@ -47,9 +48,9 @@ $driver = new \Doctrine\ORM\Mapping\Driver\DatabaseDriver(
 );
 $em->getConfiguration()->setMetadataDriverImpl($driver);
 $cmf = new \Doctrine\ORM\Tools\DisconnectedClassMetadataFactory($em);
-$cmf->setEntityManager($em); 
+$cmf->setEntityManager($em);
 $classes = $driver->getAllClassNames();
-$metadata = $cmf->getAllMetadata(); 
+$metadata = $cmf->getAllMetadata();
 $generator = new EntityGenerator();
 $generator->setUpdateEntityIfExists(true);
 $generator->setGenerateStubMethods(true);

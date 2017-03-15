@@ -11,6 +11,7 @@ use Helpers\HelperUtils;
 use Controllers\Router\Route;
 use Controllers\ExceptionController;
 use Modules\GFStarterKit\ViewsLogic\Pages\PAGPublic404;
+use Controllers\GFEvents\GFEventController;
 
 
 class Request extends HttpBase {
@@ -76,15 +77,25 @@ class Request extends HttpBase {
 	 */
 	protected $matchedRoute;
 
+	/**
+	 * Response body content to send back;
+	 * @var string $responseBody
+	 */
+	protected $responseBody;
 
-	private static $instancia;
 
+
+	private static $instance;
+
+	/**
+	 * Get current Request instance
+	 */
 	public static function getInstance() {
-		if ( !self::$instancia instanceof self) {
-			self::$instancia = new self;
+		if ( !self::$instance instanceof self) {
+			self::$instance = new self;
 
 		}
-		return self::$instancia;
+		return self::$instance;
 	}
 
 	private function __construct() {
@@ -123,7 +134,7 @@ class Request extends HttpBase {
 			if($this->getIsApi()) {
 
 				if ($matchedRoute->getTargetClassMethod() != null) {
-					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array($this));
+					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
 				} else {
 					new $class();
 				}
@@ -132,7 +143,7 @@ class Request extends HttpBase {
 			} else {
 
 				if($matchedRoute->getTargetClassMethod() != null) {
-					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array($this));
+					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
 
 				} else {
 					new $class();
@@ -143,23 +154,24 @@ class Request extends HttpBase {
 	}
 
 	public function sendResponse() {
+		GFEventController::dispatch("Request.sendResponse", null);
 		$this->attachHeaders();
-		if (is_null($this->getBody())) return;
+		if (is_null($this->getResponseBody())) return;
 
 		$contentLength = $this->getHeaderAsString('Content-Length');
 		if ($contentLength !== null) {
 			$output = fopen('php://output', 'wb');
-			if (is_resource($this->getBody()) && get_resource_type($this->getBody()) == 'stream') {
-				stream_copy_to_stream($this->getBody(), $output, $contentLength);
+			if (is_resource($this->getResponseBody()) && get_resource_type($this->getResponseBody()) == 'stream') {
+				stream_copy_to_stream($this->getResponseBody(), $output, $contentLength);
 			} else {
-				fwrite($output, $this->getBody(), $contentLength);
+				fwrite($output, $this->getResponseBody(), $contentLength);
 			}
 		} else {
-			file_put_contents('php://output', $this->getBody());
+			file_put_contents('php://output', $this->getResponseBody());
 		}
 
-		if (is_resource($this->getBody())) {
-			fclose($this->getBody());
+		if (is_resource($this->getResponseBody())) {
+			fclose($this->getResponseBody());
 		}
 	}
 
@@ -320,5 +332,13 @@ class Request extends HttpBase {
 	public function setMatchedRoute($route) {
 		$this->matchedRoute = $route;
 	}
+	public function getResponseBody() {
+		return $this->responseBody;
+	}
+	public function setResponseBody($responseBody) {
+		$this->responseBody = $responseBody;
+		return $this;
+	}
+
 
 }
