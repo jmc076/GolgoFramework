@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\GFStarterKit\Entities\UserManagement;
+namespace Modules\GFStarterKit\Entities\UserManagement\Abstracts;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Modules\GFStarterKit\Entities\BasicModel;
@@ -123,6 +123,13 @@ trait BaseUserTrait
      * @ORM\Column(name="should_change_password", type="integer")
      */
     protected $shouldChangePassword;
+
+    /**
+     * @var string $nombre
+     *
+     * @ORM\Column(name="token", type="string", length=255, nullable=true)
+     */
+    protected $token;
 
 
     /**
@@ -263,6 +270,14 @@ trait BaseUserTrait
 		$this->permissions = $permissions;
 		return $this;
 	}
+	public function getToken() {
+		return $this->token;
+	}
+	public function setToken($token) {
+		$this->token = $token;
+		return $this;
+	}
+
 
 
 

@@ -14,6 +14,7 @@ class GFSessionModel {
 
 
 
+
 	public function initializeValues() {
 		$this->userModel = null;
 		$this->userId = 0;

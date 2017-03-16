@@ -13,6 +13,7 @@ use Modules\GFStarterKit\GFSKEntityManager;
 use Modules\GFStarterKit\Utils\AssignGenerator;
 use Controllers\GFSessions\CSRFSessionController;
 use Controllers\Http\Decorators\RequestJSONDecorator;
+use Modules\GFStarterKit\Entities\UserManagement\UserBasic;
 
 class LogicCRUD implements CRUDInterface{
 
@@ -117,7 +118,7 @@ class LogicCRUD implements CRUDInterface{
 
 
 		if (!is_null($username) && !is_null($password)) {
-			$user = new BaseUser();
+			$user = new UserBasic();
 			$loged = $this->auth->login($username, $password);
 			if(!$loged["error"]) {
 				$this->response->setStatusCode(200);
@@ -137,7 +138,7 @@ class LogicCRUD implements CRUDInterface{
 				ExceptionController::customError("Datos de acceso incorrectos2", 404);
 			}
 			//$this->userModel = SessionController::getCurrentUserModel();
-			GFEventController::dispatch("LogicCRUD.preload.HTTP_AUTHORIZATION", array("user" => $username,"pass" => $password));
+			GFEventController::dispatch("LogicCRUD.preload.HTTP_AUTHORIZATION", array(this));
 		} else {
 			//$this->userModel = SessionController::getCurrentUserModel();
 			GFEventController::dispatch("LogicCRUD.preload", null);

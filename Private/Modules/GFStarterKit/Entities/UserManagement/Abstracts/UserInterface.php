@@ -1,5 +1,5 @@
 <?php
-namespace Modules\GFStarterKit\Entities\UserManagement;
+namespace Modules\GFStarterKit\Entities\UserManagement\Abstracts;
 
 
 interface UserInterface {

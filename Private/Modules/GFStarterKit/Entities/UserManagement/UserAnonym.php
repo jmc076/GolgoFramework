@@ -3,6 +3,8 @@
 namespace Modules\GFStarterKit\Entities\UserManagement;
 
 
+use Modules\GFStarterKit\Entities\UserManagement\Abstracts\UserInterface;
+
 class UserAnonym implements UserInterface
 {
 
