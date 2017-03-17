@@ -133,10 +133,10 @@ trait BaseUserTrait
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Modules\UserManagement\Entities\Permissions", cascade={"persist"})
-     * @ORM\JoinTable(name="um_users2permissions",
-     *      joinColumns={@ORM\JoinColumn(name="id_user", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="id_permission", referencedColumnName="id", unique=true)}
+     * @ORM\ManyToMany(targetEntity="Modules\GFStarterKit\Entities\UserManagement\Permissions", cascade={"persist"})
+     * @ORM\JoinTable(name="gf_users2permissions",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="permission_id", referencedColumnName="id", unique=true)}
      *      )
      **/
     protected $permissions;

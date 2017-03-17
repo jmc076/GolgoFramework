@@ -8,7 +8,7 @@ use Modules\GFStarterKit\Entities\UserManagement\Abstracts\UserInterface;
 class UserAnonym implements UserInterface
 {
 
-	public function getPermisos() {
+	public function getPrivileges() {
 		$permisos = array();
 		return $permisos;
 	}

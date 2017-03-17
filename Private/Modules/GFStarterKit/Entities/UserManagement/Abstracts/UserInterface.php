@@ -4,7 +4,7 @@ namespace Modules\GFStarterKit\Entities\UserManagement\Abstracts;
 
 interface UserInterface {
 
-	public function getPermisos();
+	public function getPrivileges();
 
 	public function getUserType();
 

@@ -1,33 +1,29 @@
 <?php
+namespace Modules\GFStarterKit\Controllers;
+
 use Controllers\GFSessions\GFSessionController;
-use BaseEntities\SessionBaseUser;
+use Modules\GFStarterKit\Entities\UserManagement\UserAnonym;
+use Modules\GFStarterKit\GFEntityManager;
 
 class UserController {
 
 	private static $user;
 
-	/**
-	 * The array with static permissions
-	 * @return array
-	 */
-
-
 	public static function getCurrentUserModel() {
 		$sessionController = GFSessionController::getInstance();
 		$sessionModel = $sessionController->getSessionModel();
 		if($sessionModel->getStatus() == false) {
-			$model = new SessionBaseUser();
+			$model = new UserAnonym();
 			return $model;
 
-		} elseif ($_SESSION["sessionData"]["user_id"] != 0) {
-			$userModel = $_SESSION["sessionData"]["user_model"];
+		} elseif ($userid = $sessionModel->getUserId() != 0) {
+			$userModel = $sessionModel->getUserModel();
 			if (class_exists($userModel)) {
 				$model = new $userModel();
-				$model = $model->loadById($GLOBALS['em'], $_SESSION["sessionData"]["user_id"]);
+				$model = $model->loadById(GFEntityManager::getEntityManager(), $userid);
 				return $model;
 			} else {
-				$user = SESSION_ANONYM;
-				$model = new $user();
+				$model = new UserAnonym();
 				return $model;
 			}
 		}

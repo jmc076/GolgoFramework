@@ -12,7 +12,7 @@ class PAGPublic404 extends PAGBasePage {
 
 
 	protected function setTplFile() {
-		$this->tpl = SMARTY_TEMPLATE_MODULES_FOLDER . '/public/404.tpl';
+		$this->tpl = GF_SMARTY_TEMPLATE_FOLDER . '/public/404.tpl';
 
 	}
 

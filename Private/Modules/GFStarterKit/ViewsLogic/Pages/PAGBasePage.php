@@ -4,8 +4,8 @@ namespace Modules\GFStarterKit\ViewsLogic\Pages;
 
 use Controllers\Http\Request;
 use Controllers\i18nController;
-use Modules\GFStarterKit\GFSKEntityManager;
 use Controllers\GFSessions\GFSessionController;
+use Modules\GFStarterKit\GFEntityManager;
 
 
 class PAGBasePage {
@@ -33,7 +33,7 @@ class PAGBasePage {
 		} else {
 
 			$this->routeParams = $this->request->getUrlRouteParams();
-			$this->em = GFSKEntityManager::getEntityManager();
+			$this->em = GFEntityManager::getEntityManager();
 
 			if(isset($this->routeParams["modelId"])) {
 				$this->modelId = $this->routeParams["modelId"];

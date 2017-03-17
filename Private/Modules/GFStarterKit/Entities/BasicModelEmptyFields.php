@@ -3,8 +3,7 @@
 namespace Modules\GFStarterKit\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\DoctrineHelper;
-use Modules\GFStarterKit\GFSKEntityManager;
+use Modules\GFStarterKit\Utils\DoctrineDataTablesHelper;
 
 
 abstract Class BasicModelEmptyFields

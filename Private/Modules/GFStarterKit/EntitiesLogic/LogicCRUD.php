@@ -3,17 +3,16 @@
 namespace Modules\GFStarterKit\EntitiesLogic;
 
 use Controllers\ExceptionController;
-use Controllers\Http\Response;
 use Controllers\Http\Request;
-use Controllers\Http\Decorators\ResponseJSONDecorator;
 use Controllers\RedisCacheController;
 use Controllers\GFEvents\GFEventController;
 use Controllers\GFSessions\GFSessionController;
-use Modules\GFStarterKit\GFSKEntityManager;
 use Modules\GFStarterKit\Utils\AssignGenerator;
 use Controllers\GFSessions\CSRFSessionController;
 use Controllers\Http\Decorators\RequestJSONDecorator;
-use Modules\GFStarterKit\Entities\UserManagement\UserBasic;
+use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
+use Modules\GFStarterKit\GFEntityManager;
+use Modules\GFStarterKit\Controllers\PermissionsController;
 
 class LogicCRUD implements CRUDInterface{
 
@@ -38,7 +37,7 @@ class LogicCRUD implements CRUDInterface{
 
 		$this->gfSession = GFSessionController::getInstance();
 		$this->request = Request::getInstance();
-		$this->em = GFSKEntityManager::getEntityManager();
+		$this->em = GFEntityManager::getEntityManager();
 
 		if(REDIS_CACHE_ENABLED) {
 			$this->redisClient = RedisCacheController::getRedisClient();
@@ -116,9 +115,18 @@ class LogicCRUD implements CRUDInterface{
 				list($username,$password) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
 		}
 
+		$authHeader = $this->request->getHeaderAsString('authorization');
+		print_r($authHeader); die(); //TODO: Diego pre
+		if ($authHeader) {
+			list($jwt) = sscanf( $authHeader->toString(), 'Authorization: Bearer %s');
+			if ($jwt) {
+				$token = JWT::decode($jwt, $secretKey, array('HS512'));
+			}
+		}
+
 
 		if (!is_null($username) && !is_null($password)) {
-			$user = new UserBasic();
+			$user = new UserRegistered();
 			$loged = $this->auth->login($username, $password);
 			if(!$loged["error"]) {
 				$this->response->setStatusCode(200);
@@ -229,6 +237,10 @@ class LogicCRUD implements CRUDInterface{
 
 	}
 
+	protected function needPrivileges() {
+		return true;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::getEntity()
@@ -245,6 +257,12 @@ class LogicCRUD implements CRUDInterface{
 	protected function assignParams($dataArray, $model) {
 		AssignGenerator::generarAsignacion($model, $dataArray);
 
+	}
+
+	public function checkPrivileges($dataArray) {
+		if($this->needPrivileges() == false) return true;
+
+		return PermissionsController::checkPermisos($dataArray, $this);
 	}
 
 }

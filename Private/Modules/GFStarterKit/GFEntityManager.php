@@ -7,7 +7,7 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
-class GFSKEntityManager
+class GFEntityManager
 {
 	private static $em;
 

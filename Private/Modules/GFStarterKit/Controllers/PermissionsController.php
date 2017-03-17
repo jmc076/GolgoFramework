@@ -1,17 +1,10 @@
 <?php
-namespace Modules\UserManagement\Controllers;
+namespace Modules\GFStarterKit\Controllers;
 
 
 class PermissionsController {
 
 	private static $permArray = array (
-			BASEUSER_CREATE,
-			BASEUSER_READ,
-			BASEUSER_UPDATE,
-			BASEUSER_DELETE,
-			BASEUSER_READ_DOLOGIN,
-			BASEUSER_UPDATE_UPDATEUSER,
-			BASEUSER_CREATE_CREATEADMIN
 	);
 
 
@@ -20,9 +13,9 @@ class PermissionsController {
 	 * @param string $perm
 	 * @return void
 	 */
-	public function addPerm(String $perm) {
+	public static function addPerm(String $perm) {
 		if (!array_key_exists($perm, self::$permArray)) {
-			$this->permArray[] = $perm;
+			self::$permArray[] = $perm;
 		}
 		return true;
 
@@ -41,10 +34,10 @@ class PermissionsController {
 	}
 
 
-	public function checkPermisos($params, $model) {
+	public static function checkPermisos($params, $instance) {
 
 		$op = $params['op'];
-		$classname = $model->getEntity();
+		$classname = $instance->getEntity();
 		$classname = $classname->getModelName();
 		$perm = $classname."_".$op;
 		$perm = strtolower($perm);
@@ -59,7 +52,7 @@ class PermissionsController {
 
 
 
-		$user = SessionController::getCurrentUserModel();
+		$user = UserController::getCurrentUserModel();
 
 		$allowedPermisos = $user->getPermisos();
 
