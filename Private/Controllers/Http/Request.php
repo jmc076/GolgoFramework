@@ -107,9 +107,8 @@ class Request extends HttpBase {
 		$escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
 
 		$this->requestUrl = $escaped_url;
-		$this->isApi = strpos($this->requestUrl, "/api") === 0 ? true : false;
+		$this->isApi = strpos($this->requestUrl, "/api/") !== false ? true : false;
 		$this->isAjax = strtolower(filter_input(INPUT_SERVER, 'HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest' ? true : false;
-
 
 	}
 
@@ -131,25 +130,13 @@ class Request extends HttpBase {
 			$matchedRoute = $this->getMatchedRoute();
 			$class = $matchedRoute->getTargetClass();
 
-			if($this->getIsApi()) {
 
-				if ($matchedRoute->getTargetClassMethod() != null) {
-					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
-				} else {
-					new $class();
-				}
-
-
+			if ($matchedRoute->getTargetClassMethod() != null) {
+				call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
 			} else {
-
-				if($matchedRoute->getTargetClassMethod() != null) {
-					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
-
-				} else {
-					new $class();
-
-				}
+				new $class();
 			}
+
 		}
 	}
 

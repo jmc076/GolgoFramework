@@ -11,8 +11,8 @@ use Modules\GFStarterKit\Utils\AssignGenerator;
 use Controllers\GFSessions\CSRFSessionController;
 use Controllers\Http\Decorators\RequestJSONDecorator;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
-use Modules\GFStarterKit\GFEntityManager;
 use Modules\GFStarterKit\Controllers\PermissionsController;
+use Modules\GFStarterKit\GFDoctrineManager;
 
 class LogicCRUD implements CRUDInterface{
 
@@ -37,11 +37,7 @@ class LogicCRUD implements CRUDInterface{
 
 		$this->gfSession = GFSessionController::getInstance();
 		$this->request = Request::getInstance();
-		$this->em = GFEntityManager::getEntityManager();
-
-		if(REDIS_CACHE_ENABLED) {
-			$this->redisClient = RedisCacheController::getRedisClient();
-		}
+		$this->em = GFDoctrineManager::getEntityManager();
 
 		$this->routeParams = $this->request->getUrlRouteParams();
 
@@ -51,9 +47,14 @@ class LogicCRUD implements CRUDInterface{
 		if(count($this->request->getPostParams()) > 0) {
 			$this->dataArray = $this->request->getPostParams();
 		}
-
 		$op = isset($this->dataArray['op']) ? $this->dataArray['op'] : null;
+		if($op == null) {
+			$this->getOPFromVerb($op);
+		}
 		$this->checkCSRF = $this->request->getNeedCheckCSRF() ? true : false;
+		if(REDIS_CACHE_ENABLED) {
+			$this->redisClient = RedisCacheController::getRedisClient();
+		}
 
 		$this->preload();
 
@@ -102,8 +103,38 @@ class LogicCRUD implements CRUDInterface{
 		}
 	}
 
+	private function getOPFromVerb(&$op) {
+		$method = $this->request->getVerb();
+
+		switch ($method) {
+			case 'PUT':
+				$op = "update";
+				break;
+			case 'POST':
+				$op = "create";
+				break;
+			case 'GET':
+				$op = "read";
+				break;
+			case 'HEAD':
+				break;
+			case 'DELETE':
+				$op = "delete";
+				break;
+			case 'OPTIONS':
+				break;
+			default:
+				break;
+		}
+	}
 
 	protected function preload() {
+		$this->manageHeadersAuth();
+		GFEventController::dispatch("LogicCRUD.preload", null);
+
+	}
+
+	protected function manageHeadersAuth() {
 		$username = null;
 		$password = null;
 
@@ -145,13 +176,8 @@ class LogicCRUD implements CRUDInterface{
 			} else {
 				ExceptionController::customError("Datos de acceso incorrectos2", 404);
 			}
-			//$this->userModel = SessionController::getCurrentUserModel();
-			GFEventController::dispatch("LogicCRUD.preload.HTTP_AUTHORIZATION", array(this));
-		} else {
-			//$this->userModel = SessionController::getCurrentUserModel();
-			GFEventController::dispatch("LogicCRUD.preload", null);
-		}
 
+		}
 	}
 
 

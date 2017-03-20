@@ -9,7 +9,7 @@ use Controllers\GFEvents\GFEventController;
 
 
 define('GF_SMARTY_TEMPLATE_FOLDER', 'Private/Modules/GFStarterKit/Views/tpls');
-define("TABLE_USERS", "gf_users");
+define("GF_TABLE_USERS", "gf_users");
 
 
 class Bootstrap {
@@ -17,7 +17,7 @@ class Bootstrap {
 
 	function __construct(RouteCollection $routerCollection) {
 
-		GFEntityManager::getEntityManager();
+		GFDoctrineManager::getEntityManager();
 
 		$this->setRoutes($routerCollection);
 		$this->startEventListeners();
@@ -37,11 +37,22 @@ class Bootstrap {
 		$config["name"] = "";
 		$config["checkCSRF"] = false;
 
+		/**
+		 * PAGE ROUTES
+		 */
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Public\PAGPublicAdminLogin";
-		$route = new RouteModel("acceso", $config);
+		$route = new RouteModel("login", $config);
+		$routerCollection->attachRoute($route);
+		$route = new RouteModel("/acceso", $config);
+		$routerCollection->attachRoute($route);
+		$route = new RouteModel("/", $config);
 		$routerCollection->attachRoute($route);
 
-		$route = new RouteModel("/", $config);
+		/**
+		 * API ROUTES
+		 */
+		$config["targetClass"] = $baseNamespace."\EntitiesLogic\UserManagementLogic\UserLogic";
+		$route = new RouteModel("/api/Users", $config);
 		$routerCollection->attachRoute($route);
 
 

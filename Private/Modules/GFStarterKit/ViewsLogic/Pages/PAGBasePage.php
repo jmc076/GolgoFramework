@@ -5,7 +5,7 @@ namespace Modules\GFStarterKit\ViewsLogic\Pages;
 use Controllers\Http\Request;
 use Controllers\i18nController;
 use Controllers\GFSessions\GFSessionController;
-use Modules\GFStarterKit\GFEntityManager;
+use Modules\GFStarterKit\GFDoctrineManager;
 
 
 class PAGBasePage {
@@ -33,7 +33,7 @@ class PAGBasePage {
 		} else {
 
 			$this->routeParams = $this->request->getUrlRouteParams();
-			$this->em = GFEntityManager::getEntityManager();
+			$this->em = GFDoctrineManager::getEntityManager();
 
 			if(isset($this->routeParams["modelId"])) {
 				$this->modelId = $this->routeParams["modelId"];
@@ -47,7 +47,7 @@ class PAGBasePage {
 			$this->smarty
 			->setCompileDir(ROOT_PATH .'/Private/Modules/GFStarterKit/templates_c')
 			->setCacheDir(ROOT_PATH .'/Private/Modules/GFStarterKit/cache');
-			$this->smarty->setCaching(true);
+			$this->smarty->setCaching(false);
 			$this->assignTplVars();
 			$this->setTplFile();
 			$this->displayTpl();
@@ -68,11 +68,7 @@ class PAGBasePage {
 	}
 
 	protected function assignTplVars() {
-		if(isset($_SESSION["errorMSG"])) {
-			$this->smarty->assign("errorMSG", $_SESSION["errorMSG"]);
-			$_SESSION["errorMSG"] = "";
-			unset($_SESSION["errorMSG"]);
-		}
+		$this->smarty->assign("basePath", BASE_PATH);
 		$this->smarty->assign("csrfdata", '<input id="csrf" type="hidden" name="'.$this->session->getSessionCsrfName().'" value="'.$this->session->getSessionCsrfValue().'" />');
 		if(NEED_LOCALIZATION) {
 			$this->smarty->assign("i18n", i18nController::localization());

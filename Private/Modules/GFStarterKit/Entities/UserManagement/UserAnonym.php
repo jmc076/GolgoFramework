@@ -4,6 +4,7 @@ namespace Modules\GFStarterKit\Entities\UserManagement;
 
 
 use Modules\GFStarterKit\Entities\UserManagement\Abstracts\UserInterface;
+use Modules\GFStarterKit\Entities\BasicModel;
 
 class UserAnonym implements UserInterface
 {

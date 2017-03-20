@@ -4,6 +4,7 @@ namespace Modules\GFStarterKit\Entities\UserManagement;
 use Doctrine\ORM\Mapping as ORM;
 use Modules\GFStarterKit\Entities\UserManagement\Abstracts\UserInterface;
 use Modules\GFStarterKit\Entities\UserManagement\Abstracts\BaseUserTrait;
+use Modules\GFStarterKit\Entities\BasicModel;
 
 
 /**
@@ -12,7 +13,7 @@ use Modules\GFStarterKit\Entities\UserManagement\Abstracts\BaseUserTrait;
  * @ORM\Table(name="gf_users")
  * @ORM\Entity
  */
-class UserRegistered implements UserInterface
+class UserRegistered extends BasicModel implements UserInterface
 {
 	use BaseUserTrait;
 
