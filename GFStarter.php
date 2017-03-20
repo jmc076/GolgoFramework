@@ -1,6 +1,5 @@
 <?php
 use Controllers\Http\Request;
-use Controllers\Http\Response;
 use Controllers\Router\Router;
 use Controllers\Router\RouteCollection;
 use Controllers\RedisCacheController;

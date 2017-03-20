@@ -7,21 +7,20 @@
 namespace Controllers\Http;
 
 abstract class HttpBase {
-	
-	protected $body;
+
 	protected $headers = array();
 	protected $httpVersion = '1.1';
 	protected $charset = 'UTF-8';
-	
+
 	/**
 	 * @var integer
 	 */
 	protected $statusCode = 200;
-	
+
 	public function hasHeader($name) {
 		return isset ($this->headers[strtolower($name)]);
 	}
-	
+
 	public function getAllHeadersAsArray() {
 		$result = array ();
 		foreach ($this->headers as $header) {
@@ -29,30 +28,30 @@ abstract class HttpBase {
 		}
 		return $result;
 	}
-	
+
 	public function getHeaderAsString($name) {
 		$name = strtolower($name);
-		
+
 		if (isset($this->headers[$name])) {
 			return implode( ',', $this->headers[$name][1]);
 		}
 		return null;
 	}
-	
+
 	public function getHeaderAsArray($name) {
 		$name = strtolower($name);
-		
+
 		if (isset($this->headers[$name])) {
 			return $this->headers[$name][1];
 		}
-		
+
 		return array ();
 	}
-	
+
 	public function updateHeader($name, $value) {
 		$this->headers[strtolower($name)] = [$name,(array)$value];
 	}
-	
+
 	public function setHeader($name, $value) {
 		$keyName = strtolower($name);
 		if (isset($this->headers[$keyName])) {
@@ -61,13 +60,13 @@ abstract class HttpBase {
 			$this->headers[$keyName] = [$name,(array)$value ];
 		}
 	}
-	
+
 	public function setHeaders(array $headers) {
 		foreach ($headers as $name => $value) {
 			$this->setHeader($name,$value);
 		}
 	}
-	
+
 	public function removeHeader($name) {
 		$name = strtolower($name);
 		if (!isset($this->headers[$name])) {
@@ -76,31 +75,23 @@ abstract class HttpBase {
 		unset($this->headers[$name]);
 		return true;
 	}
-	
+
 	public function getHttpVersion() {
 		return $this->httpVersion;
 	}
-	
+
 	public function setHttpVersion($httpVersion) {
 		$this->httpVersion = $httpVersion;
 	}
-	
-	public function getBody() {
-		return $this->body;
-	}
-	
-	public function setBody($body) {
-		$this->body = $body;
-	}
-	
+
 	public function getCharset() {
 		return $this->charset;
 	}
-	
+
 	public function setCharset($charset) {
 		$this->charset = $charset;
 	}
-	
+
 	public function getStatusCode() {
 		return $this->statusCode;
 	}

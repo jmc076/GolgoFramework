@@ -1,7 +1,8 @@
 <?php
 namespace Modules\GFStarterKit;
 
-use Modules;
+require_once 'vendor/autoload.php';
+
 use Controllers\Router\RouteCollection;
 use Controllers\Router\RouteModel;
 use Controllers\GFEvents\GFEventController;

@@ -2,7 +2,6 @@
 
 use Controllers\Router\RouteCollection;
 require_once __DIR__ .'/Private/Configs/Constants.php';
-require_once 'vendor/autoload.php';
 require_once 'GFStarter.php';
 require_once 'GFAutoload.php';
 

@@ -44,6 +44,10 @@ class PAGBasePage {
 
 			$this->preLoad();
 			$this->smarty = new \Smarty();
+			$this->smarty
+			->setCompileDir(ROOT_PATH .'/Private/Modules/GFStarterKit/templates_c')
+			->setCacheDir(ROOT_PATH .'/Private/Modules/GFStarterKit/cache');
+			$this->smarty->setCaching(true);
 			$this->assignTplVars();
 			$this->setTplFile();
 			$this->displayTpl();
@@ -53,7 +57,6 @@ class PAGBasePage {
 	}
 
 	protected function preLoad(){
-		//$this->userModel = SessionController::getCurrentUserModel();
 	}
 
 	public function isSuperAdmin() {
@@ -81,6 +84,11 @@ class PAGBasePage {
 	}
 
 	protected function displayTpl() {
+		$this->request->setHeader("Content-type", "text/html; charset=UTF-8");
+		$this->request->setResponseBody($this->smarty->fetch($this->tpl));
+	}
+
+	protected function simpleDisplayTpl() {
 		header('Content-type: text/html; charset=UTF-8');
 		$this->smarty->display($this->tpl);
 	}
