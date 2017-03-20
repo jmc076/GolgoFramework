@@ -11,7 +11,7 @@ use Controllers\i18nController;
 class GFStarter {
 
 	private $routerCollection;
-
+	
 	function __construct(RouteCollection $routerCollection) {
 
 		$session = GFSessionController::getInstance();
@@ -49,7 +49,6 @@ class GFStarter {
 
 
 	}
-
 
 
 	protected function loadModules($modules) {

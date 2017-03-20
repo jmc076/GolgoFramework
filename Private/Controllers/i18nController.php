@@ -42,17 +42,20 @@ class i18nController {
 	}
 
 	public static function getDefaultLanguage() {
-		if(isset($_SESSION["lang"]) && $_SESSION["lang"] != "") {
-			return $_SESSION["lang"];
-		} else {
-			if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
-				return self::parseDefaultLanguage($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-				else
-					return self::parseDefaultLanguage(NULL);
-		}
+	 $session = GFSessionController::getInstance();
+	    $lang = $session->getSessionModel()->getUserLang();
+	     
+	    if($lang != "") {
+	        return $lang;
+	    } else {
+	        if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
+	            return self::parseDefaultLanguage($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+	            else
+	                return self::parseDefaultLanguage(NULL);
+	    }
 	}
 
-	public static function parseDefaultLanguage($http_accept, $deflang = "en") {
+	public static function parseDefaultLanguage($http_accept, $deflang = DEFAULT_LOCALIZATION) {
 		if(isset($http_accept) && strlen($http_accept) > 1)  {
 			# Split possible languages into array
 			$x = explode(",",$http_accept);
@@ -74,5 +77,6 @@ class i18nController {
 			}
 		}
 		return strtolower($deflang);
+		
 	}
 }

@@ -22,6 +22,7 @@ class GFSessionModel {
 		$this->userCart = array();
 		$this->userExtra = array();
 		$this->status = false;
+		$this->userLang = "";
 	}
 	public function getUserModel() {
 		return $this->userModel;
