@@ -3,6 +3,7 @@ namespace Modules\GFStarterKit;
 
 require_once 'vendor/autoload.php';
 
+
 use Controllers\Router\RouteCollection;
 use Controllers\Router\RouteModel;
 use Controllers\GFEvents\GFEventController;
@@ -10,6 +11,16 @@ use Controllers\GFEvents\GFEventController;
 
 define('GF_SMARTY_TEMPLATE_FOLDER', 'Private/Modules/GFStarterKit/Views/tpls');
 define("GF_TABLE_USERS", "gf_users");
+define("GF_TABLE_ATTEMPTS","gf_login_attempts");
+
+define('LOGIN_ATTEMPTS_MITIGATION_TIME', '+30 minutes');
+define('LOGIN_ATTEMPTS_BEFORE_BLOCK', '5');
+define('EMAIL_MAX_LENGTH','100');
+define('EMAIL_MIN_LENGTH','5');
+define('PASSWORD_MIN_LENGTH','5');
+define('PASSWORD_BCRYPT_COST','10');
+
+define("GF_JWT_AUTHENTICATION_EXPIRATION", 60*60); //1 hour
 
 
 class Bootstrap {

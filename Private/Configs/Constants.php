@@ -23,8 +23,6 @@ define("NEED_LOCALIZATION", true);
 define("DEFAULT_LOCALIZATION", "es");
 define("GF_EVENTS_ENABLED", true);
 
-define("GF_JWT_AUTHENTICATION_EXPIRATION", 60*60); //1 hour
-
 
 
 //HOST CONFIGURATION
