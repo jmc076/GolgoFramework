@@ -1,0 +1,20 @@
+{
+    "name": "golgorz/golgo_framework",
+    "description": "PHP framework for simple use. With a module for fast start with MySQL, Doctrine and Smarty",
+    "type": "project",
+    "require": {
+        "predis/predis": "^1.1"
+    },
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "Diego Lopez Rivera",
+            "email": "forgin50@gmail.com"
+        }
+    ],
+    "config": {
+        "vendor-dir": "Private/Vendors"
+    },
+    "minimum-stability": "stable"
+    
+}

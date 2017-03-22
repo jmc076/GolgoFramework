@@ -4,6 +4,8 @@ use Controllers\Router\RouteCollection;
 require_once __DIR__ .'/Private/Configs/Constants.php';
 require_once 'GFStarter.php';
 require_once 'GFAutoload.php';
+if(file_exists( __DIR__ .'/Private/Vendors/autoload.php'))
+	require_once __DIR__ .'/Private/Vendors/autoload.php';
 
 setShowError(true);
 
