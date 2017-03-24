@@ -35,30 +35,7 @@ class BaseUserLogic extends LogicCRUD {
 			$model = $this->getEntity();
 			switch ($dataArray["sop"]) {
 				case "doLogin":
-				    //NO USAR EMAIL
-					if(isset($dataArray["email"]))
-						$loged = $this->auth->login($dataArray["email"], $dataArray["pass"]);
-					else
-						$loged = $this->auth->login($dataArray["user"], $dataArray["pass"]);
-					if(!$loged["error"]) {
-						$return = true;
-						$this->response->setStatusCode(200);
-						$model = $model->loadById($this->em, $loged['id']);
-						if($model != null) {
-							SessionController::setSessionData('user_model', $model->getEntityWithNamespace($model));
-							SessionController::setSessionData('tipo_usuario', $model->getTipoUsuario());
-							SessionController::setSessionData('user_id', $model->getId());
-							SessionController::setSessionData('user_name', $model->getNombre());
-							SessionController::setSessionData('user_email', $model->getEmail());
-							SessionController::setSessionData('status', true);
-							SessionController::regenerateSession();
-						} else {
-							ExceptionController::customError("Datos de acceso incorrectos", 404);
-							$return = false;
-						}
-					} else {
-						ExceptionController::customError("Datos de acceso incorrectos2", 404);
-					}
+
 					break;
 				case "loadAll":
 					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
