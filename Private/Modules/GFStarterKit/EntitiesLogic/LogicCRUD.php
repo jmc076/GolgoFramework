@@ -13,6 +13,7 @@ use Controllers\Http\Decorators\RequestJSONDecorator;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Modules\GFStarterKit\Controllers\PermissionsController;
 use Modules\GFStarterKit\GFDoctrineManager;
+use Modules\GFStarterKit\Controllers\UserController;
 
 class LogicCRUD implements CRUDInterface{
 
@@ -130,6 +131,7 @@ class LogicCRUD implements CRUDInterface{
 
 	protected function preload() {
 		$this->manageHeadersAuth();
+		$this->userModel = UserController::getCurrentUserModel();
 		GFEventController::dispatch("LogicCRUD.preload", null);
 
 	}
@@ -146,36 +148,18 @@ class LogicCRUD implements CRUDInterface{
 				list($username,$password) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
 		}
 
-		$authHeader = $this->request->getHeaderAsString('authorization');
+		/*$authHeader = $this->request->getHeaderAsString('authorization');
 		print_r($authHeader); die(); //TODO: Diego pre
 		if ($authHeader) {
 			list($jwt) = sscanf( $authHeader->toString(), 'Authorization: Bearer %s');
 			if ($jwt) {
 				$token = JWT::decode($jwt, $secretKey, array('HS512'));
 			}
-		}
+		}*/
 
 
 		if (!is_null($username) && !is_null($password)) {
-			$user = new UserRegistered();
-			$loged = $this->auth->login($username, $password);
-			if(!$loged["error"]) {
-				$this->response->setStatusCode(200);
-				$model = $user->loadById($this->em, $loged['id']);
-				if($model != null) {
-					//SessionController::setSessionData('user_model', $model->getEntityWithNamespace($model));
-					//SessionController::setSessionData('tipo_usuario', $model->getTipoUsuario());
-					//SessionController::setSessionData('user_id', $model->getId());
-					//SessionController::setSessionData('user_name', $model->getNombre());
-					//SessionController::setSessionData('user_email', $model->getEmail());
-					//SessionController::setSessionData('status', true);
-					//SessionController::regenerateSession();
-				} else {
-					ExceptionController::customError("Datos de acceso incorrectos", 404);
-				}
-			} else {
-				ExceptionController::customError("Datos de acceso incorrectos2", 404);
-			}
+
 
 		}
 	}
@@ -183,7 +167,7 @@ class LogicCRUD implements CRUDInterface{
 
 	public function create($dataArray) {
 		$return = false;
-		if($this->hasPermissions($dataArray)) {
+		if($this->checkPrivileges($dataArray)) {
 			try {
 				$model = $this->getEntity();
 				$this->assignParams($dataArray,$model);
@@ -202,7 +186,7 @@ class LogicCRUD implements CRUDInterface{
 
 	public function update($dataArray) {
 		$return = false;
-		if($this->hasPermissions($dataArray)) {
+		if($this->checkPrivileges($dataArray)) {
 			if(isset($dataArray["id"])) {
 				$model = $this->getEntity();
 				$model->loadById($this->em, $dataArray["id"]);
@@ -221,7 +205,7 @@ class LogicCRUD implements CRUDInterface{
 	}
 	public function read($dataArray) {
 		$return = false;
-		if($this->hasPermissions($dataArray)) {
+		if($this->checkPrivileges($dataArray)) {
 			if(isset($dataArray["id"])) {
 				$model = $this->getEntity();
 				$model = $model->loadById($this->em, $dataArray["id"],true);
@@ -237,7 +221,7 @@ class LogicCRUD implements CRUDInterface{
 
 	public function delete($dataArray) {
 		$return = false;
-		if($this->hasPermissions($dataArray)) {
+		if($this->checkPrivileges($dataArray)) {
 			if(isset($dataArray["id"])) {
 				$model = $this->getEntity();
 				$model->loadById($this->em, $dataArray["id"]);
@@ -286,9 +270,18 @@ class LogicCRUD implements CRUDInterface{
 	}
 
 	public function checkPrivileges($dataArray) {
-		if($this->needPrivileges() == false) return true;
+		if($this->needPrivileges() == false || $this->isSuperAdmin()) return true;
 
 		return PermissionsController::checkPermisos($dataArray, $this);
+	}
+
+
+	public function isSuperAdmin() {
+		return $this->userModel->getUserType() == USER_SUPERADMIN;
+	}
+
+	public function isAdmin() {
+		return $this->userModel->getUserType() == USER_ADMIN;
 	}
 
 }

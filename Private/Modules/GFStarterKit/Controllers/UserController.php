@@ -6,6 +6,7 @@ use Controllers\GFSessions\GFSessionController;
 use Modules\GFStarterKit\Entities\UserManagement\UserAnonym;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Helpers\HelperUtils;
+use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
 	require("password.php");
@@ -34,6 +35,111 @@ class UserController {
 				return $model;
 			}
 		}
+	}
+
+
+	/*
+	 * Logs a user in
+	 * @param string $email
+	 * @param string $password
+	 * @param bool $remember
+	 * @return array $return
+	 */
+	public function login($user, $password)
+	{
+		$return = array();
+		$return['error'] = true;
+
+
+		if ($this->isBlocked()) {
+			$return['message'] = ERROR_USER_BLOCKED;
+			return $return;
+		}
+
+		$uid = $this->getUID($user);
+
+		if(!$uid) {
+			$return['message'] = ERROR_USER_NAME_NOT_FOUND;
+			$this->addAttempt();
+			return $return;
+		}
+
+		$user = $this->getUser($uid);
+
+		if (!password_verify($password, $user['password'])) {
+			$return['message'] = ERROR_USER_PASSWORD_MISSMATCH;
+			$this->addAttempt();
+			return $return;
+		}
+
+		if ($user['is_active'] != 1) {
+			$return['message'] = ERROR_USER_NOT_ACTIVE;
+			return $return;
+		}
+
+		$userModel = new UserRegistered();
+		$return['user_model'] = $userModel->loadById($this->em, $user['uid']);
+		$return['error'] = false;
+
+
+		return $return;
+	}
+
+	/**
+	* Gets user data for a given UID and returns an array
+	* @param int $uid
+	* @return array $data
+	*/
+	public function getUser($uid)
+	{
+		$query = $this->dbh->prepare("SELECT password, isactive FROM {$this->config['table_users']} WHERE id = ?");
+		$query->execute(array($uid));
+
+
+		$dbal = GFDoctrineManager::getDoctrineDBAL();
+
+		$sql = "SELECT password, isactive FROM ".GF_TABLE_USERS." WHERE id = :id";
+		$stmt = $dbal->prepare($sql);
+		$stmt->bindValue("id", $uid);
+		$stmt->execute();
+
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		$row = $stmt->fetch();
+
+		if (!$row) {
+			return false;
+		}
+
+		$row['uid'] = $uid;
+		return $row;
+	}
+
+
+
+	/**
+	 * Gets UID for a given email address and returns an array
+	 * @param string $email
+	 * @return array $uid
+	 */
+
+	public function getUID($user)
+	{
+		$dbal = GFDoctrineManager::getDoctrineDBAL();
+
+		$sql = "SELECT id FROM ".GF_TABLE_USERS." WHERE user = :user";
+		$stmt = $dbal->prepare($sql);
+		$stmt->bindValue("user", $user);
+		$stmt->execute();
+
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		$row = $stmt->fetch();
+		return $row['id'];
 	}
 
 

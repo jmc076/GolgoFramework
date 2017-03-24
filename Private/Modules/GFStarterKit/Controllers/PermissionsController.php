@@ -54,7 +54,7 @@ class PermissionsController {
 
 		$user = UserController::getCurrentUserModel();
 
-		$allowedPermisos = $user->getPermisos();
+		$allowedPermisos = $user->getPrivileges();
 
 
 		if (in_array($opPerm, $allowedPermisos) && in_array($perm, $allowedPermisos)){
