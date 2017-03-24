@@ -90,7 +90,7 @@ class UserController {
 	* @param int $uid
 	* @return array $data
 	*/
-	public function getUser($uid)
+	private function getUser($uid)
 	{
 		$query = $this->dbh->prepare("SELECT password, isactive FROM {$this->config['table_users']} WHERE id = ?");
 		$query->execute(array($uid));

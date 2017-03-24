@@ -2,28 +2,29 @@
 namespace Modules\UserManagement\EntitiesLogic;
 
 use BaseEntities\Serializor;
-use Controllers\SessionController;
-use Controllers\FileController;
-use Modules\UserManagement\Entities\BaseUser;
 use Controllers\ExceptionController;
+use Controllers\FileController;
+use Controllers\SessionController;
+use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
+use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
 use Modules\UserManagement\Entities\Permissions;
-use Modules\UserManagement\Bootstrap;
+use Controllers\GFSessions\GFSessionController;
 
 
-class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
-	
-	
-		
-	/** 
+class BaseUserLogic extends LogicCRUD {
+
+
+
+	/**
 	 * Returns Entity managed in this logic.
 	 * @return string
 	 */
 	public function getEntity() {
-		return new BaseUser();
+		return new UserRegistered();
 	}
-	
-	public static function logout() {
-		SessionController::exitSession();
+
+	public function logout() {
+		$this->gfSession->exitSession();
 		header("Location: /");
 		die();
 	}
@@ -60,45 +61,27 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 					}
 					break;
 				case "loadAll":
-					if($this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
+					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
 						$models = $this->getEntity();
 						$models = $models->loadAll($this->em, null);
-						$return = Serializor::toArray($models,1);
+						$return = $models;
 					} else {
 						ExceptionController::PermissionDenied();
 					}
 					break;
 				case "loadById":
-					if($this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
+					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
 						$model = $model->loadById($this->em, $dataArray["id"],true);
 						$return = $model;
 					} else {
 						ExceptionController::PermissionDenied();
 					}
 					break;
-				case "loadOperadores":
-					if($this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
-						$models = $this->getEntity();
-						$models = $models->loadOperadores($this->em);
-						$return = Serializor::toArray($models,1);
-					} else {
-						ExceptionController::PermissionDenied();
-					}
-					break;
-				case "loadClientes":
-					if($this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
-						$models = $this->getEntity();
-						$models = $models->loadClientes($this->em);
-						$return = Serializor::toArray($models,1);
-					} else {
-						ExceptionController::PermissionDenied();
-					}
-					break;
 				case "loadAdmins":
-					if($this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
+					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
 						$models = $this->getEntity();
-						$models = $models->loadAdmins($this->em, null);
-						$return = Serializor::toArray($models,1);
+						$models = $models->loadAdmins($this->em, null,true);
+						$return = $models;
 					} else {
 						ExceptionController::PermissionDenied();
 					}
@@ -110,12 +93,12 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 		} else {
 			ExceptionController::noSOPFound();
 		}
-		
+
 
 			//$return = $model->loadAll($this->em, $getParams);
 		return $return;
 	}
-	
+
 	public function create($dataArray) {
 		$return = false;
 		if($this->hasPermissions($dataArray)) {
@@ -134,21 +117,21 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 				print_r($e->getMessage()); die(); //TODO: Diego pre
 				$return = false;
 			}
-			
+
 		} else {
 			ExceptionController::PermissionDenied();
 		}
-		
+
 		return $return;
 	}
-	
+
 	public function update($dataArray) {
 		$return = false;
 		if($this->hasPermissions($dataArray)) {
 			$model = $this->getEntity();
 			if(isset($dataArray["id"])) $model = $model->loadById($this->em, $dataArray["id"]);
 			else $model = $this->userModel;
-			
+
 			if(isset($dataArray["email"]) && $model->getEmail() != $dataArray["email"] && $this->auth->isEmailTaken($dataArray["email"])) {
 				$error = array('error' => "El email ya está en uso.");
 				return $error;
@@ -197,13 +180,13 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 		} else {
 			ExceptionController::PermissionDenied();
 		}
-			
-					
-		
-	
+
+
+
+
 		return $return;
 	}
-	
+
 	public function delete($dataArray) {
 		if($this->hasPermissions($dataArray)) {
 			if($dataArray["id"] != $this->userModel->getId()) {
@@ -217,9 +200,9 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 			ExceptionController::PermissionDenied();
 		}
 	}
-	
+
 	protected function assignParams($dataArray, &$model) {
-	
+
 		if(isset($dataArray['op']) && $dataArray['op'] == 'update' && isset($dataArray["files"]) && isset($dataArray["files"]["avatar"]) && $dataArray["files"]["avatar"]["error"] == 0) {
 			if($model->getAvatar() != null && $model->getAvatar() != "") {
 				$this->deletePublicFile($model->getAvatar());
@@ -228,65 +211,65 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 			$this->tempFiles[] = $ruta[0];
 			$model->setAvatar($ruta[1]);
 		}
-		
+
 		if(isset($dataArray["tipoUsuario"]) && !empty($dataArray["tipoUsuario"]) &&  $dataArray["tipoUsuario"] != $model->getTipoUsuario()) {
 			$model->setTipoUsuario($dataArray["tipoUsuario"]);
 		} else if(!isset($dataArray["tipoUsuario"])) {
 			$model->setTipoUsuario(USER_USER);
 		}
-		
+
 		if(isset($dataArray["isAdmin"]) && $dataArray["isAdmin"] == 1) {
 			$model->setTipoUsuario(USER_ADMINISTRADOR);
 		}
-		
-		
+
+
 		if(isset($dataArray["email"]) && $dataArray["email"] != "") {
 			$model->setEmail($dataArray["email"]);
 		}
-		
+
 		if(isset($dataArray["user"]) && $dataArray["user"] != "") {
 			$model->setUser($dataArray["user"]);
 		}
-		
+
 		if(isset($dataArray["categoria"]) && $dataArray["categoria"] != "") {
 			$model->setCategoria($dataArray["categoria"]);
 		}
-		
+
 		if(isset($dataArray["pass"]) && $dataArray["pass"] != "") {
 			$model->setPassword($this->auth->getHash($dataArray["pass"]));
 		}
-		
+
 		if(isset($dataArray["nombre"]) && $dataArray["nombre"] != "")
 			$model->setNombre(utf8_decode($dataArray["nombre"]));
-			
+
 		if(isset($dataArray["telefono"]) && $dataArray["telefono"] != "")
 			$model->setTelefono($dataArray["telefono"]);
-	
+
 		if(isset($dataArray["movil"]) && $dataArray["movil"] != "")
 			$model->setMovil($dataArray["movil"]);
-	
+
 		if(isset($dataArray["nif"]) && $dataArray["nif"] != "")
 			$model->setDni($dataArray["nif"]);
-	
+
 		if(isset($dataArray["codigo-postal"]) && $dataArray["codigo-postal"] != "")
 			$model->setCp($dataArray["codigo-postal"]);
-	
+
 		if(isset($dataArray["direccion"]) && $dataArray["direccion"] != "")
 			$model->setDireccion(utf8_decode($dataArray["direccion"]));
-	
+
 		if(isset($dataArray["web"]) && $dataArray["web"] != "")
 			$model->setWeb($dataArray["web"]);
-	
+
 		if(isset($dataArray["descripcion"]) && $dataArray["descripcion"] != "")
 			$model->setDescripcion(utf8_decode($dataArray["descripcion"]));
-	
-			
+
+
 		if($this->isAdmin() || $this->isSuperAdmin() && isset($dataArray["containsPermissions"])) {
 		    $this->assignPermisos($dataArray,$model);
 		}
-	
+
 	}
-	
+
 	private function assignPermisos($dataArray, &$model) {
 	    $permisos = $model->getPermissions();
 	    if(isset($dataArray["inmuebleCreate"])) {
@@ -311,7 +294,7 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 	        if($permisos && $permisos->contains($perm))
 	            $model->getPermissions()->removeElement($perm);
 	    }
-	    	
+
 	    if(isset($dataArray["inmuebleUpdate"])) {
 	        $perm = new Permissions();
 	        $perm = $perm->loadById($this->em, 3);
@@ -358,7 +341,7 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 	        if($permisos && $permisos->contains($perm))
 	            $model->getPermissions()->removeElement($perm);
 	    }
-	    	
+
 	    if(isset($dataArray["captacionesUpdate"])) {
 	        $perm = new Permissions();
 	        $perm = $perm->loadById($this->em, 7);
@@ -370,7 +353,7 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 	        if($permisos && $permisos->contains($perm))
 	            $model->getPermissions()->removeElement($perm);
 	    }
-	    	
+
 	    if(isset($dataArray["captacionesDelete"])) {
 	        $perm = new Permissions();
 	        $perm = $perm->loadById($this->em, 8);
@@ -405,7 +388,7 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 	        if($permisos && $permisos->contains($perm))
 	            $model->getPermissions()->removeElement($perm);
 	    }
-	    	
+
 	    if(isset($dataArray["demandasUpdate"])) {
 	        $perm = new Permissions();
 	        $perm = $perm->loadById($this->em, 11);
@@ -417,7 +400,7 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 	        if($permisos && $permisos->contains($perm))
 	            $model->getPermissions()->removeElement($perm);
 	    }
-	    	
+
 	    if(isset($dataArray["demandasDelete"])) {
 	        $perm = new Permissions();
 	        $perm = $perm->loadById($this->em, 12);
@@ -452,7 +435,7 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 	        if($permisos && $permisos->contains($perm))
 	            $model->getPermissions()->removeElement($perm);
 	    }
-	    	
+
 	    if(isset($dataArray["clientesUpdate"])) {
 	        $perm = new Permissions();
 	        $perm = $perm->loadById($this->em, 15);
@@ -464,7 +447,7 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 	        if($permisos && $permisos->contains($perm))
 	            $model->getPermissions()->removeElement($perm);
 	    }
-	    	
+
 	    if(isset($dataArray["clientesDelete"])) {
 	        $perm = new Permissions();
 	        $perm = $perm->loadById($this->em, 16);
@@ -477,5 +460,5 @@ class UserManagementBaseUserLogic extends UserManagementLogicCRUD {
 	            $model->getPermissions()->removeElement($perm);
 	    }
 	}
-	
+
 }
