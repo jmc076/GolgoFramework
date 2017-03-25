@@ -1,14 +1,11 @@
 <?php
 namespace Modules\UserManagement\EntitiesLogic;
 
-use BaseEntities\Serializor;
 use Controllers\ExceptionController;
 use Controllers\FileController;
-use Controllers\SessionController;
+use Modules\GFStarterKit\Controllers\UserController;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
-use Modules\UserManagement\Entities\Permissions;
-use Controllers\GFSessions\GFSessionController;
 
 
 class BaseUserLogic extends LogicCRUD {
@@ -35,7 +32,20 @@ class BaseUserLogic extends LogicCRUD {
 			$model = $this->getEntity();
 			switch ($dataArray["sop"]) {
 				case "doLogin":
-
+					if(isset($dataArray["user"]) && isset($dataArray["password"])) {
+						$userController = new UserController();
+						$result = $userController->login($dataArray["user"], $dataArray["password"]);
+						if($result["error"] == false) {
+							$userModel =  $result["user_model"]->getId();
+							$sessionModel = $this->gfSession->getSessionModel();
+							$sessionModel->setStatus(true)->setUserId($userModel->getId());
+						} else {
+							ExceptionController::customError("Login failed with code: " + $result["message"], 400);
+						}
+					} else {
+						ExceptionController::customError("missing password and user in form", 400);
+					}
+					
 					break;
 				case "loadAll":
 					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
@@ -247,195 +257,7 @@ class BaseUserLogic extends LogicCRUD {
 
 	}
 
-	private function assignPermisos($dataArray, &$model) {
-	    $permisos = $model->getPermissions();
-	    if(isset($dataArray["inmuebleCreate"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 1);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 1);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-	    if(isset($dataArray["inmuebleRead"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 2);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 2);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-
-	    if(isset($dataArray["inmuebleUpdate"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 3);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 3);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-
-	    if(isset($dataArray["inmuebleDelete"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 4);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 4);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-	    ////////////
-	    if(isset($dataArray["captacionesCreate"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 5);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 5);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-	    if(isset($dataArray["captacionesRead"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 6);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 6);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-
-	    if(isset($dataArray["captacionesUpdate"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 7);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 7);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-
-	    if(isset($dataArray["captacionesDelete"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 8);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 8);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-	    ///////////////////
-	    if(isset($dataArray["demandasCreate"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 9);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 9);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-	    if(isset($dataArray["demandasRead"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 10);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 10);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-
-	    if(isset($dataArray["demandasUpdate"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 11);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 11);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-
-	    if(isset($dataArray["demandasDelete"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 12);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 12);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-	    ////////////////////////////////////
-	    if(isset($dataArray["clientesCreate"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em,13);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 13);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-	    if(isset($dataArray["clientesRead"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 14);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 14);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-
-	    if(isset($dataArray["clientesUpdate"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 15);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 15);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
-
-	    if(isset($dataArray["clientesDelete"])) {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em, 16);
-	        if($permisos && !$permisos->contains($perm))
-	            $model->setPermissions($perm);
-	    } else {
-	        $perm = new Permissions();
-	        $perm = $perm->loadById($this->em,16);
-	        if($permisos && $permisos->contains($perm))
-	            $model->getPermissions()->removeElement($perm);
-	    }
+	
 	}
 
 }
