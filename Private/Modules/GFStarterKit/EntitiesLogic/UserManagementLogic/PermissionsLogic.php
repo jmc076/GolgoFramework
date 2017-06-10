@@ -3,8 +3,9 @@ namespace Modules\UserManagement\EntitiesLogic;
 
 use Controllers\ExceptionController;
 use Modules\GFStarterKit\Entities\UserManagement\Permissions;
+use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
 
-class PermissionsLogic extends UserManagementLogicCRUD {
+class PermissionsLogic extends LogicCRUD {
 
 
 	public function getEntity() {
