@@ -27,6 +27,7 @@ define("GF_EVENTS_ENABLED", true);
 
 //HOST CONFIGURATION
 define("BASE_PATH","localhost/GolgoFramework");
+define("BASE_PATH_DIRECTORY","GolgoFramework");
 
 
 //REDIS CACHE

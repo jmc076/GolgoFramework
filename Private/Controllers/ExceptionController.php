@@ -45,6 +45,12 @@ class ExceptionController {
 		self::showMessage();
 	}
 
+	public static function classNotFound() {
+		self::$code = 404;
+		self::$msg = "Class not found exception";
+		self::showMessage();
+	}
+
 	public static function subdomainNotFound() {
 		self::$code = 404;
 		self::$msg = "Subdominio no encontrado.";

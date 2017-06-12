@@ -1,5 +1,5 @@
 <?php
-namespace Modules\UserManagement\EntitiesLogic;
+namespace Modules\GFStarterKit\EntitiesLogic\UserManagementLogic;
 
 use Controllers\ExceptionController;
 use Controllers\FileController;
@@ -40,12 +40,12 @@ class BaseUserLogic extends LogicCRUD {
 							$sessionModel = $this->gfSession->getSessionModel();
 							$sessionModel->setStatus(true)->setUserId($userModel->getId());
 						} else {
-							ExceptionController::customError("Login failed with code: " + $result["message"], 400);
+							ExceptionController::customError("Login failed with code: " . $result["message"], 400);
 						}
 					} else {
 						ExceptionController::customError("missing password and user in form", 400);
 					}
-					
+
 					break;
 				case "loadAll":
 					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
@@ -188,7 +188,7 @@ class BaseUserLogic extends LogicCRUD {
 		}
 	}
 
-	protected function assignParams($dataArray, &$model) {
+	public function assignParams($dataArray, &$model) {
 
 		if(isset($dataArray['op']) && $dataArray['op'] == 'update' && isset($dataArray["files"]) && isset($dataArray["files"]["avatar"]) && $dataArray["files"]["avatar"]["error"] == 0) {
 			if($model->getAvatar() != null && $model->getAvatar() != "") {
@@ -257,7 +257,6 @@ class BaseUserLogic extends LogicCRUD {
 
 	}
 
-	
-	}
 
 }
+

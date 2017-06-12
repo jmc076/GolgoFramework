@@ -41,6 +41,13 @@ trait BaseUserTrait
     protected $email;
 
     /**
+     * @var string $bio
+     *
+     * @ORM\Column(name="bio", type="string", nullable=true)
+     */
+    protected $bio;
+
+    /**
      * @var string $email
      *
      * @ORM\Column(name="telephone", type="string", length=255, nullable=true)
@@ -179,6 +186,16 @@ trait BaseUserTrait
 		$this->email = $email;
 		return $this;
 	}
+
+
+	public function getBio() {
+		return $this->bio;
+	}
+	public function setBio($bio) {
+		$this->bio = $bio;
+		return $this;
+	}
+
 	public function getTelephone() {
 		return $this->telephone;
 	}

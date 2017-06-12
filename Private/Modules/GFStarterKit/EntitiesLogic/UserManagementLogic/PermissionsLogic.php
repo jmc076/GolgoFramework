@@ -1,5 +1,5 @@
 <?php
-namespace Modules\UserManagement\EntitiesLogic;
+namespace Modules\GFStarterKit\EntitiesLogic\UserManagementLogic;
 
 use Controllers\ExceptionController;
 use Modules\GFStarterKit\Entities\UserManagement\Permissions;

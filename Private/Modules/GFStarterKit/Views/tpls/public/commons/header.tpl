@@ -29,3 +29,5 @@
 	 			</svg>
 			</div>
 		</div> 
+		
+		<script>var basePath = "/{$smarty.const.BASE_PATH_DIRECTORY}";</script>

@@ -134,7 +134,9 @@ class Request extends HttpBase {
 			if ($matchedRoute->getTargetClassMethod() != null) {
 				call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
 			} else {
-				new $class();
+				if(class_exists($class))
+					new $class();
+				else ExceptionController::classNotFound();
 			}
 
 		}

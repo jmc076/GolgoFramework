@@ -92,9 +92,6 @@ class UserController {
 	*/
 	private function getUser($uid)
 	{
-		$query = $this->dbh->prepare("SELECT password, isactive FROM {$this->config['table_users']} WHERE id = ?");
-		$query->execute(array($uid));
-
 
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
@@ -129,7 +126,7 @@ class UserController {
 	{
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
-		$sql = "SELECT id FROM ".GF_TABLE_USERS." WHERE user = :user";
+		$sql = "SELECT id FROM ".GF_TABLE_USERS." WHERE username = :user";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("user", $user);
 		$stmt->execute();
@@ -172,7 +169,7 @@ class UserController {
 	public function isUserTaken($user) {
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
-		$sql = "SELECT * FROM ".GF_TABLE_USERS." WHERE user = :user";
+		$sql = "SELECT * FROM ".GF_TABLE_USERS." WHERE username = :user";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("user", $user);
 		$stmt->execute();
@@ -295,14 +292,14 @@ class UserController {
 
 		if($all==true) {
 
-			$sql = "DELETE FROM ".GF_TABLE_USERS." WHERE ip = :ip";
+			$sql = "DELETE FROM ".GF_TABLE_ATTEMPTS." WHERE ip = :ip";
 			$stmt = $dbal->prepare($sql);
 			$stmt->bindValue("ip", $ip);
 			return $stmt->execute();
 
 		}
 
-		$sql = "SELECT id, expiredate FROM ".GF_TABLE_USERS." WHERE ip = :ip";
+		$sql = "SELECT id, expiredate FROM ".GF_TABLE_ATTEMPTS." WHERE ip = :ip";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("ip", $ip);
 		$stmt->execute();
@@ -311,7 +308,7 @@ class UserController {
 			$expiredate = strtotime($row['expiredate']);
 			$currentdate = strtotime(date("Y-m-d H:i:s"));
 			if($currentdate > $expiredate) {
-				$sql = "DELETE FROM ".GF_TABLE_USERS." WHERE id = :id";
+				$sql = "DELETE FROM ".GF_TABLE_ATTEMPTS." WHERE id = :id";
 				$stmt = $dbal->prepare($sql);
 				$stmt->bindValue("id", $row['id']);
 				$stmt->execute();

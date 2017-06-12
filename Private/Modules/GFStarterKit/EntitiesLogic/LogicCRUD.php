@@ -15,13 +15,11 @@ use Modules\GFStarterKit\Controllers\PermissionsController;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\UserController;
 
-class LogicCRUD implements CRUDInterface{
+class LogicCRUD implements CRUDInterface {
 
 	protected $userModel;
 	protected $result;
 	protected $checkCSRF;
-
-
 
 
 	protected $routeParams = array();
@@ -104,7 +102,7 @@ class LogicCRUD implements CRUDInterface{
 		}
 	}
 
-	private function getOPFromVerb(&$op) {
+	function getOPFromVerb(&$op) {
 		$method = $this->request->getVerb();
 
 		switch ($method) {
@@ -129,14 +127,14 @@ class LogicCRUD implements CRUDInterface{
 		}
 	}
 
-	protected function preload() {
+	function preload() {
 		$this->manageHeadersAuth();
 		$this->userModel = UserController::getCurrentUserModel();
 		GFEventController::dispatch("LogicCRUD.preload", null);
 
 	}
 
-	protected function manageHeadersAuth() {
+	function manageHeadersAuth() {
 		$username = null;
 		$password = null;
 
@@ -242,12 +240,12 @@ class LogicCRUD implements CRUDInterface{
 	 * {@inheritDoc}
 	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::isPrivate()
 	 */
-	protected function isPrivate() {
+	function isPrivate() {
 		return true;
 
 	}
 
-	protected function needPrivileges() {
+	function needPrivileges() {
 		return true;
 	}
 
@@ -255,7 +253,7 @@ class LogicCRUD implements CRUDInterface{
 	 * {@inheritDoc}
 	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::getEntity()
 	 */
-	protected function getEntity() {
+	function getEntity() {
 		return end(explode("/", $this->request->getRequestUrl()));
 
 	}
@@ -264,7 +262,7 @@ class LogicCRUD implements CRUDInterface{
 	 * {@inheritDoc}
 	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::assignParams()
 	 */
-	protected function assignParams($dataArray, $model) {
+	public function assignParams($dataArray, &$model) {
 		AssignGenerator::generarAsignacion($model, $dataArray);
 
 	}
