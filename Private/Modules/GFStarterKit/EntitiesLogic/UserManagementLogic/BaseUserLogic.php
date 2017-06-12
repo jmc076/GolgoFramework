@@ -10,7 +10,7 @@ use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
 
 class BaseUserLogic extends LogicCRUD {
 
-
+	protected $userController = new UserController();
 
 	/**
 	 * Returns Entity managed in this logic.
@@ -33,8 +33,8 @@ class BaseUserLogic extends LogicCRUD {
 			switch ($dataArray["sop"]) {
 				case "doLogin":
 					if(isset($dataArray["user"]) && isset($dataArray["password"])) {
-						$userController = new UserController();
-						$result = $userController->login($dataArray["user"], $dataArray["password"]);
+
+						$result = $this->userController->login($dataArray["user"], $dataArray["password"]);
 						if($result["error"] == false) {
 							$userModel =  $result["user_model"]->getId();
 							$sessionModel = $this->gfSession->getSessionModel();
@@ -89,10 +89,9 @@ class BaseUserLogic extends LogicCRUD {
 	public function create($dataArray) {
 		$return = false;
 		if($this->hasPermissions($dataArray)) {
-			if((isset($dataArray["email"]) && $this->auth->isEmailTaken($dataArray["email"]))
-			 || (isset($dataArray["user"]) && $this->auth->isUserTaken($dataArray["user"]))) {
-				$error = array('error' => "El email o usuario ya está en uso.");
-				return $error;
+			if((isset($dataArray["email"]) && $this->userController->isEmailTaken($dataArray["email"]))
+			 || (isset($dataArray["user"]) && $this->userController->isUserTaken($dataArray["user"]))) {
+			 	ExceptionController::customError("email or user taken", 409);
 			}
 			$model = $this->getEntity();
 			try {
@@ -101,7 +100,6 @@ class BaseUserLogic extends LogicCRUD {
 				$this->em->flush();
 				$return = $model->getId();
 			} catch (Exception $e) {
-				print_r($e->getMessage()); die(); //TODO: Diego pre
 				$return = false;
 			}
 
@@ -119,7 +117,7 @@ class BaseUserLogic extends LogicCRUD {
 			if(isset($dataArray["id"])) $model = $model->loadById($this->em, $dataArray["id"]);
 			else $model = $this->userModel;
 
-			if(isset($dataArray["email"]) && $model->getEmail() != $dataArray["email"] && $this->auth->isEmailTaken($dataArray["email"])) {
+			if(isset($dataArray["email"]) && $model->getEmail() != $dataArray["email"] && $this->userController->isEmailTaken($dataArray["email"])) {
 				$error = array('error' => "El email ya está en uso.");
 				return $error;
 			}
@@ -223,7 +221,7 @@ class BaseUserLogic extends LogicCRUD {
 		}
 
 		if(isset($dataArray["pass"]) && $dataArray["pass"] != "") {
-			$model->setPassword($this->auth->getHash($dataArray["pass"]));
+			$model->setPassword($this->userController->getHash($dataArray["pass"]));
 		}
 
 		if(isset($dataArray["nombre"]) && $dataArray["nombre"] != "")
