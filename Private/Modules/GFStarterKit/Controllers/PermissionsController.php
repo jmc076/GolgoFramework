@@ -51,16 +51,16 @@ class PermissionsController {
 		}
 
 
-
 		$user = UserController::getCurrentUserModel();
 
 		$allowedPermisos = $user->getPrivileges();
 
-
 		if (in_array($opPerm, $allowedPermisos) && in_array($perm, $allowedPermisos)){
 			return true;
 		} else {
-		//	print_r($perm); die(); //TODO: Diego pre
+			print_r($perm);
+			print_r("<br>");
+			print_r($opPerm); die(); //TODO: Diego pre
 			return false;
 		}
 	}

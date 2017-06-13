@@ -11,7 +11,7 @@ define("ROOT_PATH", $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) );
 define("MYSQL_HOST", 'localhost');
 define("DB_NAME", 'golgo_framework');
 define("DB_USER", 'root');
-define("DB_PASS", '');
+define("DB_PASS", 'golgo2007');
 define("DB_PORT", '3306');
 define("DB_DRIVER", 'pdo_mysql');
 

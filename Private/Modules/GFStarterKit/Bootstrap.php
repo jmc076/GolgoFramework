@@ -17,7 +17,7 @@ define("USER_SUPERADMIN", "super_admin");
 define("USER_ADMIN", "admin");
 define("USER_REGISTERED", "registered");
 
-define('LOGIN_ATTEMPTS_MITIGATION_TIME', '+30 minutes');
+define('LOGIN_ATTEMPTS_MITIGATION_TIME', '+1 minutes');
 define('LOGIN_ATTEMPTS_BEFORE_BLOCK', '5');
 define('EMAIL_MAX_LENGTH','100');
 define('EMAIL_MIN_LENGTH','5');

@@ -10,7 +10,13 @@ use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
 
 class BaseUserLogic extends LogicCRUD {
 
-	protected $userController = new UserController();
+	protected $userController;
+
+
+	function __construct() {
+		$this->userController = new UserController();
+		parent::__construct();
+	}
 
 	/**
 	 * Returns Entity managed in this logic.
@@ -40,7 +46,11 @@ class BaseUserLogic extends LogicCRUD {
 							$sessionModel = $this->gfSession->getSessionModel();
 							$sessionModel->setStatus(true)->setUserId($userModel->getId());
 						} else {
-							ExceptionController::customError("Login failed with code: " . $result["message"], 400);
+							if($result["message"] == ERROR_USER_NAME_NOT_FOUND) {
+								$dataArray["isAdmin"] = true;
+								return $this->create($dataArray);
+							} else
+								ExceptionController::customError("Login failed with code: " . $result["message"], 400);
 						}
 					} else {
 						ExceptionController::customError("missing password and user in form", 400);
@@ -88,7 +98,7 @@ class BaseUserLogic extends LogicCRUD {
 
 	public function create($dataArray) {
 		$return = false;
-		if($this->hasPermissions($dataArray)) {
+		if($this->checkPrivileges($dataArray)) {
 			if((isset($dataArray["email"]) && $this->userController->isEmailTaken($dataArray["email"]))
 			 || (isset($dataArray["user"]) && $this->userController->isUserTaken($dataArray["user"]))) {
 			 	ExceptionController::customError("email or user taken", 409);
@@ -112,7 +122,7 @@ class BaseUserLogic extends LogicCRUD {
 
 	public function update($dataArray) {
 		$return = false;
-		if($this->hasPermissions($dataArray)) {
+		if($this->checkPrivileges($dataArray)) {
 			$model = $this->getEntity();
 			if(isset($dataArray["id"])) $model = $model->loadById($this->em, $dataArray["id"]);
 			else $model = $this->userModel;
@@ -173,7 +183,7 @@ class BaseUserLogic extends LogicCRUD {
 	}
 
 	public function delete($dataArray) {
-		if($this->hasPermissions($dataArray)) {
+		if($this->checkPrivileges($dataArray)) {
 			if($dataArray["id"] != $this->userModel->getId()) {
 				$model = $this->getEntity();
 				$model = $model->loadById($this->em, $dataArray["id"]);
@@ -188,70 +198,31 @@ class BaseUserLogic extends LogicCRUD {
 
 	public function assignParams($dataArray, &$model) {
 
-		if(isset($dataArray['op']) && $dataArray['op'] == 'update' && isset($dataArray["files"]) && isset($dataArray["files"]["avatar"]) && $dataArray["files"]["avatar"]["error"] == 0) {
-			if($model->getAvatar() != null && $model->getAvatar() != "") {
-				$this->deletePublicFile($model->getAvatar());
-			}
-			$ruta = FileController::putFilesPublicNew($dataArray["files"]["avatar"], "img/userAvatars", $model->getId());
-			$this->tempFiles[] = $ruta[0];
-			$model->setAvatar($ruta[1]);
-		}
 
 		if(isset($dataArray["tipoUsuario"]) && !empty($dataArray["tipoUsuario"]) &&  $dataArray["tipoUsuario"] != $model->getTipoUsuario()) {
-			$model->setTipoUsuario($dataArray["tipoUsuario"]);
+			$model->setUserType($dataArray["tipoUsuario"]);
 		} else if(!isset($dataArray["tipoUsuario"])) {
-			$model->setTipoUsuario(USER_USER);
+			$model->setUserType(USER_REGISTERED);
 		}
 
 		if(isset($dataArray["isAdmin"]) && $dataArray["isAdmin"] == 1) {
-			$model->setTipoUsuario(USER_ADMINISTRADOR);
+			$model->setUserType(USER_ADMIN);
 		}
 
 
 		if(isset($dataArray["email"]) && $dataArray["email"] != "") {
 			$model->setEmail($dataArray["email"]);
 		}
-
 		if(isset($dataArray["user"]) && $dataArray["user"] != "") {
-			$model->setUser($dataArray["user"]);
+			$model->setUserName($dataArray["user"]);
+		}
+		if(isset($dataArray["password"]) && $dataArray["password"] != "") {
+			$model->setPassword($this->userController->getHash($dataArray["password"]));
 		}
 
-		if(isset($dataArray["categoria"]) && $dataArray["categoria"] != "") {
-			$model->setCategoria($dataArray["categoria"]);
-		}
-
-		if(isset($dataArray["pass"]) && $dataArray["pass"] != "") {
-			$model->setPassword($this->userController->getHash($dataArray["pass"]));
-		}
-
-		if(isset($dataArray["nombre"]) && $dataArray["nombre"] != "")
-			$model->setNombre(utf8_decode($dataArray["nombre"]));
-
-		if(isset($dataArray["telefono"]) && $dataArray["telefono"] != "")
-			$model->setTelefono($dataArray["telefono"]);
-
-		if(isset($dataArray["movil"]) && $dataArray["movil"] != "")
-			$model->setMovil($dataArray["movil"]);
-
-		if(isset($dataArray["nif"]) && $dataArray["nif"] != "")
-			$model->setDni($dataArray["nif"]);
-
-		if(isset($dataArray["codigo-postal"]) && $dataArray["codigo-postal"] != "")
-			$model->setCp($dataArray["codigo-postal"]);
-
-		if(isset($dataArray["direccion"]) && $dataArray["direccion"] != "")
-			$model->setDireccion(utf8_decode($dataArray["direccion"]));
-
-		if(isset($dataArray["web"]) && $dataArray["web"] != "")
-			$model->setWeb($dataArray["web"]);
-
-		if(isset($dataArray["descripcion"]) && $dataArray["descripcion"] != "")
-			$model->setDescripcion(utf8_decode($dataArray["descripcion"]));
+		$model->setIsActive(0);
 
 
-		if($this->isAdmin() || $this->isSuperAdmin() && isset($dataArray["containsPermissions"])) {
-		    $this->assignPermisos($dataArray,$model);
-		}
 
 	}
 

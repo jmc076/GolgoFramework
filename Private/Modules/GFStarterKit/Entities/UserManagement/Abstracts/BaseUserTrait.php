@@ -57,14 +57,14 @@ trait BaseUserTrait
     /**
      * @var string $nombre
      *
-     * @ORM\Column(name="user_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="username", type="string", length=255, nullable=true)
      */
     protected $userName;
 
     /**
      * @var string $password
      *
-     * @ORM\Column(name="password", type="string", length=255, nullable=true)
+     * @ORM\Column(name="password", type="string", length=255, nullable=false)
      */
     protected $password;
 

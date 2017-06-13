@@ -31,7 +31,6 @@ class LogicCRUD implements CRUDInterface {
 	protected $request;
 
 	public function __construct() {
-
 		GFEventController::dispatch("LogicCRUD.__construct", null);
 
 		$this->gfSession = GFSessionController::getInstance();

@@ -95,7 +95,7 @@ class UserController {
 
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
-		$sql = "SELECT password, isactive FROM ".GF_TABLE_USERS." WHERE id = :id";
+		$sql = "SELECT password, is_active FROM ".GF_TABLE_USERS." WHERE id = :id";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("id", $uid);
 		$stmt->execute();
@@ -291,27 +291,24 @@ class UserController {
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
 		if($all==true) {
-
 			$sql = "DELETE FROM ".GF_TABLE_ATTEMPTS." WHERE ip = :ip";
 			$stmt = $dbal->prepare($sql);
 			$stmt->bindValue("ip", $ip);
 			return $stmt->execute();
 
 		}
-
 		$sql = "SELECT id, expiredate FROM ".GF_TABLE_ATTEMPTS." WHERE ip = :ip";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("ip", $ip);
 		$stmt->execute();
-
 		while ($row = $stmt->fetch()) {
 			$expiredate = strtotime($row['expiredate']);
 			$currentdate = strtotime(date("Y-m-d H:i:s"));
 			if($currentdate > $expiredate) {
 				$sql = "DELETE FROM ".GF_TABLE_ATTEMPTS." WHERE id = :id";
-				$stmt = $dbal->prepare($sql);
-				$stmt->bindValue("id", $row['id']);
-				$stmt->execute();
+				$deleteStmt = $dbal->prepare($sql);
+				$deleteStmt->bindValue("id", $row['id']);
+				$deleteStmt->execute();
 
 			}
 		}
