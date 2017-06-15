@@ -27,17 +27,17 @@ class JWTAuthentication {
 
 	public function initializeToken(array $data = array()) {
 
-		if(!isset($data["data"])) return false;
+		if(!isset($data["data"])) $data["data"] = array();
 
-		$this->token = [
+		$this->token = array(
 				'iat'  => isset($data["iat"]) ? $data["iat"] : $this->issuedAt, // Issued at: time when the token was generated
-				'aud'  => isset($data["aud"]) ? $data["aud"] : aud(),			// Audience claim, verifies
+				'aud'  => isset($data["aud"]) ? $data["aud"] : self::aud(),			// Audience claim, verifies
 				'jti'  => isset($data["jti"]) ? $data["jti"] : $this->tokenId,  // Json Token Id: an unique identifier for the token
 				'iss'  => isset($data["iss"]) ? $data["iss"] : $this->issuer,   // Issuer
 				'nbf'  => isset($data["nbf"]) ? $data["nbf"] : $this->notBefore,// Not before
 				'exp'  => isset($data["exp"]) ? $data["exp"] : $this->expire,   // Expire
-				'data' => isset($data["data"])									// Custom data
-		];
+				'data' => $data["data"]								// Custom data
+		);
 
 		return true;
 	}
@@ -49,17 +49,23 @@ class JWTAuthentication {
 
 	}
 
-	public function decodeToken(string $token) {
+	public function decodeToken($token) {
 		try {
 			$decoded = JWT::decode($token, $this->key, array('HS256'));
 			if($decoded->aud !== self::aud()) {
-				throw new Exception("Invalid user logged in.");
+				print_r("self aud"); die(); //TODO: Diego pre
+				return false;
 			}
 		} catch (\Exception $e) {
+			print_r($e); die(); //TODO: Diego pre
 			return false;
 		}
 
 		return $decoded;
+	}
+
+	public function isValidToken($token) {
+		return $this->decodeToken($token) === false ? false : true;
 	}
 
 	private static function aud()

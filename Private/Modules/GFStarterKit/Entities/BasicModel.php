@@ -4,6 +4,7 @@ namespace Modules\GFStarterKit\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Modules\GFStarterKit\Utils\DoctrineDataTablesHelper;
+use Modules\GFStarterKit\GFDoctrineManager;
 
 
 abstract Class BasicModel
@@ -138,6 +139,12 @@ abstract Class BasicModel
 		}
 
 		return $count;
+	}
+
+	public function persistNow() {
+		$em = GFDoctrineManager::getEntityManager();
+		$em->persist($this);
+		$em->flush();
 	}
 
 }

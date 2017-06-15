@@ -78,7 +78,7 @@ class UserController {
 		}
 
 		$userModel = new UserRegistered();
-		$return['user_model'] = $userModel->loadById($this->em, $user['uid']);
+		$return['user_model'] = $userModel->loadById(GFDoctrineManager::getEntityManager(), $user['uid']);
 		$return['error'] = false;
 
 

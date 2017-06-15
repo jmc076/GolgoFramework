@@ -183,9 +183,9 @@ class Request extends HttpBase {
 	public function parseIncomingParams() {
 
 		if (isset($_SERVER['QUERY_STRING'])) {
-			parse_str($_SERVER['QUERY_STRING'], $this->GetParams);
-			foreach($this->GetParams as $field => $value) {
-				$this->GetParams[$field] = HelperUtils::xssafe($value);
+			parse_str($_SERVER['QUERY_STRING'], $this->getParams);
+			foreach($this->getParams as $field => $value) {
+				$this->getParams[$field] = HelperUtils::xssafe($value);
 
 			}
 		}

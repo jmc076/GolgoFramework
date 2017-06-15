@@ -6,6 +6,8 @@ use Controllers\FileController;
 use Modules\GFStarterKit\Controllers\UserController;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
+use Modules\GFStarterKit\Controllers\JWTAuthentication;
+use Helpers\HelperUtils;
 
 
 class BaseUserLogic extends LogicCRUD {
@@ -42,9 +44,16 @@ class BaseUserLogic extends LogicCRUD {
 
 						$result = $this->userController->login($dataArray["user"], $dataArray["password"]);
 						if($result["error"] == false) {
-							$userModel =  $result["user_model"]->getId();
+							$userModel =  $result["user_model"];
+							$userModel->setToken(HelperUtils::getRandomKey());
+							$userModel->persistNow();
 							$sessionModel = $this->gfSession->getSessionModel();
 							$sessionModel->setStatus(true)->setUserId($userModel->getId());
+							$jwt = new JWTAuthentication();
+							$jwt->initializeToken(array("data"=>array("user"=> $userModel->getId(), "token"=>$userModel->getToken())));
+							$cadena = $jwt->encodeToken();
+							print_r($cadena); die(); //TODO: Diego pre
+							return $cadena;
 						} else {
 							if($result["message"] == ERROR_USER_NAME_NOT_FOUND) {
 								$dataArray["isAdmin"] = true;
@@ -56,6 +65,15 @@ class BaseUserLogic extends LogicCRUD {
 						ExceptionController::customError("missing password and user in form", 400);
 					}
 
+					break;
+				case "validateLogin":
+					$jwt = new JWTAuthentication();
+					$data = $jwt->decodeToken($dataArray["token"]);
+					$token = $data->data->token;
+					$user = new UserRegistered();
+					$user = $user->loadByToken($token);
+					print_r($user->getUserName()); die(); //TODO: Diego pre
+					return $data;
 					break;
 				case "loadAll":
 					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
