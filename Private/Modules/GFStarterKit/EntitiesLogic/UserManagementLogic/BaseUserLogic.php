@@ -50,30 +50,16 @@ class BaseUserLogic extends LogicCRUD {
 							$sessionModel = $this->gfSession->getSessionModel();
 							$sessionModel->setStatus(true)->setUserId($userModel->getId());
 							$jwt = new JWTAuthentication();
-							$jwt->initializeToken(array("data"=>array("user"=> $userModel->getId(), "token"=>$userModel->getToken())));
+							$jwt->initializeToken(array("token"=>$userModel->getToken()));
 							$cadena = $jwt->encodeToken();
-							print_r($cadena); die(); //TODO: Diego pre
-							return $cadena;
+							return array("result"=>true, "token"=>$cadena);
 						} else {
-							if($result["message"] == ERROR_USER_NAME_NOT_FOUND) {
-								$dataArray["isAdmin"] = true;
-								return $this->create($dataArray);
-							} else
 								ExceptionController::customError("Login failed with code: " . $result["message"], 400);
 						}
 					} else {
 						ExceptionController::customError("missing password and user in form", 400);
 					}
 
-					break;
-				case "validateLogin":
-					$jwt = new JWTAuthentication();
-					$data = $jwt->decodeToken($dataArray["token"]);
-					$token = $data->data->token;
-					$user = new UserRegistered();
-					$user = $user->loadByToken($token);
-					print_r($user->getUserName()); die(); //TODO: Diego pre
-					return $data;
 					break;
 				case "loadAll":
 					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {

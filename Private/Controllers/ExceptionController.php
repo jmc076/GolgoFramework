@@ -109,6 +109,11 @@ class ExceptionController {
 		self::$msg = utf8_encode("Invalid CSRF token");
 		self::showMessage();
 	}
+	public static function jwtError() {
+		self::$code = 401;
+		self::$msg = utf8_encode("Invalid jwt token");
+		self::showMessage();
+	}
 
 	private static function showMessage() {
 

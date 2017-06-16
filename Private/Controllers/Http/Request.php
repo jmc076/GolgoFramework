@@ -145,22 +145,22 @@ class Request extends HttpBase {
 	public function sendResponse() {
 		GFEventController::dispatch("Request.sendResponse", null);
 		$this->attachHeaders();
-		if (is_null($this->getResponseBody())) return;
 
+		if (is_null($this->getResponseBody())) return;
 		$contentLength = $this->getHeaderAsString('Content-Length');
 		if ($contentLength !== null) {
 			$output = fopen('php://output', 'wb');
 			if (is_resource($this->getResponseBody()) && get_resource_type($this->getResponseBody()) == 'stream') {
 				stream_copy_to_stream($this->getResponseBody(), $output, $contentLength);
 			} else {
-				fwrite($output, $this->getResponseBody(), $contentLength);
+				fwrite($output, $this->getResponseBody());
 			}
 		} else {
 			file_put_contents('php://output', $this->getResponseBody());
 		}
 
 		if (is_resource($this->getResponseBody())) {
-			fclose($this->getResponseBody());
+			fclose($output);
 		}
 	}
 

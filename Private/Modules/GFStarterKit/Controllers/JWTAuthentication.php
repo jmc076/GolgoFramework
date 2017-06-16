@@ -53,11 +53,9 @@ class JWTAuthentication {
 		try {
 			$decoded = JWT::decode($token, $this->key, array('HS256'));
 			if($decoded->aud !== self::aud()) {
-				print_r("self aud"); die(); //TODO: Diego pre
 				return false;
 			}
 		} catch (\Exception $e) {
-			print_r($e); die(); //TODO: Diego pre
 			return false;
 		}
 
