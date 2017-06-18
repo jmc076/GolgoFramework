@@ -7,8 +7,7 @@ RewriteCond %{ENV:REDIRECT_STATUS} !200
 RewriteRule modules/([^/.]*)?/(.+)$ Private/Modules/$1/Public/$2 [NC,L]
 
 RewriteCond %{REQUEST_URI} ^((?!Private/Modules).)*$ [NC]
-RewriteCond %{REQUEST_URI} ^((?!wordpress/).)*$ [NC]
-RewriteRule (css|js|images|img|fonts|vendors)/(.+)$ Public/$1/$2 [NC,L]
+RewriteRule (css|js|images|img|fonts|vendors|assets)/(.+)$ Public/$1/$2 [NC,L]
 
 
 
