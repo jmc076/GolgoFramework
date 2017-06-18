@@ -7,6 +7,7 @@ use Modules\GFStarterKit\Entities\UserManagement\UserAnonym;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Helpers\HelperUtils;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
+use Controllers\ExceptionController;
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
 	require("password.php");
@@ -35,6 +36,16 @@ class UserController {
 				return $model;
 			}
 		}
+	}
+
+	public static function getCurrentUserModelWithJWT($jwtToken)  {
+		$jwt = new JWTAuthentication();
+		$data = $jwt->decodeToken($jwtToken);
+		if($data === false) ExceptionController::jwtError();
+		$token = $data->data->token;
+		$user = new UserRegistered();
+		$user = $user->loadByToken($token);
+		return $user;
 	}
 
 
@@ -78,7 +89,7 @@ class UserController {
 		}
 
 		$userModel = new UserRegistered();
-		$return['user_model'] = $userModel->loadById($this->em, $user['uid']);
+		$return['user_model'] = $userModel->loadById(GFDoctrineManager::getEntityManager(), $user['uid']);
 		$return['error'] = false;
 
 
@@ -92,13 +103,10 @@ class UserController {
 	*/
 	private function getUser($uid)
 	{
-		$query = $this->dbh->prepare("SELECT password, isactive FROM {$this->config['table_users']} WHERE id = ?");
-		$query->execute(array($uid));
-
 
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
-		$sql = "SELECT password, isactive FROM ".GF_TABLE_USERS." WHERE id = :id";
+		$sql = "SELECT password, is_active FROM ".GF_TABLE_USERS." WHERE id = :id";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("id", $uid);
 		$stmt->execute();
@@ -129,7 +137,7 @@ class UserController {
 	{
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
-		$sql = "SELECT id FROM ".GF_TABLE_USERS." WHERE user = :user";
+		$sql = "SELECT id FROM ".GF_TABLE_USERS." WHERE username = :user";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("user", $user);
 		$stmt->execute();
@@ -172,7 +180,7 @@ class UserController {
 	public function isUserTaken($user) {
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
-		$sql = "SELECT * FROM ".GF_TABLE_USERS." WHERE user = :user";
+		$sql = "SELECT * FROM ".GF_TABLE_USERS." WHERE username = :user";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("user", $user);
 		$stmt->execute();
@@ -294,27 +302,24 @@ class UserController {
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
 		if($all==true) {
-
-			$sql = "DELETE FROM ".GF_TABLE_USERS." WHERE ip = :ip";
+			$sql = "DELETE FROM ".GF_TABLE_ATTEMPTS." WHERE ip = :ip";
 			$stmt = $dbal->prepare($sql);
 			$stmt->bindValue("ip", $ip);
 			return $stmt->execute();
 
 		}
-
-		$sql = "SELECT id, expiredate FROM ".GF_TABLE_USERS." WHERE ip = :ip";
+		$sql = "SELECT id, expiredate FROM ".GF_TABLE_ATTEMPTS." WHERE ip = :ip";
 		$stmt = $dbal->prepare($sql);
 		$stmt->bindValue("ip", $ip);
 		$stmt->execute();
-
 		while ($row = $stmt->fetch()) {
 			$expiredate = strtotime($row['expiredate']);
 			$currentdate = strtotime(date("Y-m-d H:i:s"));
 			if($currentdate > $expiredate) {
-				$sql = "DELETE FROM ".GF_TABLE_USERS." WHERE id = :id";
-				$stmt = $dbal->prepare($sql);
-				$stmt->bindValue("id", $row['id']);
-				$stmt->execute();
+				$sql = "DELETE FROM ".GF_TABLE_ATTEMPTS." WHERE id = :id";
+				$deleteStmt = $dbal->prepare($sql);
+				$deleteStmt->bindValue("id", $row['id']);
+				$deleteStmt->execute();
 
 			}
 		}

@@ -4,19 +4,19 @@ namespace Modules\GFStarterKit\EntitiesLogic;
 
 interface CRUDInterface {
 
-	protected function preload();
+	function preload();
 
-	protected function create($dataArray);
+	function create($dataArray);
 
-	protected function update($dataArray);
+	function update($dataArray);
 
-	protected function delete($dataArray);
+	function delete($dataArray);
 
-	protected function isPrivate();
+	function isPrivate();
 
-	protected function getEntity();
+	function getEntity();
 
-	protected function assignParams($dataArray, &$model);
+	function assignParams($dataArray, &$model);
 
 
 }

@@ -11,7 +11,7 @@ define("ROOT_PATH", $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) );
 define("MYSQL_HOST", 'localhost');
 define("DB_NAME", 'golgo_framework');
 define("DB_USER", 'root');
-define("DB_PASS", '');
+define("DB_PASS", 'golgo2007');
 define("DB_PORT", '3306');
 define("DB_DRIVER", 'pdo_mysql');
 
@@ -22,11 +22,13 @@ define("SESSION_LENGTH", 3600); //30 MINS
 define("NEED_LOCALIZATION", true);
 define("DEFAULT_LOCALIZATION", "es");
 define("GF_EVENTS_ENABLED", true);
+define("JWT_SINGLE_SESSIONS_ONLY", true );
 
 
 
 //HOST CONFIGURATION
 define("BASE_PATH","localhost/GolgoFramework");
+define("BASE_PATH_DIRECTORY","GolgoFramework");
 
 
 //REDIS CACHE

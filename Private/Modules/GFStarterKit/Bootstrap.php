@@ -17,7 +17,7 @@ define("USER_SUPERADMIN", "super_admin");
 define("USER_ADMIN", "admin");
 define("USER_REGISTERED", "registered");
 
-define('LOGIN_ATTEMPTS_MITIGATION_TIME', '+30 minutes');
+define('LOGIN_ATTEMPTS_MITIGATION_TIME', '+1 minutes');
 define('LOGIN_ATTEMPTS_BEFORE_BLOCK', '5');
 define('EMAIL_MAX_LENGTH','100');
 define('EMAIL_MIN_LENGTH','5');
@@ -70,7 +70,7 @@ class Bootstrap {
 		/**
 		 * API ROUTES
 		 */
-		$config["targetClass"] = $baseNamespace."\EntitiesLogic\UserManagementLogic\UserLogic";
+		$config["targetClass"] = $baseNamespace."\EntitiesLogic\UserManagementLogic\BaseUserLogic";
 		$route = new RouteModel("/api/Users", $config);
 		$routerCollection->attachRoute($route);
 

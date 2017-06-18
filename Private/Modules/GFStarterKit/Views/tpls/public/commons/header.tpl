@@ -18,7 +18,6 @@
     
     <link rel="stylesheet" href="modules/GFStarterKit/css/admin-mdl-template.css">
     <link rel="stylesheet" href="modules/GFStarterKit/css/login.css">
-
     </head>
     <body class="login-content">
     {$csrfdata}
@@ -29,3 +28,4 @@
 	 			</svg>
 			</div>
 		</div> 
+		

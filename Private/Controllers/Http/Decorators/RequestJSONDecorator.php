@@ -23,10 +23,8 @@ class RequestJSONDecorator {
 		$result["result"] = $this->request->getResponseBody();
 
 		$result = HelperUtils::convertArrayKeysToUtf8($result);
-
 		$this->request->setHeader("Content-Type", "application/json");
 		$this->request->setResponseBody(json_encode($result));
-		$this->request->sendResponse();
 	}
 
 }

@@ -45,6 +45,12 @@ class ExceptionController {
 		self::showMessage();
 	}
 
+	public static function classNotFound() {
+		self::$code = 404;
+		self::$msg = "Class not found exception";
+		self::showMessage();
+	}
+
 	public static function subdomainNotFound() {
 		self::$code = 404;
 		self::$msg = "Subdominio no encontrado.";
@@ -101,6 +107,11 @@ class ExceptionController {
 	public static function invalidCSRF() {
 		self::$code = 401;
 		self::$msg = utf8_encode("Invalid CSRF token");
+		self::showMessage();
+	}
+	public static function jwtError() {
+		self::$code = 401;
+		self::$msg = utf8_encode("Invalid jwt token");
 		self::showMessage();
 	}
 
