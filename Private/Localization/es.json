@@ -2,13 +2,13 @@
 "admin-login" : {
 	"usuario": "Usuario",
 	"contrasena" : "Contraseña",
-	"login": "Entrar",
-	"seccion2": {
-		"extra-data": "extraño",
-		"extra-data2": "extra2"
-		}
+	"login": "Entrar"
 	},
-	"registro": {
-		"title": "Registrarse"
+"admin-register" : {
+	"user": "Usuario",
+	"pass" : "Contraseña",
+	"register": "Registrarse",
+	"email": "Email",
+	"formTitle": "Formulario de registro"
 	}
 }

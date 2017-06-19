@@ -5,7 +5,7 @@
 		<!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
 	  <div class="content">
 	            <div class="container-fluid">
-				{include file="../blocks/login-form.tpl"}
+				{include file="../blocks/register-form.tpl"}
 			</div>
 		</div>
 	</div>
@@ -13,7 +13,7 @@
 </div>
 </body>
 {include file="./commons/general/commonjs.tpl"}
-<script type="text/javascript" src="modules/GFStarterKit/js/admin-login/admin-login.js"></script>
+<script type="text/javascript" src="modules/GFStarterKit/js/admin-login/admin-register.js"></script>
 
 </html>
 

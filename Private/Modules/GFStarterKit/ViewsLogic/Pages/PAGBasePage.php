@@ -21,6 +21,9 @@ class PAGBasePage {
 	protected $routeParams;
 	protected $session;
 
+
+	protected $sessionModel;
+
 	public function __construct() {
 		$this->request = Request::getInstance();
 		$this->session = GFSessionController::getInstance();
@@ -28,10 +31,11 @@ class PAGBasePage {
 	}
 
 	protected function init() {
-		if($this->isPrivate() == true && (!isset($_SESSION["sessionData"]) || $_SESSION["sessionData"]["status"] == false)) {
+		$this->sessionModel = $this->session->getSessionModel();
+		if($this->isPrivate() == true && ($this->sessionModel->getStatus() == false || $this->sessionModel->getUserId() == 0)) {
+			print_r($this->sessionModel->getUserId()); die(); //TODO: Diego pre
 			header("Location:/");
 		} else {
-
 			$this->routeParams = $this->request->getUrlRouteParams();
 			$this->em = GFDoctrineManager::getEntityManager();
 
@@ -60,11 +64,11 @@ class PAGBasePage {
 	}
 
 	public function isSuperAdmin() {
-		return $this->userModel->getTipoUsuario() == USER_SUPERADMINISTRADOR;
+		return $this->userModel->getTipoUsuario() == USER_SUPERADMIN;
 	}
 
 	public function isAdmin() {
-		return $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR;
+		return $this->userModel->getTipoUsuario() == USER_ADMIN;
 	}
 
 	protected function assignTplVars() {

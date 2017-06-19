@@ -25,12 +25,12 @@ $(window, document, undefined).ready(function() {
 		        },
 		        success:  function (response) {
 		        	console.log(response);
-		        	if(response && response.resources != null) {
-		        		if(response.resources === true) {
-		        			window.location.href = basePath + "/admin";
+		        	if(response && response.result != null) {
+		        		if(response.result.result === true) {
+		        			window.location.href = basePath + "/dashboard";
 		        		} else {
-		        			if(response.resources.error)
-		        				alert(response.resources.error);
+		        			if(response.result.error)
+		        				alert(response.result.error);
 		        			else
 		        				alert("Usuario o contraseña erroneos.");
 		        		}

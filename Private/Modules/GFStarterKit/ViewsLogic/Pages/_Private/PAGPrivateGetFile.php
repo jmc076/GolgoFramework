@@ -1,7 +1,8 @@
 <?php
 namespace ViewsLogic\Pages\_Private;
 
-use ViewsLogic\Pages\_Base\PAGBasePage;
+
+use Modules\GFStarterKit\ViewsLogic\Pages\PAGBasePage;
 
 class PAGPrivateGetFile extends PAGBasePage {
 

@@ -60,12 +60,23 @@ class Bootstrap {
 		 * PAGE ROUTES
 		 */
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Public\PAGPublicAdminLogin";
-		$route = new RouteModel("login", $config);
+		$route = new RouteModel("/login", $config);
 		$routerCollection->attachRoute($route);
 		$route = new RouteModel("/acceso", $config);
 		$routerCollection->attachRoute($route);
 		$route = new RouteModel("/", $config);
 		$routerCollection->attachRoute($route);
+
+		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Public\PAGPublicAdminRegister";
+		$route = new RouteModel("/register", $config);
+		$routerCollection->attachRoute($route);
+
+		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionInicio";
+		$route = new RouteModel("/dashboard", $config);
+		$routerCollection->attachRoute($route);
+		$route = new RouteModel("/dashboard/home", $config);
+		$routerCollection->attachRoute($route);
+
 
 		/**
 		 * API ROUTES
