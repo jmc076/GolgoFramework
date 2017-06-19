@@ -27,8 +27,8 @@ define("JWT_SINGLE_SESSIONS_ONLY", true );
 
 
 //HOST CONFIGURATION
-define("BASE_PATH","localhost/GolgoFramework");
-define("BASE_PATH_DIRECTORY","GolgoFramework");
+define("BASE_PATH","localhost/GolgoFrameworkHexenbytes");
+define("BASE_PATH_DIRECTORY","GolgoFrameworkHexenbytes");
 
 
 //REDIS CACHE
