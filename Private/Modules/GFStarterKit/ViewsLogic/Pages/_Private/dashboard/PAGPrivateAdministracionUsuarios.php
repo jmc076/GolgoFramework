@@ -13,7 +13,7 @@ class PAGPrivateAdministracionUsuarios extends PAGPrivateAdministracionBase {
 
 
 	protected function setTplFile() {
-		$this->tpl = SMARTY_TEMPLATE_MODULES_FOLDER . '/Tivoli/Views/tpls/private/admin/usuarios.tpl';
+		$this->tpl = GF_SMARTY_TEMPLATE_FOLDER . '/private/dashboard/usuarios.tpl';
 
 	}
 

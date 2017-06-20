@@ -77,6 +77,11 @@ class Bootstrap {
 		$route = new RouteModel("/dashboard/home", $config);
 		$routerCollection->attachRoute($route);
 
+		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionUsuarios";
+		$route = new RouteModel("dashboard/users", $config);
+		$routerCollection->attachRoute($route);
+
+
 
 		/**
 		 * API ROUTES
