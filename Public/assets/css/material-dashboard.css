@@ -1479,6 +1479,9 @@ body.inverse .card .form-control {
   height: auto;
   min-height: 100vh;
   background-image: url("../img/background2.jpg");
+      background-repeat: no-repeat;
+    background-size: cover;
+}
 }
 
 blockquote p {
