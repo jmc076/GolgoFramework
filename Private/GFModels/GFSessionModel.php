@@ -14,7 +14,6 @@ class GFSessionModel {
 
 
 
-
 	public function initializeValues() {
 		$this->userModel = null;
 		$this->userId = 0;
@@ -29,6 +28,7 @@ class GFSessionModel {
 	}
 	public function setUserModel($userModel) {
 		$this->userModel = $userModel;
+		$this->autoSave();
 		return $this;
 	}
 	public function getUserId() {
@@ -36,6 +36,7 @@ class GFSessionModel {
 	}
 	public function setUserId($userId) {
 		$this->userId = $userId;
+		$this->autoSave();
 		return $this;
 	}
 	public function getUserIp() {
@@ -43,6 +44,7 @@ class GFSessionModel {
 	}
 	public function setUserIp($userIp) {
 		$this->userIp = $userIp;
+		$this->autoSave();
 		return $this;
 	}
 	public function getUserCart() {
@@ -50,13 +52,16 @@ class GFSessionModel {
 	}
 	public function setUserCart($userCart) {
 		$this->userCart = $userCart;
+		$this->autoSave();
 		return $this;
 	}
 	public function getUserExtra() {
 		return $this->userExtra;
+
 	}
 	public function setUserExtra($userExtra) {
 		$this->userExtra = $userExtra;
+		$this->autoSave();
 		return $this;
 	}
 	public function getStatus() {
@@ -64,6 +69,7 @@ class GFSessionModel {
 	}
 	public function setStatus($status) {
 		$this->status = $status;
+		$this->autoSave();
 		return $this;
 	}
 	public function getUserLang() {
@@ -71,11 +77,13 @@ class GFSessionModel {
 	}
 	public function setUserLang($userLang) {
 		$this->userLang = $userLang;
+		$this->autoSave();
 		return $this;
 	}
 
-	public function save() {
-		GFSessionController::getInstance()->saveModel($this);
+	private function autoSave() {
+		$session = GFSessionController::getInstance();
+		$session->getSession()->saveSessionModel($this);
 	}
 
 

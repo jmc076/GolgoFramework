@@ -23,7 +23,6 @@
 	
 	    <!--  Material Dashboard CSS    -->
 	    <link href="./assets/css/material-dashboard.css" rel="stylesheet"/>
-	    <link href="./assets/css/colors.css" rel="stylesheet"/>
 	
 	    <!--     Fonts and icons     -->
 	    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">

@@ -6,6 +6,7 @@ use Controllers\Http\Request;
 use Controllers\i18nController;
 use Controllers\GFSessions\GFSessionController;
 use Modules\GFStarterKit\GFDoctrineManager;
+use Modules\GFStarterKit\Controllers\UserController;
 
 
 class PAGBasePage {
@@ -33,7 +34,6 @@ class PAGBasePage {
 	protected function init() {
 		$this->sessionModel = $this->session->getSessionModel();
 		if($this->isPrivate() == true && ($this->sessionModel->getStatus() == false || $this->sessionModel->getUserId() == 0)) {
-			print_r($this->sessionModel->getUserId()); die(); //TODO: Diego pre
 			header("Location:/");
 		} else {
 			$this->routeParams = $this->request->getUrlRouteParams();
@@ -61,14 +61,15 @@ class PAGBasePage {
 	}
 
 	protected function preLoad(){
+		$this->userModel = UserController::getCurrentUserModel();
 	}
 
 	public function isSuperAdmin() {
-		return $this->userModel->getTipoUsuario() == USER_SUPERADMIN;
+		return $this->userModel->getUserType() == USER_SUPERADMIN;
 	}
 
 	public function isAdmin() {
-		return $this->userModel->getTipoUsuario() == USER_ADMIN;
+		return $this->userModel->getUserType() == USER_ADMIN;
 	}
 
 	protected function assignTplVars() {

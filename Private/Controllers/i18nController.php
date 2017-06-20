@@ -42,9 +42,9 @@ class i18nController {
 	}
 
 	public static function getDefaultLanguage() {
-	 $session = GFSessionController::getInstance();
+	 	$session = GFSessionController::getInstance();
 	    $lang = $session->getSessionModel()->getUserLang();
-	     
+
 	    if($lang != "") {
 	        return $lang;
 	    } else {
@@ -77,6 +77,6 @@ class i18nController {
 			}
 		}
 		return strtolower($deflang);
-		
+
 	}
 }

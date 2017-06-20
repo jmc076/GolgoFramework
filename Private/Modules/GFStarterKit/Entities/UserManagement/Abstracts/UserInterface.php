@@ -8,5 +8,7 @@ interface UserInterface {
 
 	public function getUserType();
 
+	public function getId();
+
 }
 

@@ -48,7 +48,7 @@ class BaseUserLogic extends LogicCRUD {
 							$userModel->setToken(HelperUtils::getRandomKey());
 							$userModel->persistNow();
 							$sessionModel = $this->gfSession->getSessionModel();
-							$sessionModel->setStatus(true)->setUserId($userModel->getId());
+							$sessionModel->setStatus(true)->setUserId($userModel->getId())->setUserModel($userModel->getModelNameWithNamespace());
 							$jwt = new JWTAuthentication();
 							$jwt->initializeToken(array("token"=>$userModel->getToken()));
 							$cadena = $jwt->encodeToken();

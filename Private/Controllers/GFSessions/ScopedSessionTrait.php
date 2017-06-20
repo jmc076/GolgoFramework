@@ -8,22 +8,18 @@ trait ScopedSessionTrait {
 
 	public function __construct($scope = self::GF_DEFAULT_SESSION) {
 		$this->scope = $scope;
+		$this->initializeSession();
 	}
 
-	public function getSession(){
-		if(isset($_SESSION[$this->scope])) {
-			return $_SESSION[$this->scope];
-		} else {
+	private function initializeSession() {
+		if(!isset($_SESSION[$this->scope])) {
 			$_SESSION[$this->scope] = array();
-			return $_SESSION[$this->scope];
 		}
 	}
 
-
 	public function put($key, $value) {
 		try {
-			$session = $this->getSessionScope();
-			$session[$key] = $value;
+			$_SESSION[$this->scope][$key] = $value;
 		} catch (Exception $e) {
 			return false;
 		}
@@ -32,9 +28,8 @@ trait ScopedSessionTrait {
 	}
 	public function safePut($key, $value){
 		try {
-			$session = $this->getSessionScope();
-			if(!isset($session[$key])){
-				$session[$key] = $value;
+			if(!isset($_SESSION[$this->scope][$key])){
+				$_SESSION[$this->scope][$key] = $value;
 				return true;
 			}
 			return false;
@@ -46,8 +41,7 @@ trait ScopedSessionTrait {
 
 	public function get($key) {
 		try {
-			$session = $this->getSessionScope();
-			return isset($session[$key]) ? $session[$key]: null;
+			return isset($_SESSION[$this->scope][$key]) ? $_SESSION[$this->scope][$key]: null;
 		} catch (Exception $e) {
 			return null;
 		}
@@ -55,8 +49,7 @@ trait ScopedSessionTrait {
 
 	public function getAndDelete($key){
 		try {
-			$session = $this->getSessionScope();
-			$value = isset($session[$key]) ? $session[$key]: null;
+			$value = isset($$_SESSION[$this->scope][$key]) ? $_SESSION[$this->scope][$key]: null;
 			$this->delete($key);
 			return $value;
 		} catch (Exception $e) {
@@ -66,12 +59,15 @@ trait ScopedSessionTrait {
 
 	public function delete($key) {
 		try {
-			$session = $this->getSessionScope();
-			unset($session[$key]);
+			unset($_SESSION[$this->scope][$key]);
 		} catch (Exception $e) {
 			return false;
 		}
 		return  true;
+	}
+
+	public function isKeySet($key) {
+		return isset($_SESSION[$this->scope][$key]);
 	}
 
 

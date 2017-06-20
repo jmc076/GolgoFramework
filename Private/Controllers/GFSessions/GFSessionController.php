@@ -2,7 +2,6 @@
 namespace Controllers\GFSessions;
 
 
-use GFModels\GFSessionModel;
 
 class GFSessionController {
 
@@ -12,13 +11,18 @@ class GFSessionController {
 	private $csrf;
 
 	private function __construct() {
-		@session_start();
-		$sessionController = new ScopedSessionController(ScopedSessionController::GF_GLOBAL_SESSION);
-		$this->session = $sessionController->getSession();
-		$this->init();
+		$this->session = new ScopedSessionController(ScopedSessionController::GF_GLOBAL_SESSION);
+		$this->session->initSessionModel();
+		$this->sessionModel = $this->session->getSessionModel();
 		$this->initSessionTimings();
 		$this->csrf = CSRFSessionController::getInstance();
 
+	}
+
+
+
+	public function getSession() {
+		return $this->session;
 	}
 
 	public static function getInstance() {
@@ -37,38 +41,27 @@ class GFSessionController {
 		return $this->csrf->getTokenValue();
 	}
 
-
-	/**
-	 * Initialize session model object to sessionModel
-	 */
-	public function init() {
-
-		if(!isset($this->session["sessionModel"])) {
-			$this->sessionModel = new GFSessionModel();
-			$this->sessionModel->initializeValues();
-			$this->session["sessionModel"] = $this->sessionModel;
-		} else {
-			$this->sessionModel = $this->session["sessionModel"];
-		}
-
+	public static function startManagingSession() {
+		@session_start();
 	}
 
+
 	public  function initSessionTimings(){
-		if (!isset($this->session['CREATED'])) {
-			$this->session['CREATED'] = time();
-		} else if (time() - $this->session['CREATED'] > SESSION_LENGTH) {
+		if (!$this->session->isKeySet("CREATED")) {
+			$this->session->put("CREATED", time());
+		} else if (time() - $this->session->get("CREATED") > SESSION_LENGTH) {
 			$this->regenerateSession();
 		}
-		if (isset($this->session['LAST_ACTIVITY']) && (time() - $this->session['LAST_ACTIVITY'] > SESSION_LENGTH)) {
+		if ($this->session->isKeySet("LAST_ACTIVITY") && (time() - $this->session->get("LAST_ACTIVITY") > SESSION_LENGTH)) {
 			self::expireSession();
 		}
-		$this->session['LAST_ACTIVITY'] = time();
+		$this->session->put("LAST_ACTIVITY", time());
 	}
 
 
 	public function regenerateSession() {
 		session_regenerate_id(true);
-		$this->session['CREATED'] = time();
+		$this->session->put("CREATED", time());
 	}
 
 	public function getSessionId() {
@@ -105,21 +98,19 @@ class GFSessionController {
 		return $this->sessionModel;
 	}
 
+	public function saveSessionModel() {
+		$this->session->saveSessionModel($this->sessionModel);
+	}
+
 	public function setSessionModel($sessionModel) {
 		$this->sessionModel = $sessionModel;
+		$this->session->saveSessionModel($this->sessionModel);
 		return $this;
 	}
 
-	public function saveModel(GFSessionModel $model) {
-		try {
-			$this->sessionModel = $model;
-			$this->session["sessionModel"] = $this->sessionModel;
-			return true;
-		} catch (Exception $e) {
-			return false;
-		}
+
+	public function getCurrentUserModel() {
 
 	}
-
 
 }

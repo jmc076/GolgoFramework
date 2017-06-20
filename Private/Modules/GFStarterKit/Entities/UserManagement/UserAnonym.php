@@ -21,4 +21,12 @@ class UserAnonym implements UserInterface
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 * @see \Modules\GFStarterKit\Entities\UserManagement\Abstracts\UserInterface::getId()
+	 */
+	public function getId() {
+		return 0;
+	}
+
 }

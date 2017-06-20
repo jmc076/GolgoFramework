@@ -9,9 +9,8 @@ use Controllers\GFSessions\GFSessionController;
 class PAGPrivateAdministracionBase extends PAGBasePage{
 
 	public function preLoad() {
-		print_r("admin base"); die(); //TODO: Diego pre
 		parent::preLoad();
-		if(!$this->isAdmin() || !$this->isSuperAdmin()) {
+		if(!$this->isAdmin() && !$this->isSuperAdmin()) {
 			GFSessionController::getInstance()->exitSession();
 			header("Location:/login");
 			die();

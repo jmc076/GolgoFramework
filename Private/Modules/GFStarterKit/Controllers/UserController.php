@@ -25,7 +25,8 @@ class UserController {
 			$model = new UserAnonym();
 			return $model;
 
-		} elseif ($userid = $sessionModel->getUserId() != 0) {
+		} elseif ($sessionModel->getUserId() != 0) {
+			$userid = $sessionModel->getUserId();
 			$userModel = $sessionModel->getUserModel();
 			if (class_exists($userModel)) {
 				$model = new $userModel();

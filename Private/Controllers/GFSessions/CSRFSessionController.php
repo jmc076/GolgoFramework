@@ -9,8 +9,7 @@ class CSRFSessionController {
 	private static $instancia;
 
 	private function __construct() {
-		$sessionController = new ScopedSessionController(ScopedSessionController::CSRF_SCOPE);
-		$this->session = $sessionController->getSession();
+		$this->session = new ScopedSessionController(ScopedSessionController::CSRF_SCOPE);
 		$this->initialize();
 	}
 
@@ -45,21 +44,21 @@ class CSRFSessionController {
 
 	public function getTokenId() {
 
-		if(isset($this->session['token_id'])) {
-			return $this->session['token_id'];
+		if($this->session->isKeySet("token_id")) {
+			return $this->session->get("token_id");
 		} else {
 			$token_id = HelperUtils::getRandomKey(10);
-			$this->session['token_id'] = $token_id;
+			$this->session->put("token_id", $token_id);
 			return $token_id;
 		}
 	}
 
 	public function getTokenValue() {
-		if(isset($this->session['token_value'])) {
-			return $this->session['token_value'];
+		if($this->session->isKeySet("token_value")) {
+			return $this->session->get("token_value");
 		} else {
 			$token = hash('sha256', HelperUtils::getRandomKey(500));
-			$this->session['token_value'] = $token;
+			$this->session->put("token_value", $token);
 			return $token;
 		}
 
@@ -67,7 +66,7 @@ class CSRFSessionController {
 
 	public function resetTokenValue() {
 		$token = hash('sha256', HelperUtils::getRandomKey(500));
-		$this->session['token_value'] = $token;
+		$this->session->put("token_value", $token);
 		return $token;
 
 	}

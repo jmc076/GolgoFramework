@@ -11,12 +11,13 @@ use Controllers\i18nController;
 class GFStarter {
 
 	private $routerCollection;
-	
+
 	function __construct(RouteCollection $routerCollection) {
 
+		GFSessionController::startManagingSession();
 		$session = GFSessionController::getInstance();
 
-		$session->getSessionModel()->setUserLang(i18nController::getDefaultLanguage())->save();
+		$session->getSessionModel()->setUserLang(i18nController::getDefaultLanguage());
 		$this->routerCollection = $routerCollection;
 
 		if(REDIS_CACHE_ENABLED) {
@@ -30,10 +31,12 @@ class GFStarter {
 
 	}
 
-	public function start($modules) {
-		$request = Request::getInstance();
-
+	public function initModules($modules) {
 		$this->loadModules($modules);
+	}
+
+	public function start() {
+		$request = Request::getInstance();
 
 		$router = new Router($this->routerCollection, $request);
 

@@ -15,7 +15,6 @@ class PAGPrivateAdministracionInicio extends PAGPrivateAdministracionBase {
 
 
 	protected function setTplFile() {
-		print_r("admin home"); die(); //TODO: Diego pre
 		$this->tpl = GF_SMARTY_TEMPLATE_FOLDER . '/private/dashboard/admin_home.tpl';
 
 	}

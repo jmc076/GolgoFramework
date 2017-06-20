@@ -33,13 +33,5 @@ class UserRegistered extends BasicModel implements UserInterface
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see \Modules\GFStarterKit\Entities\UserManagement\UserInterface::getUserType()
-	 */
-	public function getUserType() {
-		// TODO: Auto-generated method stub
-
-	}
 
 }
