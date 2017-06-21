@@ -2,7 +2,10 @@
 "admin-login" : {
 	"usuario": "Usuario",
 	"contrasena" : "Contraseña",
-	"login": "Entrar"
+	"login": "Entrar",
+	"alreadyLogged": "Ya has iniciado sesión.",
+	"continue": "Continuar con mi sesión",
+	"exit": "Desconectar"
 	},
 "admin-register" : {
 	"user": "Usuario",

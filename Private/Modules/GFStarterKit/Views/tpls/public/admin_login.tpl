@@ -5,7 +5,11 @@
 		<!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
 	  <div class="content">
 	            <div class="container-fluid">
-				{include file="../blocks/login-form.tpl"}
+	            {if isset($alreaydLogged) && $alreaydLogged == true}
+	           	 	{include file="../blocks/login-form-logged.tpl"}
+	            {else}
+					{include file="../blocks/login-form.tpl"}
+				{/if}
 			</div>
 		</div>
 	</div>

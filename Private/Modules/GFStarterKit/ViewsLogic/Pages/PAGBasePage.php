@@ -36,7 +36,7 @@ class PAGBasePage {
 
 	protected function init() {
 		$this->sessionModel = $this->session->getSessionModel();
-		if($this->isPrivate() == true && ($this->sessionModel->getStatus() == false || $this->sessionModel->getUserId() == 0)) {
+		if($this->isPrivate() == true && !$this->isUserLogged()) {
 			$this->redirectTo("/".BASE_PATH_DIRECTORY);
 		} else {
 			$this->routeParams = $this->request->getUrlRouteParams();
@@ -108,7 +108,10 @@ class PAGBasePage {
 
 	public function redirectTo($location) {
 		$this->request->setHeader("Location", $location);
-		$this->request->sendResponse();
+	}
+
+	public function isUserLogged() {
+		return $this->sessionModel->getStatus() === true && $this->sessionModel->getUserId() != 0;
 	}
 
 

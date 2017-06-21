@@ -14,6 +14,9 @@ class PAGPublicAdminLogin extends PAGBasePage {
 		$this->smarty->assign("companyUrl", "https://www.hexenbytes.com");
 		$this->smarty->assign("loginActive", "active");
 		$this->smarty->assign("registerActive", "");
+		if($this->isUserLogged()) {
+			$this->smarty->assign("alreaydLogged", true);
+		}
 	}
 
 
