@@ -24,6 +24,10 @@ define("DEFAULT_LOCALIZATION", "es");
 define("GF_EVENTS_ENABLED", true);
 define("JWT_SINGLE_SESSIONS_ONLY", true );
 
+const GF_GLOBAL_SESSION = "gf_session";
+const GF_DEFAULT_SESSION = "gf_default";
+
+
 
 
 //HOST CONFIGURATION

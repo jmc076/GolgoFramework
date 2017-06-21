@@ -83,7 +83,7 @@ class GFSessionModel {
 
 	private function autoSave() {
 		$session = GFSessionController::getInstance();
-		$session->getSession()->saveSessionModel($this);
+		$session->saveSessionModel($this);
 	}
 
 

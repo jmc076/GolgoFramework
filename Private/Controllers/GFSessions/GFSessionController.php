@@ -3,26 +3,21 @@ namespace Controllers\GFSessions;
 
 
 
+use GFModels\GFSessionModel;
+use Helpers\HelperUtils;
+
 class GFSessionController {
 
-	private $session;
-	protected $sessionModel;
+	use ScopedSessionTrait;
+
 	private static $instancia;
-	private $csrf;
 
 	private function __construct() {
-		$this->session = new ScopedSessionController(ScopedSessionController::GF_GLOBAL_SESSION);
-		$this->session->initSessionModel();
-		$this->sessionModel = $this->session->getSessionModel();
+		$this->scopedSessionInit(GF_GLOBAL_SESSION);
+		$this->initSessionModel();
 		$this->initSessionTimings();
-		$this->csrf = CSRFSessionController::getInstance();
+		$this->initCSRF();
 
-	}
-
-
-
-	public function getSession() {
-		return $this->session;
 	}
 
 	public static function getInstance() {
@@ -33,35 +28,41 @@ class GFSessionController {
 		return self::$instancia;
 	}
 
-	public function getSessionCsrfName() {
-		return $this->csrf->getTokenId();
+	public function initSessionModel() {
+		if(!$this->isKeySet("sessionModel")) {
+			$model =  new GFSessionModel();
+			$model->initializeValues();
+			$this->put("sessionModel", $model);
+		}
 	}
 
-	public function getSessionCsrfValue() {
-		return $this->csrf->getTokenValue();
+	public  function initSessionTimings(){
+		if (!$this->isKeySet("CREATED")) {
+			$this->put("CREATED", time());
+		} else if (time() - $this->get("CREATED") > SESSION_LENGTH) {
+			$this->regenerateSession();
+		}
+		if ($this->isKeySet("LAST_ACTIVITY") && (time() - $this->get("LAST_ACTIVITY") > SESSION_LENGTH)) {
+			self::expireSession();
+		}
+		$this->put("LAST_ACTIVITY", time());
+	}
+
+	public function getSessionModel() {
+		return $this->get("sessionModel");
+	}
+
+	public function saveSessionModel($model) {
+		$this->put("sessionModel", $model);
 	}
 
 	public static function startManagingSession() {
 		@session_start();
 	}
 
-
-	public  function initSessionTimings(){
-		if (!$this->session->isKeySet("CREATED")) {
-			$this->session->put("CREATED", time());
-		} else if (time() - $this->session->get("CREATED") > SESSION_LENGTH) {
-			$this->regenerateSession();
-		}
-		if ($this->session->isKeySet("LAST_ACTIVITY") && (time() - $this->session->get("LAST_ACTIVITY") > SESSION_LENGTH)) {
-			self::expireSession();
-		}
-		$this->session->put("LAST_ACTIVITY", time());
-	}
-
-
 	public function regenerateSession() {
 		session_regenerate_id(true);
-		$this->session->put("CREATED", time());
+		$this->put("CREATED", time());
 	}
 
 	public function getSessionId() {
@@ -71,7 +72,6 @@ class GFSessionController {
 	public  function setSessionId($sessionID) {
 		session_id($sessionID);
 	}
-
 
 	public  function exitSession() {
 		$_SESSION = array();
@@ -93,24 +93,71 @@ class GFSessionController {
 
 	}
 
-
-	public function getSessionModel() {
-		return $this->sessionModel;
-	}
-
-	public function saveSessionModel() {
-		$this->session->saveSessionModel($this->sessionModel);
-	}
-
 	public function setSessionModel($sessionModel) {
-		$this->sessionModel = $sessionModel;
-		$this->session->saveSessionModel($this->sessionModel);
+		$thisModel = $sessionModel;
+		$this->saveSessionModel($thisModel);
 		return $this;
 	}
 
+	/////////////////CSRF////////////////////////
+	private function initCSRF() {
+		$this->getTokenId();
+		$this->getTokenValue();
+	}
 
-	public function getCurrentUserModel() {
+
+	public function getSessionCsrfName() {
+		return $this->getTokenId();
+	}
+
+	public function getSessionCsrfValue() {
+		return $this->getTokenValue();
+	}
+
+	public function isValid($dataArray) {
+		if(isset($dataArray[$this->getTokenId()])) {
+			if ($dataArray[$this->getTokenId()] == $this->getTokenValue()) {
+				$this->resetTokenValue();
+				return true;
+			} else {
+				$this->resetTokenValue();
+				return false;
+			}
+		} else {
+			$this->resetTokenValue();
+			return false;
+		}
+	}
+
+
+	public function getTokenId() {
+
+		if($this->isKeySet("token_id")) {
+			return $this->get("token_id");
+		} else {
+			$token_id = HelperUtils::getRandomKey(10);
+			$this->put("token_id", $token_id);
+			return $token_id;
+		}
+	}
+
+	public function getTokenValue() {
+		if($this->isKeySet("token_value")) {
+			return $this->get("token_value");
+		} else {
+			$token = hash('sha256', HelperUtils::getRandomKey(500));
+			$this->put("token_value", $token);
+			return $token;
+		}
 
 	}
+
+	public function resetTokenValue() {
+		$token = hash('sha256', HelperUtils::getRandomKey(500));
+		$this->put("token_value", $token);
+		return $token;
+
+	}
+
 
 }

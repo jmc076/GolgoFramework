@@ -31,6 +31,7 @@ define('ERROR_USER_NOT_ACTIVE', "user_not_active");
 define("GF_JWT_AUTHENTICATION_EXPIRATION", 60*60); //1 hour
 
 
+
 class Bootstrap {
 
 
@@ -78,17 +79,23 @@ class Bootstrap {
 		$routerCollection->attachRoute($route);
 
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionUsuarios";
-		$route = new RouteModel("dashboard/users", $config);
+		$route = new RouteModel("/dashboard/users", $config);
 		$routerCollection->attachRoute($route);
 
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionLockscreen";
-		$route = new RouteModel("lockscreen", $config);
+		$route = new RouteModel("/lockscreen", $config);
 		$routerCollection->attachRoute($route);
 
+		$config["targetClass"] = $baseNamespace . "\Controllers\UserController";
+		$config["targetClassMethod"] = "logout";
+		$route = new RouteModel("/logout", $config);
+		$routerCollection->attachRoute($route);
+		$route = new RouteModel("/exit", $config);
+		$routerCollection->attachRoute($route);
+		unset($config["targetClassMethod"]);
 
 
-
-		/**
+			/**
 		 * API ROUTES
 		 */
 		$config["targetClass"] = $baseNamespace."\EntitiesLogic\UserManagementLogic\BaseUserLogic";

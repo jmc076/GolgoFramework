@@ -14,7 +14,8 @@
 		</div>
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
-			
+			<li class=""><a href="/GolgoFramework/logout">  <i class="material-icons">power_settings_new</i>Logout
+				</a></li>
 			</ul>
 		</div>
 	</div>

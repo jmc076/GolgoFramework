@@ -25,7 +25,7 @@ class LogicCRUD implements CRUDInterface {
 	protected $routeParams = array();
 	protected $dataArray = array();
 
-	protected $gfSession;
+	protected $session;
 	protected $redisClient;
 	protected $em;
 	protected $request;
@@ -33,7 +33,7 @@ class LogicCRUD implements CRUDInterface {
 	public function __construct() {
 		GFEventController::dispatch("LogicCRUD.__construct", null);
 
-		$this->gfSession = GFSessionController::getInstance();
+		$this->session = GFSessionController::getInstance();
 		$this->request = Request::getInstance();
 		$this->em = GFDoctrineManager::getEntityManager();
 
@@ -63,7 +63,7 @@ class LogicCRUD implements CRUDInterface {
 			};
 		}
 		if($op != null) {
-			$key = "api:" . $this->gfSession->getSessionId() . ":" . md5(serialize($this->dataArray));
+			$key = "api:" . $this->session->getSessionId() . ":" . md5(serialize($this->dataArray));
 		    if(REDIS_CACHE_ENABLED) {
 		        if($this->redisClient->exists($key)) {
 		            $this->result = json_decode($this->redisClient->get($key));

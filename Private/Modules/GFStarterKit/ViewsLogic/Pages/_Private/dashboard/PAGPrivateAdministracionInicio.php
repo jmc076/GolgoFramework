@@ -5,7 +5,9 @@ namespace Modules\GFStarterKit\ViewsLogic\Pages\_Private\dashboard;
 class PAGPrivateAdministracionInicio extends PAGPrivateAdministracionBase {
 
 
+
 	protected function assignTplVars() {
+
 		parent::assignTplVars();
 		$this->smarty->assign("inicioActive", "active");
 		$this->smarty->assign("headerTitle", "Administración Inicio");

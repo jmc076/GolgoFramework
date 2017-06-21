@@ -9,19 +9,20 @@ use Controllers\GFSessions\GFSessionController;
 class PAGPrivateAdministracionBase extends PAGBasePage {
 
 	protected function preLoad() {
-		$this->request->setHeader("Cache-Control","no-cache, no-store, must-revalidate");
 		parent::preLoad();
-		if(strpos($_SERVER['REQUEST_URI'], "lockscreen") === false){
-			$this->session->getSession()->put("previousUrl", $_SERVER['REQUEST_URI']);
-		}
+
+		$this->request->setHeader("Cache-Control","no-cache, no-store, must-revalidate");
 		if(!$this->isAdmin() && !$this->isSuperAdmin()) {
 			GFSessionController::getInstance()->exitSession();
-			header("Location: /".BASE_PATH_DIRECTORY."/login");
-			die();
+			$this->redirectTo("/".BASE_PATH_DIRECTORY."/login");
 		}
-		if(GFSessionController::getInstance()->getSession()->get("lockedScreen") && !$this instanceof PAGPrivateAdministracionLockscreen ) {
-			header("Location: /".BASE_PATH_DIRECTORY."/lockscreen");
-			die();
+
+		if(GFSessionController::getInstance()->get("lockedScreen") && !$this instanceof PAGPrivateAdministracionLockscreen ) {
+			$this->redirectTo("/".BASE_PATH_DIRECTORY."/lockscreen");
+		} else {
+			if(strpos($_SERVER['REQUEST_URI'], "lockscreen") === false){
+				$this->session->put("previousUrl", $_SERVER['REQUEST_URI']);
+			}
 		}
 	}
 

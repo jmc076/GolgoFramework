@@ -15,8 +15,11 @@ if (version_compare(phpversion(), '5.5.0', '<')) {
 
 class UserController {
 
-
-
+	public static function logout() {
+		GFSessionController::getInstance()->exitSession();
+		header("Location: /" . BASE_PATH_DIRECTORY . "/");
+		die();
+	}
 
 	public static function getCurrentUserModel() {
 		$sessionController = GFSessionController::getInstance();

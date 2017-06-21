@@ -59,6 +59,7 @@ abstract class HttpBase {
 		} else {
 			$this->headers[$keyName] = [$name,(array)$value ];
 		}
+
 	}
 
 	public function setHeaders(array $headers) {

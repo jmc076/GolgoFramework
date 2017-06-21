@@ -16,6 +16,7 @@ use Modules\GFStarterKit\Entities\UserManagement\Abstracts\BaseUser;
  */
 class UserRegistered extends BaseUser implements UserInterface {
 
+
 	/**
 	 * {@inheritDoc}
 	 * @see \Modules\GFStarterKit\Entities\UserManagement\UserInterface::getPermisos()
@@ -30,6 +31,4 @@ class UserRegistered extends BaseUser implements UserInterface {
 		return $permisos;
 
 	}
-
-
 }

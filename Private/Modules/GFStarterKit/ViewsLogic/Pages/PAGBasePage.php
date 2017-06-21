@@ -37,7 +37,7 @@ class PAGBasePage {
 	protected function init() {
 		$this->sessionModel = $this->session->getSessionModel();
 		if($this->isPrivate() == true && ($this->sessionModel->getStatus() == false || $this->sessionModel->getUserId() == 0)) {
-			header("Location:/");
+			$this->redirectTo("/".BASE_PATH_DIRECTORY);
 		} else {
 			$this->routeParams = $this->request->getUrlRouteParams();
 			$this->em = GFDoctrineManager::getEntityManager();
@@ -105,6 +105,11 @@ class PAGBasePage {
 		return false;
 	}
 
+
+	public function redirectTo($location) {
+		$this->request->setHeader("Location", $location);
+		$this->request->sendResponse();
+	}
 
 
 }

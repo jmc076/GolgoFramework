@@ -4,14 +4,16 @@ namespace Controllers\GFSessions;
 
 trait ScopedSessionTrait {
 
+
 	private $scope;
 
-	public function __construct($scope = self::GF_DEFAULT_SESSION) {
+
+	public function scopedSessionInit($scope = GF_DEFAULT_SESSION) {
 		$this->scope = $scope;
-		$this->initializeSession();
+		$this->createSessionScope();
 	}
 
-	private function initializeSession() {
+	private function createSessionScope() {
 		if(!isset($_SESSION[$this->scope])) {
 			$_SESSION[$this->scope] = array();
 		}

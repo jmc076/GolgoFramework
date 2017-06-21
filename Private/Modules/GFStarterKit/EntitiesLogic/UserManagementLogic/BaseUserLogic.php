@@ -28,12 +28,6 @@ class BaseUserLogic extends LogicCRUD {
 		return new UserRegistered();
 	}
 
-	public function logout() {
-		$this->gfSession->exitSession();
-		header("Location: /");
-		die();
-	}
-
 	public function read($dataArray) {
 		$return = null;
 		if(isset($dataArray["sop"]) && $dataArray["sop"] != "") {
@@ -47,7 +41,7 @@ class BaseUserLogic extends LogicCRUD {
 							$userModel =  $result["user_model"];
 							$userModel->setToken(HelperUtils::getRandomKey());
 							$userModel->persistNow();
-							$sessionModel = $this->gfSession->getSessionModel();
+							$sessionModel = $this->session->getSessionModel();
 							$sessionModel->setStatus(true)->setUserId($userModel->getId())->setUserModel($userModel->getModelNameWithNamespace());
 							$jwt = new JWTAuthentication();
 							$jwt->initializeToken(array("token"=>$userModel->getToken()));
