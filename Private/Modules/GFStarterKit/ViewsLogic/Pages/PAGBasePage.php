@@ -22,12 +22,15 @@ class PAGBasePage {
 	protected $routeParams;
 	protected $session;
 
+	protected $userController;
+
 
 	protected $sessionModel;
 
 	public function __construct() {
 		$this->request = Request::getInstance();
 		$this->session = GFSessionController::getInstance();
+		$this->userController = new UserController();
 		$this->init();
 	}
 

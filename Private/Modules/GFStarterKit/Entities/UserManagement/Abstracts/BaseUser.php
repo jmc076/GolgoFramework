@@ -10,7 +10,7 @@ use Modules\GFStarterKit\GFDoctrineManager;
 /**
  * BaseUser
  */
-trait BaseUserTrait
+abstract class BaseUser extends BasicModel
 {
 
 	/**

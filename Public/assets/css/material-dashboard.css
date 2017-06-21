@@ -3585,6 +3585,10 @@ footer .btn {
 .card .card-content {
   padding: 15px 20px;
 }
+.lock-form .card .card-content {
+	padding-top: 0px;
+    margin-top: -50px;
+}
 .card .card-content .category {
   margin-bottom: 0;
 }
@@ -5268,20 +5272,7 @@ footer .btn {
 .lock-form .card-profile {
     width: 240px;
     margin: 60px auto 0;
-    position: absolute;
-    left: 0;
-    right: 0;
-    display: block;
-    -webkit-transform: translate3d(0, 0, 0);
-    -moz-transform: translate3d(0, 0, 0);
-    -o-transform: translate3d(0, 0, 0);
-    -ms-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-}
-.lock-form .card-profile {
-    width: 240px;
-    margin: 60px auto 0;
-    position: absolute;
+    position: relative;
     left: 0;
     right: 0;
     display: block;
@@ -5295,7 +5286,8 @@ footer .btn {
 .lock-form .card-profile .card-avatar {
     max-width: 90px;
     max-height: 90px;
-    margin-top: -45px;
+    position: relative;
+    bottom: 45px;
 }
 
 .login-form {
@@ -5304,4 +5296,7 @@ footer .btn {
 }
 .header-card-color {
 	background-color: #32c7c7;
+}
+.black {
+	color: #222222;
 }
