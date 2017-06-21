@@ -28,6 +28,9 @@ class UserRegistered extends BaseUser implements UserInterface {
 			$permisos[] = $permiso->getValue();
 		}
 
+		$permisos[]="userregistered_read";
+		$permisos[]="userregistered_read_loadall";
+
 		return $permisos;
 
 	}

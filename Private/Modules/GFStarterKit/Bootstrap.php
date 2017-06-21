@@ -95,12 +95,13 @@ class Bootstrap {
 		unset($config["targetClassMethod"]);
 
 
-			/**
+		/**
 		 * API ROUTES
 		 */
 		$config["targetClass"] = $baseNamespace."\EntitiesLogic\UserManagementLogic\BaseUserLogic";
 		$route = new RouteModel("/api/Users", $config);
 		$routerCollection->attachRoute($route);
+
 
 
 	}

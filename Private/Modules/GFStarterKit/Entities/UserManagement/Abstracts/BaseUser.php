@@ -59,7 +59,7 @@ abstract class BaseUser extends BasicModel
 	 *
 	 * @var string $password @ORM\Column(name="password", type="string", length=255, nullable=false)
 	 */
-	protected $password;
+	private $password;
 
 	/**
 	 *

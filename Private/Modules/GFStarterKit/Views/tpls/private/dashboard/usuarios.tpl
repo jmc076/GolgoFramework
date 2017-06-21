@@ -5,36 +5,12 @@
 		<div class="mdl-grid demo-content">
 			<div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col">
 				<div class="demo-avatar-dropdown mdl-typography--title mdl-color-text--grey-600">
-					<a id="js-new-user" class="mdl-button-mini mdl-js-button mdl-button--raised mdl-button--colored mdl-color--green-400 mdl-js-ripple-effect">
+					<a id="js-new-user" class="mdl-button-mini mdl-js-button mdl-button--raised  mdl-js-ripple-effect">
 						<i class="md material-icons icon-mini">add</i>
 					</a> Listado de Usuarios
 				</div>
 				<br>
 				<table id="data-table-users" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp fullwidth table-bordered">
-					<thead>
-						<tr>
-							<th class="mdl-data-table__cell--non-numeric ">Nombre</th>
-							<th class="mdl-data-table__cell--non-numeric ">Email</th>
-							<th class="mdl-data-table__cell--non-numeric ">Teléfono</th>
-							<th class="mdl-data-table__cell--non-numeric ">Nombre de Usuario</th>
-							<th class="mdl-data-table__cell--non-numeric ">Fecha creación</th>
-							<th class="mdl-data-table__cell--non-numeric ">Acciones</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div class="mdl-grid demo-content">
-			<div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col">
-				<div class="demo-avatar-dropdown mdl-typography--title mdl-color-text--grey-600">
-					<a id="js-new-admin" class="mdl-button-mini mdl-js-button mdl-button--raised mdl-button--colored mdl-color--green-400 mdl-js-ripple-effect"> <i
-						class="md material-icons icon-mini">add</i>
-					</a> Listado de Administradores
-				</div>
-				<br>
-				<table id="data-table-admins" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp fullwidth table-bordered">
 					<thead>
 						<tr>
 							<th class="mdl-data-table__cell--non-numeric ">Nombre</th>

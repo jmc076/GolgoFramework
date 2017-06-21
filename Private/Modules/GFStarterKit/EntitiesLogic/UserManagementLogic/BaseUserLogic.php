@@ -56,16 +56,16 @@ class BaseUserLogic extends LogicCRUD {
 
 					break;
 				case "loadAll":
-					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
+					if($this->checkPrivileges($dataArray) || $this->userModel->getUserType() == USER_ADMIN) {
 						$models = $this->getEntity();
-						$models = $models->loadAll($this->em, null);
+						$models = $models->loadAll($this->em, null,true);
 						$return = $models;
 					} else {
 						ExceptionController::PermissionDenied();
 					}
 					break;
 				case "loadById":
-					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
+					if($this->checkPrivileges($dataArray) || $this->userModel->getUserType() == USER_ADMIN) {
 						$model = $model->loadById($this->em, $dataArray["id"],true);
 						$return = $model;
 					} else {
@@ -73,7 +73,7 @@ class BaseUserLogic extends LogicCRUD {
 					}
 					break;
 				case "loadAdmins":
-					if($this->checkPrivileges($dataArray) || $this->userModel->getTipoUsuario() == USER_ADMINISTRADOR) {
+					if($this->checkPrivileges($dataArray) || $this->userModel->getUserType() == USER_ADMIN) {
 						$models = $this->getEntity();
 						$models = $models->loadAdmins($this->em, null,true);
 						$return = $models;
