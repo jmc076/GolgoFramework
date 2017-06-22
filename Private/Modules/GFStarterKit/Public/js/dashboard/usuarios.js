@@ -133,7 +133,7 @@ $( document ).ready(function() {
 		 	        type: 'POST',
 		 	        data: postData,
 		 	        success: function (data) {
-		 	        	if(data.resources != undefined  && data.resources == true) {
+		 	        	if(data.result != undefined  && data.result == true) {
 		 	        		swal("¡Listo!", "Usuario eliminado", "success");
 		 	        		row.remove();
 		 	        	} else {
@@ -177,7 +177,7 @@ $( document ).ready(function() {
 				 	        type: 'POST',
 				 	       data: postData,
 				 	        success: function (data) {
-				 	        	if(data.resources != undefined && data.resources == true) {
+				 	        	if(data.result != undefined && data.result == true) {
 				 	        		swal("¡Listo!", "Usuario Bloqueado", "success"); 
 				 	        		button.removeClass('js-block-user');
 				 	        		button.attr("title", "Desbloquear");
@@ -228,7 +228,7 @@ $( document ).ready(function() {
 		 	        type: 'POST',
 		 	       data: postData,
 		 	        success: function (data) {
-		 	        	if(data.resources != undefined && data.resources == true) {
+		 	        	if(data.result != undefined && data.result == true) {
 		 	        		swal("¡Listo!", "Usuario desbloqueado", "success");
 		 	        		button.attr("title", "Bloquear");
 		 	        		 button.removeClass('js-unblock-user');

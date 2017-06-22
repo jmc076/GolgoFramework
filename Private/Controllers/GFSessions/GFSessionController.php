@@ -29,7 +29,7 @@ class GFSessionController {
 	}
 
 	public function initSessionModel() {
-		if(!$this->isKeySet("sessionModel")) {
+		if(!$this->isKeySet("sessionModel") || $this->get("sessionModel") == null) {
 			$model =  new GFSessionModel();
 			$model->initializeValues();
 			$this->put("sessionModel", $model);
@@ -114,7 +114,7 @@ class GFSessionController {
 		return $this->getTokenValue();
 	}
 
-	public function isValid($dataArray) {
+	public function isValidCSRF($dataArray) {
 		if(isset($dataArray[$this->getTokenId()])) {
 			if ($dataArray[$this->getTokenId()] == $this->getTokenValue()) {
 				$this->resetTokenValue();

@@ -48,6 +48,7 @@ class LogicCRUD implements CRUDInterface {
 		$op = isset($this->dataArray['op']) ? $this->dataArray['op'] : null;
 		if($op == null) {
 			$this->getOPFromVerb($op);
+			$this->dataArray['op'] = $op;
 		}
 		$this->checkCSRF = $this->request->getNeedCheckCSRF() ? true : false;
 		if(REDIS_CACHE_ENABLED) {
@@ -55,10 +56,8 @@ class LogicCRUD implements CRUDInterface {
 		}
 
 		$this->preload();
-
 		if($this->checkCSRF) {
-			$csrf = CSRFSessionController::getInstance();
-			if(!$csrf->isValid($this->dataArray)) {
+			if(!$this->session->isValidCSRF($this->dataArray)) {
 				ExceptionController::invalidCSRF();
 			};
 		}

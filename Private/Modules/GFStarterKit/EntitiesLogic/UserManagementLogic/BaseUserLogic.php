@@ -212,6 +212,16 @@ class BaseUserLogic extends LogicCRUD {
 		if(isset($dataArray["email"]) && $dataArray["email"] != "") {
 			$model->setEmail($dataArray["email"]);
 		}
+
+		if(isset($dataArray["name"]) && $dataArray["name"] != "") {
+			$model->setName($dataArray["name"]);
+		}
+
+		if(isset($dataArray["telephone"]) && $dataArray["telephone"] != "") {
+			$model->setTelephone($dataArray["telephone"]);
+		}
+
+
 		if(isset($dataArray["user"]) && $dataArray["user"] != "") {
 			$model->setUserName($dataArray["user"]);
 		}
