@@ -8,6 +8,7 @@ use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
 use Modules\GFStarterKit\Controllers\JWTAuthentication;
 use Helpers\HelperUtils;
+use Modules\GFStarterKit\Utils\Serializor;
 
 
 class BaseUserLogic extends LogicCRUD {
@@ -58,8 +59,8 @@ class BaseUserLogic extends LogicCRUD {
 				case "loadAll":
 					if($this->checkPrivileges($dataArray) || $this->userModel->getUserType() == USER_ADMIN) {
 						$models = $this->getEntity();
-						$models = $models->loadAll($this->em, null,true);
-						$return = $models;
+						$models = $models->loadAll($this->em, null);
+						$return = Serializor::toArray($models,1, null, null, array('password'));
 					} else {
 						ExceptionController::PermissionDenied();
 					}

@@ -19,7 +19,7 @@ define("DB_DRIVER", 'pdo_mysql');
 //SESSION OPTIONS
 define("SESSION_LENGTH", 3600); //30 MINS
 
-define("NEED_LOCALIZATION", true);
+define("LOCALIZATION_ENABLED", true);
 define("DEFAULT_LOCALIZATION", "es");
 define("GF_EVENTS_ENABLED", true);
 define("JWT_SINGLE_SESSIONS_ONLY", true );

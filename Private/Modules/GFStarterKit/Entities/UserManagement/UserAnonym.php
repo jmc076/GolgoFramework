@@ -3,10 +3,8 @@
 namespace Modules\GFStarterKit\Entities\UserManagement;
 
 
-use Modules\GFStarterKit\Entities\UserManagement\Abstracts\UserInterface;
 
-class UserAnonym implements UserInterface
-{
+class UserAnonym {
 
 	public function getPrivileges() {
 		$permisos = array();
@@ -20,10 +18,6 @@ class UserAnonym implements UserInterface
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 * @see \Modules\GFStarterKit\Entities\UserManagement\Abstracts\UserInterface::getId()
-	 */
 	public function getId() {
 		return 0;
 	}

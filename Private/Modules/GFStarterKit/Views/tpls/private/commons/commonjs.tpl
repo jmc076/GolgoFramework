@@ -43,6 +43,7 @@
 			    postData[$('#csrf').attr('name')] = $('#csrf').val();
 				options.data = typeof options.data === "string" ? $('#csrf').attr('name')+"="+ $('#csrf').val()+"&"+options.data : $.extend(options.data, postData);
 			});
+		 
 	 });
 	
  </script>

@@ -10,8 +10,7 @@ use Modules\GFStarterKit\GFDoctrineManager;
 /**
  * BaseUser
  */
-abstract class BaseUser extends BasicModel
-{
+trait BaseUserTrait {
 
 	/**
 	 *
@@ -129,9 +128,13 @@ abstract class BaseUser extends BasicModel
 	 * )
 	 */
 	protected $permissions;
+
+
 	public function __construct() {
 		$this->permissions = new \Doctrine\Common\Collections\ArrayCollection ();
 	}
+
+
 	public function callback($params) {
 		print_r ( "callback called" );
 		die (); // TODO: Diego pre

@@ -7,6 +7,8 @@ use Controllers\i18nController;
 use Controllers\GFSessions\GFSessionController;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\UserController;
+use Modules\GFStarterKit\Controllers\PermissionsController;
+use Controllers\ExceptionController;
 
 
 class PAGBasePage {
@@ -65,6 +67,11 @@ class PAGBasePage {
 
 	protected function preLoad(){
 		$this->userModel = UserController::getCurrentUserModel();
+		if($this->shouldCheckRoutePerms() && !$this->canReadRoute()){
+			if($this->isChunk())
+				ExceptionController::routeBlocked();
+			else $this->redirectTo("/".BASE_PATH_DIRECTORY);
+		}
 	}
 
 	public function isSuperAdmin() {
@@ -78,7 +85,7 @@ class PAGBasePage {
 	protected function assignTplVars() {
 		$this->smarty->assign("basePath", BASE_PATH);
 		$this->smarty->assign("csrfdata", '<input id="csrf" type="hidden" name="'.$this->session->getSessionCsrfName().'" value="'.$this->session->getSessionCsrfValue().'" />');
-		if(NEED_LOCALIZATION) {
+		if(LOCALIZATION_ENABLED) {
 			$this->smarty->assign("i18n", i18nController::localization());
 		}
 	}
@@ -105,6 +112,10 @@ class PAGBasePage {
 		return false;
 	}
 
+	protected function shouldCheckRoutePerms() {
+		return false;
+	}
+
 
 	public function redirectTo($location) {
 		$this->request->setHeader("Location", $location);
@@ -112,6 +123,14 @@ class PAGBasePage {
 
 	public function isUserLogged() {
 		return $this->sessionModel->getStatus() === true && $this->sessionModel->getUserId() != 0;
+	}
+
+	public function canReadRoute() {
+		return PermissionsController::checkPermisosRoute("/dashboard", $this->sessionModel->getUserId());
+	}
+
+	public function isChunk() {
+		return false;
 	}
 
 

@@ -10,6 +10,7 @@ class PAGPrivateAdministracionLockscreen extends PAGPrivateAdministracionBase {
 
 	protected function preLoad() {
 		parent::preLoad();
+
 		if($this->request->getVerb() ==  "POST") {
 			$isValidPass = $this->userController->comparePasswords($this->userModel->getId(), $this->postParams["password"]);
 			if($isValidPass) {

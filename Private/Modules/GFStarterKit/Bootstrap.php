@@ -94,6 +94,16 @@ class Bootstrap {
 		$routerCollection->attachRoute($route);
 		unset($config["targetClassMethod"]);
 
+		/**
+		 * CHUNKS
+		 */
+
+		$config["targetClass"] = $baseNamespace."\ViewsLogic\ChunkPages\ChunkPrivateUsuarios";
+		$route = new RouteModel("/chunks/usuarios", $config);
+		$routerCollection->attachRoute($route);
+		$route = new RouteModel("/chunks/usuarios/:id", $config);
+		$routerCollection->attachRoute($route);
+
 
 		/**
 		 * API ROUTES

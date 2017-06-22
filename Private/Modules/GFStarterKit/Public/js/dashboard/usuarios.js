@@ -11,7 +11,7 @@ $( document ).ready(function() {
 	                 { "data": "email" },
 	                 { "data": "telephone" },
 	                 { "data": "userName" },
-	                 { "data": "dateCreated.date" },
+	                 { "data": "dateCreated" },
 	                 { "data": "" },
 	             ],
 		 "columnDefs": [ {
@@ -95,8 +95,8 @@ $( document ).ready(function() {
 					}
 					componentHandler.upgradeDom();
 				},
-				error : function() {
-					console.log("error")
+				error : function(xhr) {
+					handleAjaxError(xhr);
 				}
 			});
 		}

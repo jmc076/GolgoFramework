@@ -2,10 +2,9 @@
 
 namespace Modules\GFStarterKit\Entities\UserManagement;
 use Doctrine\ORM\Mapping as ORM;
-use Modules\GFStarterKit\Entities\UserManagement\Abstracts\UserInterface;
-use Modules\GFStarterKit\Entities\UserManagement\Abstracts\BaseUserTrait;
 use Modules\GFStarterKit\Entities\BasicModel;
-use Modules\GFStarterKit\Entities\UserManagement\Abstracts\BaseUser;
+use Modules\GFStarterKit\Entities\UserManagement\Abstracts\BaseUserTrait;
+use Modules\GFStarterKit\GFDoctrineManager;
 
 
 /**
@@ -14,13 +13,10 @@ use Modules\GFStarterKit\Entities\UserManagement\Abstracts\BaseUser;
  * @ORM\Table(name="gf_users")
  * @ORM\Entity
  */
-class UserRegistered extends BaseUser implements UserInterface {
+class UserRegistered extends BasicModel {
 
+	use BaseUserTrait;
 
-	/**
-	 * {@inheritDoc}
-	 * @see \Modules\GFStarterKit\Entities\UserManagement\UserInterface::getPermisos()
-	 */
 	public function getPrivileges() {
 		$permisos = array();
 
@@ -34,4 +30,6 @@ class UserRegistered extends BaseUser implements UserInterface {
 		return $permisos;
 
 	}
+
+
 }

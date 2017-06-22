@@ -69,6 +69,12 @@ class ExceptionController {
 		self::showMessage();
 	}
 
+	public static function routeBlocked() {
+		self::$code = 401;
+		self::$msg = "Sin permisos para esta ruta";
+		self::showMessage();
+	}
+
 	public static function invalidEntityLogic() {
 		self::$code = 404;
 		self::$msg = "Archivo de logica asociada a la entidad no encontrada.";

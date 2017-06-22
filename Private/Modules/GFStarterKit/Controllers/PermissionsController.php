@@ -2,6 +2,9 @@
 namespace Modules\GFStarterKit\Controllers;
 
 
+use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
+use Modules\GFStarterKit\GFDoctrineManager;
+
 class PermissionsController {
 
 	private static $permArray = array (
@@ -52,6 +55,8 @@ class PermissionsController {
 
 
 		$user = UserController::getCurrentUserModel();
+		$userType = $user->getUserType();
+		if($userType == USER_ADMIN || $userType == USER_SUPERADMIN) return true;
 
 		$allowedPermisos = $user->getPrivileges();
 
@@ -61,6 +66,27 @@ class PermissionsController {
 			print_r($perm);
 			print_r("<br>");
 			print_r($opPerm); die(); //TODO: Diego pre
+			return false;
+		}
+	}
+	public static function checkPermisosRoute($route, $userId = null) {
+		$perm = strtolower($route);
+		if($userId != null) {
+			$user = new UserRegistered();
+			$user = $user->loadById(GFDoctrineManager::getEntityManager(), $userId);
+		} else {
+			$user = UserController::getCurrentUserModel();
+		}
+
+
+		$userType = $user->getUserType();
+		if($userType == USER_ADMIN || $userType == USER_SUPERADMIN) return true;
+
+		$allowedPermisos = $user->getPrivileges();
+
+		if (in_array($perm, $allowedPermisos)){
+			return true;
+		} else {
 			return false;
 		}
 	}

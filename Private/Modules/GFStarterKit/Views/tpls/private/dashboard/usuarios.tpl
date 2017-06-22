@@ -2,7 +2,7 @@
  {include file="../commons/nav-bar.tpl"}
  {include file="../commons/menu-drawer.tpl"}
 	<main class="mdl-layout__content mdl-color--grey-100">
-		<div class="mdl-grid demo-content">
+		<div class="mdl-grid fullwidth">
 			<div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col">
 				<div class="demo-avatar-dropdown mdl-typography--title mdl-color-text--grey-600">
 					<a id="js-new-user" class="mdl-button-mini mdl-js-button mdl-button--raised  mdl-js-ripple-effect">
@@ -26,7 +26,7 @@
 				</table>
 			</div>
 		</div>
-		<div class="mdl-grid demo-content" id="js-usuarios-chunk-holder">
+		<div class="mdl-grid" id="js-usuarios-chunk-holder">
 	        
         </div>
 	</main>
