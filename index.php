@@ -1,6 +1,7 @@
 <?php
 
 use Controllers\Router\RouteCollection;
+use Controllers\Router\RouteModel;
 
 require_once __DIR__ .'/Private/Configs/Constants.php';
 require_once 'GFStarter.php';
@@ -33,6 +34,14 @@ $gfStarter->start();
 
 function attachCustomRoutes(RouteCollection &$routerCollection) {
 
+
+	$config = array();
+	$config["name"] = "";
+	$config["checkCSRF"] = false;
+
+	$config["targetClass"] = "Modules\GFStarterKit\ViewsLogic\Pages\PAGAssignGenerator";
+	$route = new RouteModel("/generador", $config);
+	$routerCollection->attachRoute($route);
 }
 
 

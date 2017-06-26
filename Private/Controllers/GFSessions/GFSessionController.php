@@ -13,10 +13,6 @@ class GFSessionController {
 	private static $instancia;
 
 	private function __construct() {
-		$this->scopedSessionInit(GF_GLOBAL_SESSION);
-		$this->initSessionModel();
-		$this->initSessionTimings();
-		$this->initCSRF();
 
 	}
 
@@ -25,7 +21,15 @@ class GFSessionController {
 			self::$instancia = new self;
 
 		}
+		self::$instancia->start();
 		return self::$instancia;
+	}
+
+	public function start() {
+		$this->scopedSessionInit(GF_GLOBAL_SESSION);
+		$this->initSessionModel();
+		$this->handleSessionTimings();
+		$this->initCSRF();
 	}
 
 	public function initSessionModel() {
@@ -36,7 +40,7 @@ class GFSessionController {
 		}
 	}
 
-	public  function initSessionTimings(){
+	public  function handleSessionTimings(){
 		if (!$this->isKeySet("CREATED")) {
 			$this->put("CREATED", time());
 		} else if (time() - $this->get("CREATED") > SESSION_LENGTH) {
@@ -89,7 +93,8 @@ class GFSessionController {
 	public  function expireSession() {
 		$_SESSION = array();
 		@session_unset();
-		$_SESSION["oldSessionRedirect"] = $_SERVER['REQUEST_URI'];
+		$this->initSessionModel();
+		$this->put("oldSessionRedirect", $_SERVER['REQUEST_URI']);
 
 	}
 

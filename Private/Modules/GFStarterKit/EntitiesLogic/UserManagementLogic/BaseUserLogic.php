@@ -9,6 +9,7 @@ use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
 use Modules\GFStarterKit\Controllers\JWTAuthentication;
 use Helpers\HelperUtils;
 use Modules\GFStarterKit\Utils\Serializor;
+use Modules\GFStarterKit\Entities\UserManagement\Permissions;
 
 
 class BaseUserLogic extends LogicCRUD {
@@ -209,27 +210,81 @@ class BaseUserLogic extends LogicCRUD {
 		}
 
 
-		if(isset($dataArray["email"]) && $dataArray["email"] != "") {
+		$model->setIsActive(0);
+
+
+		if(isset($dataArray["email"])) {
 			$model->setEmail($dataArray["email"]);
 		}
 
-		if(isset($dataArray["name"]) && $dataArray["name"] != "") {
+		if(isset($dataArray["name"])) {
 			$model->setName($dataArray["name"]);
 		}
 
-		if(isset($dataArray["telephone"]) && $dataArray["telephone"] != "") {
-			$model->setTelephone($dataArray["telephone"]);
+
+		if(isset($dataArray["firstName"])) {
+			$model->setFirstName($dataArray["firstName"]);
 		}
 
+		if(isset($dataArray["lastName"])) {
+			$model->setLastName($dataArray["lastName"]);
+		}
+
+		if(isset($dataArray["bio"])) {
+			$model->setBio($dataArray["bio"]);
+		}
+
+		if(isset($dataArray["telephone"])) {
+			$model->setTelephone($dataArray["telephone"]);
+		}
 
 		if(isset($dataArray["user"]) && $dataArray["user"] != "") {
 			$model->setUserName($dataArray["user"]);
 		}
+
+		if(isset($dataArray["userName"])) {
+			$model->setUserName($dataArray["userName"]);
+		}
+
 		if(isset($dataArray["password"]) && $dataArray["password"] != "") {
 			$model->setPassword($this->userController->getHash($dataArray["password"]));
 		}
 
-		$model->setIsActive(0);
+		if(isset($dataArray["lastIp"])) {
+			$model->setLastIp($dataArray["lastIp"]);
+		}
+
+		if(isset($dataArray["lastLogin"])) {
+			$model->setLastLogin($dataArray["lastLogin"]);
+		}
+
+		if(isset($dataArray["sessionId"])) {
+			$model->setSessionId($dataArray["sessionId"]);
+		}
+
+		if(isset($dataArray["activationKey"])) {
+			$model->setActivationKey($dataArray["activationKey"]);
+		}
+
+		if(isset($dataArray["userAvatar"])) {
+			$model->setUserAvatar($dataArray["userAvatar"]);
+		}
+
+		if(isset($dataArray["shouldChangePassword"])) {
+			$model->setShouldChangePassword(1);
+		} else {
+			$model->setShouldChangePassword(0);
+		}
+
+		if(isset($dataArray["token"]) && $dataArray["token"] != "") {
+			$model->setToken($dataArray["token"]);
+		}
+
+		if(isset($dataArray["permissions"]) && $dataArray["permissions"] != "") {
+			$pModel = new Permissions();
+			$pModel = $pModel->loadById($this->em, $dataArray["permissions"]);
+			$model->setPermissions($pModel);
+		}
 
 
 

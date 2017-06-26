@@ -125,10 +125,12 @@ class HelperUtils {
 	        return $array;
 	}
 
-	public static function stringToUTF8($string) {
-	    if(!mb_check_encoding($string, 'UTF-8')) $string = utf8_encode($string);
-	    return $string;
+
+	public static function stringToUTF8 ($str) {
+		$decoded = utf8_decode($str);
+			return $decoded;
 	}
+
 
 	public static function convertArrayKeysToUtf8(array $array) {
 		$convertedArray = array();
@@ -162,10 +164,13 @@ class HelperUtils {
 				else { self::xssafe($value); }
 			}
 		} else {
-			return htmlspecialchars($data,ENT_QUOTES | ENT_HTML401, $encoding);
+			$data = htmlspecialchars($data,ENT_QUOTES | ENT_HTML401);
+			return self::stringToUTF8($data);
 		}
 
 	}
+
+
 
 	/**
 	 * This is the list of currently registered HTTP status codes.

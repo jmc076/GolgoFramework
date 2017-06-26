@@ -18,6 +18,9 @@ class GFStarter {
 		$session = GFSessionController::getInstance();
 
 		$session->getSessionModel()->setUserLang(i18nController::getDefaultLanguage());
+
+
+
 		$this->routerCollection = $routerCollection;
 
 		if(REDIS_CACHE_ENABLED) {

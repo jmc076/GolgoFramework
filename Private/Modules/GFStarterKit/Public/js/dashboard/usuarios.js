@@ -7,10 +7,11 @@ $( document ).ready(function() {
 	         "dataSrc": "result"
 	     },
 	     "columns": [
-	                 { "data": "name" },
+	                 { "data": "" },
 	                 { "data": "email" },
 	                 { "data": "telephone" },
 	                 { "data": "userName" },
+	                 { "data": "userType" },
 	                 { "data": "dateCreated" },
 	                 { "data": "" },
 	             ],
@@ -36,7 +37,14 @@ $( document ).ready(function() {
 					</button>';
 	            return html;
 	        	},
-	        	"targets": 5
+	        	"targets": 6
+	    	},
+	    	{
+	        	"render": function ( data, type, row ) {
+	        		var html = row.name +" "+ row.firstName
+	        		return html;
+	        	},
+	        	"targets": 0
 	    	}
 	    ],
 	    "oLanguage": {

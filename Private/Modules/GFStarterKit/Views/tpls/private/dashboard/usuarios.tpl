@@ -2,6 +2,9 @@
  {include file="../commons/nav-bar.tpl"}
  {include file="../commons/menu-drawer.tpl"}
 	<main class="mdl-layout__content mdl-color--grey-100">
+	<div class="mdl-grid" id="js-usuarios-chunk-holder">
+	        
+        </div>
 		<div class="mdl-grid fullwidth">
 			<div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col">
 				<div class="demo-avatar-dropdown mdl-typography--title mdl-color-text--grey-600">
@@ -17,6 +20,7 @@
 							<th class="mdl-data-table__cell--non-numeric ">Email</th>
 							<th class="mdl-data-table__cell--non-numeric ">Teléfono</th>
 							<th class="mdl-data-table__cell--non-numeric ">Nombre de Usuario</th>
+								<th class="mdl-data-table__cell--non-numeric ">User Type</th>
 							<th class="mdl-data-table__cell--non-numeric ">Fecha creación</th>
 							<th class="mdl-data-table__cell--non-numeric ">Acciones</th>
 						</tr>
@@ -26,9 +30,6 @@
 				</table>
 			</div>
 		</div>
-		<div class="mdl-grid" id="js-usuarios-chunk-holder">
-	        
-        </div>
 	</main>
 {include file="../commons/footer.tpl"}
 {include file="../commons/commonjs.tpl"}
