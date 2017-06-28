@@ -277,7 +277,7 @@ class LogicCRUD implements CRUDInterface {
 	}
 
 	public function isAdmin() {
-		return $this->userModel->getUserType() == USER_ADMIN;
+		return $this->userModel->getUserType() == USER_ADMIN || $this->isSuperAdmin() ? true : false;
 	}
 
 }

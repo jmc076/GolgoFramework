@@ -21,13 +21,11 @@
               <text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan dy="-0.07" font-size="0.2">%</tspan></text>
             </svg>
           </div>
-          <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
-            <svg fill="currentColor" viewBox="0 0 500 250" class="demo-graph">
-              <use xlink:href="#chart" />
-            </svg>
-            <svg fill="currentColor" viewBox="0 0 500 250" class="demo-graph">
-              <use xlink:href="#chart" />
-            </svg>
+          <div class="mdl-cell mdl-cell--4-col">
+          	{include file="../../blocks/card-graph.tpl"}
+          </div>
+           <div class="mdl-cell mdl-cell--4-col">
+          	{include file="../../blocks/card-resume.tpl"}
           </div>
           <div class="demo-cards mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
             <div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
@@ -83,4 +81,39 @@
       </main>
 {include file="../commons/footer.tpl"}
 {include file="../commons/commonjs.tpl"}
+<script type="text/javascript">
+$(document).ready(function(){
+/* ----------==========     Emails Subscription Chart initialization    ==========---------- */
+
+var dataEmailsSubscriptionChart = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  series: [
+    [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+
+  ]
+};
+var optionsEmailsSubscriptionChart = {
+    axisX: {
+        showGrid: false
+    },
+    low: 0,
+    high: 1000,
+    chartPadding: { top: 0, right: 5, bottom: 0, left: 0}
+};
+var responsiveOptions = [
+  ['screen and (max-width: 640px)', {
+    seriesBarDistance: 5,
+    axisX: {
+      labelInterpolationFnc: function (value) {
+        return value[0];
+      }
+    }
+  }]
+];
+var emailsSubscriptionChart = Chartist.Bar('#emailsSubscriptionChart', dataEmailsSubscriptionChart, optionsEmailsSubscriptionChart, responsiveOptions);
+
+//start animation for the Emails Subscription Chart
+md.startAnimationForBarChart(emailsSubscriptionChart);
+});
+</script>
 </html>

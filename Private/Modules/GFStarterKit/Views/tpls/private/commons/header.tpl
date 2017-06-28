@@ -40,7 +40,8 @@
 	    <link rel="stylesheet" href="modules/GFStarterKit/css/admin-mdl-template.css">
 	    <link rel="stylesheet" href="modules/GFStarterKit/css/styles.css">
 	    <link rel="stylesheet" href="modules/GFStarterKit/css/data-tables.css">
-
+  		<link rel="stylesheet" href="modules/GFStarterKit/css/getmdl-select.min.css" >
+  		<link rel="stylesheet" href="modules/GFStarterKit/css/cards.css" >
     </head>
     <body>
     {$csrfdata}

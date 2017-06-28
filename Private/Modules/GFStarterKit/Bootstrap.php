@@ -15,7 +15,7 @@ define("GF_TABLE_ATTEMPTS","gf_login_attempts");
 
 define("USER_SUPERADMIN", "super_admin");
 define("USER_ADMIN", "admin");
-define("USER_REGISTERED", "registered");
+define("USER_REGISTERED", "user_registered");
 
 define('LOGIN_ATTEMPTS_MITIGATION_TIME', '+1 minutes');
 define('LOGIN_ATTEMPTS_BEFORE_BLOCK', '5');

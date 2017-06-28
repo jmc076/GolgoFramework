@@ -20,7 +20,7 @@
 							<th class="mdl-data-table__cell--non-numeric ">Email</th>
 							<th class="mdl-data-table__cell--non-numeric ">Teléfono</th>
 							<th class="mdl-data-table__cell--non-numeric ">Nombre de Usuario</th>
-								<th class="mdl-data-table__cell--non-numeric ">User Type</th>
+							<th class="mdl-data-table__cell--non-numeric ">User Type</th>
 							<th class="mdl-data-table__cell--non-numeric ">Fecha creación</th>
 							<th class="mdl-data-table__cell--non-numeric ">Acciones</th>
 						</tr>

@@ -3,9 +3,9 @@ namespace Modules\GFStarterKit\ViewsLogic\ChunkPages;
 
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Modules\GFStarterKit\Utils\Serializor;
-use Modules\GFStarterKit\ViewsLogic\Pages\PAGBasePage;
+use Modules\GFStarterKit\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionBase;
 
-class ChunkPrivateUsuarios extends PAGBasePage {
+class ChunkPrivateUsuarios extends PAGPrivateAdministracionBase {
 
 	public function isChunk() {
 		return true;
@@ -29,6 +29,7 @@ class ChunkPrivateUsuarios extends PAGBasePage {
 		} else {
 			$this->smarty->assign("chunkTitle", "Nuevo Usuario");
 		}
+
 	}
 
 	protected function setTplFile() {

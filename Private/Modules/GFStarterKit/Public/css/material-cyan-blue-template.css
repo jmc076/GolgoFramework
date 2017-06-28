@@ -5580,7 +5580,8 @@ fieldset[disabled] .mdl-textfield .mdl-textfield__label,
 }
 .mdl-textfield--floating-label.is-focused .mdl-textfield__label,
 .mdl-textfield--floating-label.is-dirty .mdl-textfield__label,
-.mdl-textfield--floating-label.has-placeholder .mdl-textfield__label {
+.mdl-textfield--floating-label.has-placeholder .mdl-textfield__label,
+.mdl-select--floating-label.is-focused .mdl-select__label, .mdl-select--floating-label.is-dirty .mdl-select__label {
     color: rgb(0, 188, 212);
     font-size: 12px;
     top: 4px;
@@ -5595,7 +5596,8 @@ fieldset[disabled] .mdl-textfield .mdl-textfield__label,
     color: #d50000;
     font-size: 12px
 }
-.mdl-textfield__label:after {
+.mdl-textfield__label:after,
+.mdl-select__label:after {
     background-color: rgb(0, 188, 212);
     bottom: 20px;
     content: '';
@@ -5742,8 +5744,13 @@ fieldset[disabled] .mdl-textfield .mdl-textfield__label,
     padding: 0
 }
 .mdl-cell {
-    box-sizing: border-box
+    box-sizing: border-box;
+    margin: auto;
 }
+.mdl-cell.auto {
+    margin: auto !important;
+}
+
 .mdl-cell--top {
     -webkit-align-self: flex-start;
     -ms-flex-item-align: start;

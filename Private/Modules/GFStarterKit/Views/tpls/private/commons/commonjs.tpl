@@ -6,6 +6,8 @@
 <script src="modules/GFStarterKit/components/material-design-lite/material.min.js"></script>
 <script src="modules/GFStarterKit/components/jquery/dist/jquery.min.js"></script>
 <script src="modules/GFStarterKit/js/dashboard/dashboard.js"></script>
+<script src="modules/GFStarterKit/js/libraries/getmdl-select.js" type="text/javascript" ></script>
+<script src="modules/GFStarterKit/js/libraries/chartist.min.js" type="text/javascript" ></script>
 
  <div id="js-loading-chunk" style="display: none">
  	<div class="chunk-showbox demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col">

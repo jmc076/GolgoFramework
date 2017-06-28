@@ -15,7 +15,7 @@ use Modules\GFStarterKit\Entities\UserManagement\Permissions;
 class BaseUserLogic extends LogicCRUD {
 
 	protected $userController;
-
+	public $userTypes = array(USER_ADMIN, USER_REGISTERED, USER_SUPERADMIN);
 
 	function __construct() {
 		$this->userController = new UserController();
@@ -199,18 +199,20 @@ class BaseUserLogic extends LogicCRUD {
 	public function assignParams($dataArray, &$model) {
 
 
-		if(isset($dataArray["tipoUsuario"]) && !empty($dataArray["tipoUsuario"]) &&  $dataArray["tipoUsuario"] != $model->getTipoUsuario()) {
-			$model->setUserType($dataArray["tipoUsuario"]);
-		} else if(!isset($dataArray["tipoUsuario"])) {
+		if(isset($dataArray["userType"]) && !empty($dataArray["userType"]) &&  $dataArray["userType"] != $model->getUserType() && in_array($dataArray["userType"], $this->userTypes)) {
+			if(($dataArray["userType"] == USER_ADMIN || $dataArray["userType"] == USER_SUPERADMIN) && $this->isAdmin()) {
+				$model->setUserType($dataArray["userType"]);
+			} else {
+				$model->setUserType(USER_REGISTERED);
+			}
+		} else {
 			$model->setUserType(USER_REGISTERED);
 		}
 
-		if(isset($dataArray["isAdmin"]) && $dataArray["isAdmin"] == 1) {
-			$model->setUserType(USER_ADMIN);
-		}
-
-
-		$model->setIsActive(0);
+		if(isset($dataArray["isActive"]))
+			$model->setIsActive(1);
+		else
+			$model->setIsActive(0);
 
 
 		if(isset($dataArray["email"])) {

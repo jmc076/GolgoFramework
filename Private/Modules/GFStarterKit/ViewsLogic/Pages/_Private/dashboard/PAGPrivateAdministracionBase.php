@@ -8,6 +8,8 @@ use Controllers\GFSessions\GFSessionController;
 
 class PAGPrivateAdministracionBase extends PAGBasePage {
 
+	public $userTypes = array(USER_ADMIN, USER_REGISTERED, USER_SUPERADMIN);
+
 	protected function preLoad() {
 		parent::preLoad();
 
@@ -31,6 +33,7 @@ class PAGPrivateAdministracionBase extends PAGBasePage {
 		parent::assignTplVars();
 		$this->smarty->assign("inicioActive", "");
 		$this->smarty->assign("usuariosActive", "");
+		$this->smarty->assign("userTypes", $this->userTypes);
 
 	}
 
