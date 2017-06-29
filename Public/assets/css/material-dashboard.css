@@ -653,6 +653,14 @@ h2.title {
   -ms-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
   transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
 }
+.wrapper-full-page .main-panel {
+	width: 100%;
+	float: none;
+}
+.wrapper-full-page .main-panel > .footer {
+	border-top: none;
+}
+
 .main-panel > .content {
   margin-top: 70px;
   padding: 30px 15px;
@@ -729,7 +737,7 @@ h2.title {
 .navbar .navbar-nav > li > a.btn.btn-default.dropdown-toggle, .open >
 .navbar .navbar-nav > li > a.btn.btn-default.dropdown-toggle:focus, .open >
 .navbar .navbar-nav > li > a.btn.btn-default.dropdown-toggle:hover {
-  background-color: #999999;
+  background-color: #40c4ff;
   color: #FFFFFF;
 }
 .btn:focus, .btn:active, .btn:hover, .btn.btn-default:focus, .btn.btn-default:active, .btn.btn-default:hover,
@@ -826,7 +834,7 @@ h2.title {
 .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle, .open >
 .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:focus, .open >
 .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:hover {
-  background-color: #9c27b0;
+  background-color: #0b8884;
   color: #FFFFFF;
 }
 .btn.btn-primary:focus, .btn.btn-primary:active, .btn.btn-primary:hover,
@@ -1470,6 +1478,10 @@ body.inverse .card .form-control {
 .wrapper.wrapper-full-page {
   height: auto;
   min-height: 100vh;
+  background-image: url("../img/background2.jpg");
+      background-repeat: no-repeat;
+    background-size: cover;
+}
 }
 
 blockquote p {
@@ -1484,6 +1496,7 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 300;
   line-height: 1.5em;
+  color: #fff
 }
 
 .serif-font {
@@ -1946,6 +1959,7 @@ label.control-label {
 .form-group {
   padding-bottom: 7px;
   margin: 27px 0 0 0;
+  text-align: left;
 }
 .form-group .form-control {
   margin-bottom: 7px;
@@ -3430,6 +3444,9 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
 
 footer {
   padding: 15px 0;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
 }
 footer ul {
   margin-bottom: 0;
@@ -3568,6 +3585,10 @@ footer .btn {
 .card .card-content {
   padding: 15px 20px;
 }
+.lock-form .card .card-content {
+	padding-top: 0px;
+    margin-top: -50px;
+}
 .card .card-content .category {
   margin-bottom: 0;
 }
@@ -3576,7 +3597,6 @@ footer .btn {
   margin: -20px 15px 0;
   border-radius: 3px;
   padding: 15px;
-  background-color: #999999;
 }
 .card .card-header .title {
   color: #FFFFFF;
@@ -3624,8 +3644,8 @@ footer .btn {
 }
 .card .card-footer {
   margin: 0 20px 10px;
-  padding-top: 10px;
-  border-top: 1px solid #eeeeee;
+  /*padding-top: 10px;
+  border-top: 1px solid #eeeeee;*/
 }
 .card .card-footer .content {
   display: block;
@@ -4701,7 +4721,9 @@ footer .btn {
     position: relative;
   }
 
-  .main-panel {
+   .main-panel,
+  .wrapper-full-page,
+  .navbar .container {
     -webkit-transform: translate3d(0px, 0, 0);
     -moz-transform: translate3d(0px, 0, 0);
     -o-transform: translate3d(0px, 0, 0);
@@ -5062,4 +5084,219 @@ footer .btn {
     margin-left: -20px;
     margin-right: -20px;
   }
+}
+
+.wrapper.wrapper-full-page {
+  height: auto;
+  min-height: 100vh;
+}
+
+.full-page > .content,
+.full-page > .footer {
+  position: relative;
+  z-index: 4;
+}
+.full-page > .content {
+  min-height: calc(100vh - 80px);
+}
+.full-page .full-page-background {
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  display: block;
+  top: 0;
+  left: 0;
+  background-size: cover;
+  background-position: center center;
+}
+.full-page .footer nav > ul a:not(.btn),
+.full-page .footer,
+.full-page .footer .copyright a {
+  color: #FFFFFF;
+}
+
+.clear-filter:before {
+  display: none;
+}
+
+.login-page > .content,
+.lock-page > .content {
+  padding-top: 18vh;
+}
+
+.login-page .card-login {
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+  border-radius: 6px;
+  padding-bottom: 20px;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+.login-page .card-login.card-hidden {
+  opacity: 0;
+  -webkit-transform: translate3d(0, -60px, 0);
+  -moz-transform: translate3d(0, -60px, 0);
+  -o-transform: translate3d(0, -60px, 0);
+  -ms-transform: translate3d(0, -60px, 0);
+  transform: translate3d(0, -60px, 0);
+}
+.login-page .card-login .btn-wd {
+  min-width: 180px;
+}
+.login-page .card-login .card-header {
+  margin-top: -40px;
+  margin-bottom: 20px;
+}
+.login-page .card-login .card-header .title {
+  margin-top: 10px;
+}
+
+.lock-page .card-profile {
+  width: 240px;
+  margin: 60px auto 0;
+  color: #FFFFFF;
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: block;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+.lock-page .card-profile.card-hidden {
+  opacity: 0;
+  -webkit-transform: translate3d(0, -60px, 0);
+  -moz-transform: translate3d(0, -60px, 0);
+  -o-transform: translate3d(0, -60px, 0);
+  -ms-transform: translate3d(0, -60px, 0);
+  transform: translate3d(0, -60px, 0);
+}
+.lock-page .card-profile .card-avatar {
+  max-width: 90px;
+  max-height: 90px;
+  margin-top: -45px;
+}
+.lock-page .card-profile .card-footer {
+  border: none;
+  padding-top: 0;
+}
+.lock-page .card-profile .form-group {
+  text-align: left;
+}
+.lock-page .card-profile .form-group .form-control {
+  background-image: linear-gradient(#e91e63, #e91e63), linear-gradient(#D2D2D2, #D2D2D2);
+}
+.lock-page .card-profile.with-animation {
+  -webkit-transition: all 300ms ease-in;
+  -moz-transition: all 300ms ease-in;
+  -o-transition: all 300ms ease-in;
+  -ms-transition: all 300ms ease-in;
+  transition: all 300ms ease-in;
+}
+
+.register-page .card-signup {
+  border-radius: 6px;
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 100px;
+  padding: 40px 0px;
+}
+.register-page .card-signup .info {
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 0px;
+}
+.register-page .card-signup .info .info-title {
+  color: #3C4858;
+  margin: 30px 0 15px;
+}
+.register-page .card-signup .checkbox {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+.register-page .card-signup .checkbox label {
+  margin-left: 17px;
+}
+.register-page .card-signup .checkbox .checkbox-material {
+  padding-right: 20px;
+}
+.register-page .card-signup .input-group .input-group-addon {
+  padding-top: 21px;
+}
+.register-page .card-signup .info-horizontal .icon {
+  float: left;
+  margin-top: 24px;
+  margin-right: 10px;
+}
+.register-page .card-signup .info-horizontal .icon i {
+  font-size: 2.6em;
+}
+.register-page .card-signup .info-horizontal .icon.icon-primary {
+  color: #9c27b0;
+}
+.register-page .card-signup .info-horizontal .icon.icon-info {
+  color: #00bcd4;
+}
+.register-page .card-signup .info-horizontal .icon.icon-success {
+  color: #4caf50;
+}
+.register-page .card-signup .info-horizontal .icon.icon-warning {
+  color: #ff9800;
+}
+.register-page .card-signup .info-horizontal .icon.icon-danger {
+  color: #f44336;
+}
+.register-page .card-signup .info-horizontal .icon.icon-rose {
+  color: #e91e63;
+}
+.register-page .card-signup .info-horizontal .description {
+  overflow: hidden;
+}
+.register-page .card-signup .form-group {
+  margin: 27px 0 0 7px;
+  padding-bottom: 0;
+}
+.register-page .container {
+  position: relative;
+  z-index: 3;
+  padding-top: 15vh;
+}
+.register-page .footer .container {
+  padding: 0;
+}
+
+.lock-form .card-profile {
+    width: 240px;
+    margin: 60px auto 0;
+    position: relative;
+    left: 0;
+    right: 0;
+    display: block;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.lock-form .card-profile .card-avatar {
+    max-width: 90px;
+    max-height: 90px;
+    position: relative;
+    bottom: 45px;
+}
+
+.login-form {
+	max-width: 350px;
+    margin: auto;
+}
+.header-card-color {
+	background-color: #32c7c7;
+}
+.black {
+	color: #222222;
 }
