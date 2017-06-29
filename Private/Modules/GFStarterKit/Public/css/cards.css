@@ -985,3 +985,22 @@
 .ct-rose {
   stroke: #e91e63 !important;
 }
+
+/*NAV TABS*/
+.card-header .material-icons {
+	    vertical-align: middle;
+	        margin: -1px 5px 0 0;
+	            color: #FFFFFF;
+}
+.card-header a {
+	  color: #FFFFFF !important;
+}
+.card-header .mdl-tabs__tab.is-active, .mdl-tabs.is-upgraded .mdl-tabs__tab.is-active:after {
+	color: #FFFFFF !important;
+	background-color: rgba(255, 255, 255, 0.2);
+    transition: background-color .1s .2s;
+}
+
+.card-header .mdl-tabs__tab-bar {
+	border: none;
+}
