@@ -36,7 +36,8 @@ class UserController {
 				$model = $model->loadById(GFDoctrineManager::getEntityManager(), $userid);
 				return $model;
 			} else {
-				$model = new UserAnonym();
+				$model = new UserRegistered();
+				$model = $model->loadById(GFDoctrineManager::getEntityManager(), $userid);
 				return $model;
 			}
 		}

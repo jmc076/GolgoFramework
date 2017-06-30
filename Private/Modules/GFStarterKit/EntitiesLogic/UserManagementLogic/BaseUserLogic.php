@@ -49,6 +49,7 @@ class BaseUserLogic extends LogicCRUD {
 							$jwt->initializeToken(array("token"=>$userModel->getToken()));
 							$cadena = $jwt->encodeToken();
 							return array("result"=>true, "token"=>$cadena);
+
 						} else {
 								ExceptionController::customError("Login failed with code: " . $result["message"], 400);
 						}

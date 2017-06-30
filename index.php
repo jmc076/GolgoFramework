@@ -40,7 +40,7 @@ function attachCustomRoutes(RouteCollection &$routerCollection) {
 	$config["checkCSRF"] = false;
 
 	$config["targetClass"] = "Modules\GFStarterKit\ViewsLogic\Pages\PAGAssignGenerator";
-	$route = new RouteModel("/generador", $config);
+	$route = RouteModel::withConfig("/generador", $config);
 	$routerCollection->attachRoute($route);
 }
 

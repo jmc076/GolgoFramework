@@ -20,6 +20,29 @@
  </div>
  
  <script>
+ var gf = {
+			startAnimationForBarChart: function(chart){
+				seq = 0;
+				delay = 75;
+				durations = 400;
+			    chart.on('draw', function(data) {
+			      if(data.type === 'bar'){
+			    	  seq++;
+			          data.element.animate({
+			            opacity: {
+			              begin: seq * delay,
+			              dur: durations,
+			              from: 0,
+			              to: 1,
+			              easing: 'ease'
+			            }
+			          });
+			      }
+			    });
+			
+			    seq = 0;
+			}
+	};
 	 function showChunkLoading(element) {
 		 var loading = $('#js-loading-chunk').html();
 		 element.html(loading);
@@ -47,5 +70,7 @@
 			});
 		 
 	 });
+	 
+	 
 	
  </script>

@@ -69,20 +69,10 @@ class PermissionsController {
 			return false;
 		}
 	}
-	public static function checkPermisosRoute($route, $userId = null) {
+	public static function checkPermisosRoute($route, $userModel) {
 		$perm = strtolower($route);
-		if($userId != null) {
-			$user = new UserRegistered();
-			$user = $user->loadById(GFDoctrineManager::getEntityManager(), $userId);
-		} else {
-			$user = UserController::getCurrentUserModel();
-		}
 
-
-		$userType = $user->getUserType();
-		if($userType == USER_ADMIN || $userType == USER_SUPERADMIN) return true;
-
-		$allowedPermisos = $user->getPrivileges();
+		$allowedPermisos = $userModel->getPrivileges();
 
 		if (in_array($perm, $allowedPermisos)){
 			return true;

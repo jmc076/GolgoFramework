@@ -61,36 +61,36 @@ class Bootstrap {
 		 * PAGE ROUTES
 		 */
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Public\PAGPublicAdminLogin";
-		$route = new RouteModel("/login", $config);
+		$route = RouteModel::withConfig("/login", $config);
 		$routerCollection->attachRoute($route);
-		$route = new RouteModel("/acceso", $config);
+		$route = RouteModel::withConfig("/acceso", $config);
 		$routerCollection->attachRoute($route);
-		$route = new RouteModel("/", $config);
+		$route = RouteModel::withConfig("/", $config);
 		$routerCollection->attachRoute($route);
 
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Public\PAGPublicAdminRegister";
-		$route = new RouteModel("/register", $config);
+		$route = RouteModel::withConfig("/register", $config);
 		$routerCollection->attachRoute($route);
 
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionInicio";
-		$route = new RouteModel("/dashboard", $config);
+		$route = RouteModel::withConfig("/dashboard", $config);
 		$routerCollection->attachRoute($route);
-		$route = new RouteModel("/dashboard/home", $config);
+		$route = RouteModel::withConfig("/dashboard/home", $config);
 		$routerCollection->attachRoute($route);
 
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionUsuarios";
-		$route = new RouteModel("/dashboard/users", $config);
+		$route =RouteModel::withConfig("/dashboard/users", $config);
 		$routerCollection->attachRoute($route);
 
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionLockscreen";
-		$route = new RouteModel("/lockscreen", $config);
+		$route = RouteModel::withConfig("/lockscreen", $config);
 		$routerCollection->attachRoute($route);
 
 		$config["targetClass"] = $baseNamespace . "\Controllers\UserController";
 		$config["targetClassMethod"] = "logout";
-		$route = new RouteModel("/logout", $config);
+		$route = RouteModel::withConfig("/logout", $config);
 		$routerCollection->attachRoute($route);
-		$route = new RouteModel("/exit", $config);
+		$route =RouteModel::withConfig("/exit", $config);
 		$routerCollection->attachRoute($route);
 		unset($config["targetClassMethod"]);
 
@@ -99,9 +99,9 @@ class Bootstrap {
 		 */
 
 		$config["targetClass"] = $baseNamespace."\ViewsLogic\ChunkPages\ChunkPrivateUsuarios";
-		$route = new RouteModel("/chunks/usuarios", $config);
+		$route = RouteModel::withConfig("/chunks/usuarios", $config);
 		$routerCollection->attachRoute($route);
-		$route = new RouteModel("/chunks/usuarios/:id", $config);
+		$route = RouteModel::withConfig("/chunks/usuarios/:id", $config);
 		$routerCollection->attachRoute($route);
 
 
@@ -109,7 +109,7 @@ class Bootstrap {
 		 * API ROUTES
 		 */
 		$config["targetClass"] = $baseNamespace."\EntitiesLogic\UserManagementLogic\BaseUserLogic";
-		$route = new RouteModel("/api/Users", $config);
+		$route = RouteModel::withConfig("/api/Users", $config);
 		$routerCollection->attachRoute($route);
 
 

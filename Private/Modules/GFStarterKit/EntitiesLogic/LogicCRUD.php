@@ -4,18 +4,23 @@ namespace Modules\GFStarterKit\EntitiesLogic;
 
 use Controllers\ExceptionController;
 use Controllers\Http\Request;
-use Controllers\RedisCacheController;
 use Controllers\GFEvents\GFEventController;
 use Controllers\GFSessions\GFSessionController;
 use Modules\GFStarterKit\Utils\AssignGenerator;
-use Controllers\GFSessions\CSRFSessionController;
 use Controllers\Http\Decorators\RequestJSONDecorator;
-use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Modules\GFStarterKit\Controllers\PermissionsController;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\UserController;
+use Controllers\CacheController;
+use Modules\GFStarterKit\Controllers\JWTAuthentication;
+use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
+use Helpers\HelperUtils;
 
 class LogicCRUD implements CRUDInterface {
+
+	protected $session;
+	protected $em;
+	protected $request;
 
 	protected $userModel;
 	protected $result;
@@ -25,10 +30,8 @@ class LogicCRUD implements CRUDInterface {
 	protected $routeParams = array();
 	protected $dataArray = array();
 
-	protected $session;
-	protected $redisClient;
-	protected $em;
-	protected $request;
+	public static $cacheKey;
+
 
 	public function __construct() {
 		GFEventController::dispatch("LogicCRUD.__construct", null);
@@ -36,68 +39,60 @@ class LogicCRUD implements CRUDInterface {
 		$this->session = GFSessionController::getInstance();
 		$this->request = Request::getInstance();
 		$this->em = GFDoctrineManager::getEntityManager();
+		$this->checkCSRF = $this->request->getNeedCheckCSRF();
 
 		$this->routeParams = $this->request->getUrlRouteParams();
-
 		if(count($this->request->getGetParams()) > 0) {
 			$this->dataArray = $this->request->getGetParams();
 		}
 		if(count($this->request->getPostParams()) > 0) {
 			$this->dataArray = $this->request->getPostParams();
 		}
+
 		$op = isset($this->dataArray['op']) ? $this->dataArray['op'] : null;
 		if($op == null) {
 			$this->getOPFromVerb($op);
 			$this->dataArray['op'] = $op;
 		}
-		$this->checkCSRF = $this->request->getNeedCheckCSRF() ? true : false;
-		if(REDIS_CACHE_ENABLED) {
-			$this->redisClient = RedisCacheController::getRedisClient();
-		}
+
+		$this->manageAuthHeaders();
+		$this->userModel = UserController::getCurrentUserModel();
+
+		self::$cacheKey = "api:" . $this->session->getSessionId() . ":" . md5(serialize($this->dataArray));
 
 		$this->preload();
+
+
 		if($this->checkCSRF) {
 			if(!$this->session->isValidCSRF($this->dataArray)) {
 				ExceptionController::invalidCSRF();
 			};
 		}
-		if($op != null) {
-			$key = "api:" . $this->session->getSessionId() . ":" . md5(serialize($this->dataArray));
-		    if(REDIS_CACHE_ENABLED) {
-		        if($this->redisClient->exists($key)) {
-		            $this->result = json_decode($this->redisClient->get($key));
-		        }
-		    }
-			if($this->result == null) {
-    			switch ($op) {
-    				case "create":
-    					$this->result = $this->create($this->dataArray);
-    					break;
-    				case "read":
-    					$this->result = $this->read($this->dataArray);
-    					if(REDIS_CACHE_ENABLED) {
-    						   $this->redisClient->setex($key, 100 ,json_encode($this->result));
-    					}
-    					break;
-    				case "update":
-    					$this->result = $this->update($this->dataArray);
-    					break;
-    				case "delete":
-    					$this->result = $this->delete($this->dataArray);
-    					break;
-    				default:
-    					ExceptionController::noOPFound();
-    					break;
-    			}
-			}
-			$this->request->setResponseBody($this->result);
-			GFEventController::dispatch(get_class($this)."_".$op, null);
-			$responseJSon = new RequestJSONDecorator($this->request);
-			$responseJSon->sendJSONResponse();
 
-		} else {
-			ExceptionController::noOPFound();
+		if($this->result == null) {
+			switch ($op) {
+				case "create":
+					$this->result = $this->create($this->dataArray);
+					break;
+				case "read":
+					$this->result = $this->read($this->dataArray);
+					break;
+				case "update":
+					$this->result = $this->update($this->dataArray);
+					break;
+				case "delete":
+					$this->result = $this->delete($this->dataArray);
+					break;
+				default:
+					ExceptionController::noOPFound();
+					break;
+			}
 		}
+		$this->request->setResponseBody($this->result);
+		GFEventController::dispatch(get_class($this)."_".$op, null);
+		$responseJSon = new RequestJSONDecorator($this->request);
+		$responseJSon->setJSONResponse();
+
 	}
 
 	function getOPFromVerb(&$op) {
@@ -114,25 +109,26 @@ class LogicCRUD implements CRUDInterface {
 				$op = "read";
 				break;
 			case 'HEAD':
+				$op = "read";
 				break;
 			case 'DELETE':
 				$op = "delete";
 				break;
 			case 'OPTIONS':
+				$op = "read";
 				break;
 			default:
+				$op = "read";
 				break;
 		}
 	}
 
 	function preload() {
-		$this->manageHeadersAuth();
-		$this->userModel = UserController::getCurrentUserModel();
 		GFEventController::dispatch("LogicCRUD.preload", null);
 
 	}
 
-	function manageHeadersAuth() {
+	function manageAuthHeaders() {
 		$username = null;
 		$password = null;
 
@@ -144,18 +140,31 @@ class LogicCRUD implements CRUDInterface {
 				list($username,$password) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
 		}
 
-		/*$authHeader = $this->request->getHeaderAsString('authorization');
-		print_r($authHeader); die(); //TODO: Diego pre
+		$authHeader = $this->request->getHeaderAsString('authorization');
 		if ($authHeader) {
-			list($jwt) = sscanf( $authHeader->toString(), 'Authorization: Bearer %s');
+			list($jwt) = sscanf( $authHeader, 'Bearer %s');
 			if ($jwt) {
-				$token = JWT::decode($jwt, $secretKey, array('HS512'));
+				$token = JWTAuthentication::decodeToken($jwt);
+				if($token !== false) {
+					$model = new UserRegistered();
+					$this->userModel = $model->loadByToken($token->data->token);
+				}
 			}
-		}*/
+		} else if (!is_null($username) && !is_null($password)) {
+			$userController = new UserController();
+			$result = $userController->login($username, $password);
+			if($result["error"] == false) {
+				$userModel =  $result["user_model"];
+				$userModel->setToken(HelperUtils::getRandomKey());
+				$userModel->persistNow();
+				$sessionModel = $this->session->getSessionModel();
+				$sessionModel->setStatus(true)->setUserId($userModel->getId())->setUserModel($userModel->getModelNameWithNamespace());
+				$jwt = new JWTAuthentication();
+				$jwt->initializeToken(array("token"=>$userModel->getToken()));
 
-
-		if (!is_null($username) && !is_null($password)) {
-
+			} else {
+				ExceptionController::customError("Datos de acceso incorrectos", 404);
+			}
 
 		}
 	}
@@ -233,7 +242,24 @@ class LogicCRUD implements CRUDInterface {
 		return $return;
 	}
 
-
+
+	public function getFromCache() {
+		if(REDIS_CACHE_ENABLED) {
+			return CacheController::get()->getFromCache(self::$cacheKey);
+		} else {
+			return null;
+		}
+
+	}
+
+	public function saveToCache($result) {
+		if(REDIS_CACHE_ENABLED) {
+			return CacheController::get()->getFromCache(self::$cacheKey);
+		} else {
+			return null;
+		}
+
+	}
 	/**
 	 * {@inheritDoc}
 	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::isPrivate()
@@ -241,10 +267,6 @@ class LogicCRUD implements CRUDInterface {
 	function isPrivate() {
 		return true;
 
-	}
-
-	function needPrivileges() {
-		return true;
 	}
 
 	/**
@@ -266,7 +288,7 @@ class LogicCRUD implements CRUDInterface {
 	}
 
 	public function checkPrivileges($dataArray) {
-		if($this->needPrivileges() == false || $this->isSuperAdmin()) return true;
+		if($this->isPrivate() == false || $this->isSuperAdmin()) return true;
 
 		return PermissionsController::checkPermisos($dataArray, $this);
 	}
@@ -277,7 +299,7 @@ class LogicCRUD implements CRUDInterface {
 	}
 
 	public function isAdmin() {
-		return $this->userModel->getUserType() == USER_ADMIN || $this->isSuperAdmin() ? true : false;
+		return ($this->userModel->getUserType() == USER_ADMIN || $this->userModel->getUserType() == USER_SUPERADMIN);
 	}
 
 }

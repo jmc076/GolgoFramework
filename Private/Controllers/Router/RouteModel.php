@@ -7,57 +7,78 @@ class RouteModel
      * URL of this Route
      * @var string
      */
-    private $url;
+    public $url;
 
 
     /**
      * The name of this route, used to get url from route name
      * @var string
      */
-    private $name;
+    public $name;
 
 
-    
+
     /**
      * The method of the class that should be called
      * @var string
      */
-    private $targetClassMethod;
-    
+    public $targetClassMethod;
+
     /**
      * The class that should be instanciated
      * @var string
      */
-    private $targetClass;
+    public $targetClass;
 
-    
+
     /**
      * If CSRF check is needed (Only with POST method i guess)
      * @var boolean
      */
-    private $checkCSRF;
-    
-    
+    public $checkCSRF;
+
+
     /**
      * Accepted HTTP verb, empty array for all.
      * @var array() $verbs
      */
-    private $verbs;
+    public $verbs;
+
+    private function __construct() {
+
+    }
 
     /**
      * @param String $url
      * @param array() $config ("name","targetClassMethod","targetClass","verbs","checkCSRF")
      */
-    public function __construct($url, array $config)
-    {
-        $this->url     			 	= $url;
-        $this->name					= isset($config['name']) ? $config['name'] : null;
-        $this->targetClassMethod	= isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
-        $this->targetClass 			= isset($config['targetClass']) ? $config['targetClass'] : null;
-        $this->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
-        $this->checkCSRF			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
+    public static function withConfig($url, array $config) {
+
+    	$instance = new self();
+
+    	$instance->url     			 	= $url;
+    	$instance->name					= isset($config['name']) ? $config['name'] : null;
+    	$instance->targetClassMethod	= isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
+    	$instance->targetClass 			= isset($config['targetClass']) ? $config['targetClass'] : null;
+    	$instance->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
+    	$instance->checkCSRF			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
+
+        return $instance;
     }
-    
+
+    public static function with($url, $class, $checkcsrf = false, $method = null, $name = "" ) {
+
+    	$instance = new self();
+
+    	$instance->url     			 	= $url;
+    	$instance->name					= $name;
+    	$instance->targetClass 			= $class;
+    	$instance->targetClassMethod	= $method;
+    	$instance->checkCSRF			= $checkcsrf;
+
+    	return $instance;
+    }
+
     /**
      * @param array() $config ("name","targetClassMethod","targetClass","verbs","checkCSRF")
      */
@@ -68,12 +89,12 @@ class RouteModel
         $this->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
         $this->checkCSRF			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
     }
-    
+
 
     public function getUrl() {
         return $this->url;
     }
-    
+
     //ADDS LAST SLASH TO URL IF NOT SET
     public function setUrl($url) {
         $url = (string)$url;
@@ -82,7 +103,7 @@ class RouteModel
         }
         $this->url = $url;
     }
-    
+
 
     public function getVerbs() {
         return $this->verbs;
@@ -90,7 +111,7 @@ class RouteModel
     public function setVerbs(array $methods) {
         $this->verbs = $methods;
     }
-    
+
 
     public function getName() {
         return $this->name;
@@ -98,36 +119,36 @@ class RouteModel
     public function setName($name)  {
         $this->name = (string)$name;
     }
-    
-    
+
+
     public function getTargetClassMethod() {
     	return $this->targetClassMethod;
     }
     public function setTargetClassMethod($targetClassMethod) {
     	$this->targetClassMethod = $targetClassMethod;
     }
-    
-    
+
+
     public function getTargetClass() {
     	return $this->targetClass;
     }
     public function setTargetClass($targetClass) {
     	$this->targetClass = $targetClass;
     }
-    
-    
+
+
     public function getRegex()  {
         return preg_replace('/(:\w+)/', '([\w-%]+)', $this->url);
     }
-    
-    
+
+
 	public function getCheckCSRF() {
 		return $this->checkCSRF;
 	}
 	public function setCheckCSRF($checkCSRF) {
 		$this->checkCSRF = $checkCSRF;
 	}
-	
-	
+
+
 
 }

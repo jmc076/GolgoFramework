@@ -47,10 +47,10 @@ class GFStarter {
 		$router->matchRequest();
 
 		GFEventController::dispatch("Router.beforeExecute", null);
-		$request->executeRequest($request);
+		$request->executeRequest();
 
 		GFEventController::dispatch("Router.beforeSendResponse", null);
-		$request->sendResponse($request);
+		$request->sendResponse();
 		exit();
 
 

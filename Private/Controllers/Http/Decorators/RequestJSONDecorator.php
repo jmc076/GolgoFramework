@@ -18,7 +18,7 @@ class RequestJSONDecorator {
 		$this->request = $req;
 	}
 
-	public function sendJSONResponse() {
+	public function setJSONResponse() {
 		$result = array();
 		$result["result"] = $this->request->getResponseBody();
 

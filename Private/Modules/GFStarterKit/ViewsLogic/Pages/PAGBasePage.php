@@ -11,14 +11,13 @@ use Modules\GFStarterKit\Controllers\PermissionsController;
 use Controllers\ExceptionController;
 
 
-class PAGBasePage {
+ abstract class PAGBasePage {
 
 	protected $smarty;
 	protected $tpl;
 	protected $getParams;
 	protected $postParams;
 	protected $em;
-	protected $modelId;
 	protected $userModel;
 	protected $request;
 	protected $routeParams;
@@ -33,25 +32,24 @@ class PAGBasePage {
 		$this->request = Request::getInstance();
 		$this->session = GFSessionController::getInstance();
 		$this->userController = new UserController();
+		$this->sessionModel = $this->session->getSessionModel();
+		$this->userModel = UserController::getCurrentUserModel();
 		$this->init();
 	}
 
 	protected function init() {
-		$this->sessionModel = $this->session->getSessionModel();
+
 		if($this->isPrivate() == true && !$this->isUserLogged()) {
 			$this->redirectTo("/".BASE_PATH_DIRECTORY);
-		} else {
-			$this->routeParams = $this->request->getUrlRouteParams();
+		} else if ($this->hasRouteAccess()) {
 			$this->em = GFDoctrineManager::getEntityManager();
 
-			if(isset($this->routeParams["modelId"])) {
-				$this->modelId = $this->routeParams["modelId"];
-			}
-
+			$this->routeParams = $this->request->getUrlRouteParams();
 			$this->getParams = $this->request->getGetParams();
 			$this->postParams = $this->request->getPostParams();
 
 			$this->preLoad();
+
 			$this->smarty = new \Smarty();
 			$this->smarty
 			->setCompileDir(ROOT_PATH .'/Private/Modules/GFStarterKit/templates_c')
@@ -61,26 +59,28 @@ class PAGBasePage {
 			$this->setTplFile();
 			$this->displayTpl();
 
-		}
-
-	}
-
-	protected function preLoad(){
-		$this->userModel = UserController::getCurrentUserModel();
-		if($this->shouldCheckRoutePerms() && !$this->canReadRoute()){
+		} else {
 			if($this->isChunk())
 				ExceptionController::routeBlocked();
 			else $this->redirectTo("/".BASE_PATH_DIRECTORY);
 		}
+
 	}
 
-	public function isSuperAdmin() {
-		return $this->userModel->getUserType() == USER_SUPERADMIN;
+	protected function hasRouteAccess() {
+		$shouldCheckRouteAccess = $this->shouldCheckRoutePerms();
+		if($shouldCheckRouteAccess) {
+			$canAccess = PermissionsController::checkPermisosRoute($this->request->getMatchedRoute()->getUrl(), $this->userModel);
+			$isAdmin = $this->isAdmin();
+			return $isAdmin || $canAccess;
+		} else  {
+			return true;
+		}
+
 	}
 
-	public function isAdmin() {
-		return $this->userModel->getUserType() == USER_ADMIN;
-	}
+	protected function preLoad(){}
+	protected abstract function setTplFile();
 
 	protected function assignTplVars() {
 		$this->smarty->assign("basePath", BASE_PATH);
@@ -88,10 +88,6 @@ class PAGBasePage {
 		if(LOCALIZATION_ENABLED) {
 			$this->smarty->assign("i18n", i18nController::localization());
 		}
-	}
-
-	protected function setTplFile() {
-
 	}
 
 	protected function displayTpl() {
@@ -116,6 +112,14 @@ class PAGBasePage {
 		return false;
 	}
 
+	public function isSuperAdmin() {
+		return $this->userModel->getUserType() == USER_SUPERADMIN;
+	}
+
+	public function isAdmin() {
+		return ($this->userModel->getUserType() == USER_ADMIN || $this->userModel->getUserType() == USER_SUPERADMIN);
+	}
+
 
 	public function redirectTo($location) {
 		$this->request->setHeader("Location", $location);
@@ -123,10 +127,6 @@ class PAGBasePage {
 
 	public function isUserLogged() {
 		return $this->sessionModel->getStatus() === true && $this->sessionModel->getUserId() != 0;
-	}
-
-	public function canReadRoute() {
-		return PermissionsController::checkPermisosRoute("/dashboard", $this->sessionModel->getUserId());
 	}
 
 	public function isChunk() {

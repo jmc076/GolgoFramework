@@ -6,7 +6,7 @@ use Firebase\JWT\JWT;
 
 class JWTAuthentication {
 
-	private $key = "example_key";
+	private static $key = "example_key";
 	private $token;
 
 	private $tokenId;
@@ -27,7 +27,6 @@ class JWTAuthentication {
 
 	public function initializeToken(array $data = array()) {
 
-		if(!isset($data["data"])) $data["data"] = array();
 
 		$this->token = array(
 				'iat'  => isset($data["iat"]) ? $data["iat"] : $this->issuedAt, // Issued at: time when the token was generated
@@ -36,7 +35,7 @@ class JWTAuthentication {
 				'iss'  => isset($data["iss"]) ? $data["iss"] : $this->issuer,   // Issuer
 				'nbf'  => isset($data["nbf"]) ? $data["nbf"] : $this->notBefore,// Not before
 				'exp'  => isset($data["exp"]) ? $data["exp"] : $this->expire,   // Expire
-				'data' => $data["data"]								// Custom data
+				'data' => $data							// Custom data
 		);
 
 		return true;
@@ -44,14 +43,14 @@ class JWTAuthentication {
 
 
 	public function encodeToken() {
-		$jwt = JWT::encode($this->token, $this->key);
+		$jwt = JWT::encode($this->token, self::$key);
 		return $jwt;
 
 	}
 
-	public function decodeToken($token) {
+	public static function decodeToken($token) {
 		try {
-			$decoded = JWT::decode($token, $this->key, array('HS256'));
+			$decoded = JWT::decode($token, self::$key, array('HS256'));
 			if($decoded->aud !== self::aud()) {
 				return false;
 			}

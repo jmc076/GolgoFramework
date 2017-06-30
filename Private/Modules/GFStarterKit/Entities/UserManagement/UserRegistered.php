@@ -17,6 +17,7 @@ class UserRegistered extends BasicModel {
 
 	use BaseUserTrait;
 
+
 	public function getPrivileges() {
 		$permisos = array();
 

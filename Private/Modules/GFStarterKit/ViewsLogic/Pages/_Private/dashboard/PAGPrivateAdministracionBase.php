@@ -6,12 +6,15 @@ namespace Modules\GFStarterKit\ViewsLogic\Pages\_Private\dashboard;
 use Modules\GFStarterKit\ViewsLogic\Pages\PAGBasePage;
 use Controllers\GFSessions\GFSessionController;
 
-class PAGPrivateAdministracionBase extends PAGBasePage {
+abstract class PAGPrivateAdministracionBase extends PAGBasePage {
 
 	public $userTypes = array(USER_ADMIN, USER_REGISTERED, USER_SUPERADMIN);
+	protected $modelId;
 
 	protected function preLoad() {
-		parent::preLoad();
+		if(isset($this->routeParams["modelId"])) {
+			$this->modelId = $this->routeParams["modelId"];
+		}
 
 		$this->request->setHeader("Cache-Control","no-cache, no-store, must-revalidate");
 		if(!$this->isAdmin() && !$this->isSuperAdmin()) {
@@ -41,5 +44,6 @@ class PAGPrivateAdministracionBase extends PAGBasePage {
 	protected function isPrivate() {
 		return true;
 	}
+
 
 }

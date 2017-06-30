@@ -10,6 +10,7 @@ class RedisCacheController {
 
     private static $redisClient;
 
+
     public static function getRedisClient() {
         if(self::$redisClient == null) {
             self::$redisClient = new \Predis\Client(array (
