@@ -19,6 +19,10 @@
           <a class="mdl-navigation__link {$inicioActive}" href="/GolgoFramework/dashboard"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
           <a class="mdl-navigation__link {$usuariosActive}" href="/GolgoFramework/dashboard/users"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">people</i>Users</a>
           <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i>nothing here</a>
+          
+          {foreach from=$menuItems item=menu}
+             <a class="mdl-navigation__link {$menu.isActive}" href="{$menu.url}"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">{$menu.icon}</i>{$menu.title}</a>
+          {/foreach}
           <div class="mdl-layout-spacer"></div>
           <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
         </nav>

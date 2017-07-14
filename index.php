@@ -23,6 +23,8 @@ $modules = array();
  * Add your modules here
  */
 $modules[] = "Modules\GFStarterKit\Bootstrap";
+$modules[] = "Modules\GFFileManager\Bootstrap";
+
 
 
 $gfStarter = new GFStarter($routerCollection);

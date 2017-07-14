@@ -11,6 +11,8 @@ abstract class PAGPrivateAdministracionBase extends PAGBasePage {
 	public $userTypes = array(USER_ADMIN, USER_REGISTERED, USER_SUPERADMIN);
 	protected $modelId;
 
+	protected static $menuItems = array();
+
 	protected function preLoad() {
 		if(isset($this->routeParams["modelId"])) {
 			$this->modelId = $this->routeParams["modelId"];
@@ -31,12 +33,26 @@ abstract class PAGPrivateAdministracionBase extends PAGBasePage {
 		}
 	}
 
+	public static function addItemMenu($item) {
+		self::$menuItems[] = $item;
+	}
+
+	public static function setActive($url) {
+		foreach (self::$menuItems as &$array) {
+			if(isset($array["url"]) && $array["url"] == $url) {
+				$array["isActive"] = "active";
+			}
+		}
+	}
+
+
 
 	protected function assignTplVars() {
 		parent::assignTplVars();
 		$this->smarty->assign("inicioActive", "");
 		$this->smarty->assign("usuariosActive", "");
 		$this->smarty->assign("userTypes", $this->userTypes);
+		$this->smarty->assign("menuItems", self::$menuItems);
 
 	}
 

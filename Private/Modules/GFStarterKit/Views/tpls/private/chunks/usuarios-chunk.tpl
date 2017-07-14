@@ -67,12 +67,8 @@
 {literal}
 <script type="text/javascript">
 
-function initChunkUsuarios(isAdmin) {
-	if(isAdmin == true) {
-		$('#js-form-new-user').find('input[name="isAdmin"]').val(1);
-	} else {
-		$('#js-form-new-user').find('input[name="isAdmin"]').val(0);
-	}
+function initChunkUsuarios() {
+	
 	$('#js-form-new-user').on('click','.js-btn-save-user',function(e) {
 		e.preventDefault();
 		 var form = $('#js-form-new-user').serialize();
@@ -86,11 +82,7 @@ function initChunkUsuarios(isAdmin) {
 	 	        		closeOnConfirm: false});
 		        },
 	 	        success: function (data) {
-	 	        	if(isAdmin == false)
-	 	        		tableUsers.ajax.reload();
-	 	        	else
-	 	        		tableAdmin.ajax.reload();
-	 	        	
+	 	        	tableUsers.ajax.reload();
 	 	          	swal("¡Listo!", "Usuario guardado correctamente", "success");
 	 	        },
 	 	       error: function(xhr) {

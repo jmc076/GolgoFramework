@@ -250,7 +250,16 @@ class BaseUserLogic extends LogicCRUD {
 		}
 
 		if(isset($dataArray["password"]) && $dataArray["password"] != "") {
-			$model->setPassword($this->userController->getHash($dataArray["password"]));
+			if(isset($dataArray["repeat_pass"]) && $dataArray["repeat_pass"] != "") {
+				if($dataArray["password"] == $dataArray["repeat_pass"] ) {
+					$model->setPassword($this->userController->getHash($dataArray["password"]));
+				} else {
+					ExceptionController::passwordMissmatch();
+				}
+			} else {
+				ExceptionController::customError("To set new password please fill the repeat password field", 400);
+			}
+
 		}
 
 		if(isset($dataArray["lastIp"])) {

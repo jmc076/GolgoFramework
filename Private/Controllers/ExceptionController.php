@@ -121,6 +121,12 @@ class ExceptionController {
 		self::showMessage();
 	}
 
+	public static function passwordMissmatch() {
+		self::$code = 400;
+		self::$msg = utf8_encode("Password missmatch");
+		self::showMessage();
+	}
+
 	private static function showMessage() {
 
 		if (!function_exists('http_response_code'))
