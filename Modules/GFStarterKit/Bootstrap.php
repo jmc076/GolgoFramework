@@ -9,7 +9,7 @@ use Controllers\Router\RouteModel;
 use Controllers\GFEvents\GFEventController;
 
 
-define('GF_SMARTY_TEMPLATE_FOLDER', 'Private/Modules/GFStarterKit/Views/tpls');
+define('GF_SMARTY_TEMPLATE_FOLDER', 'Modules/GFStarterKit/Views/tpls');
 define("GF_TABLE_USERS", "gf_users");
 define("GF_TABLE_ATTEMPTS","gf_login_attempts");
 

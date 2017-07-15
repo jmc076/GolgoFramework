@@ -10,7 +10,7 @@ class PAGPrivateGetFile extends PAGBasePage {
 		if ($this->isPrivate() == true && (!isset($_SESSION["sessionData"]) || $_SESSION["sessionData"]["status"] == false)) {
 			header("Location:/");
 		} else {
-			$upload_dir = ROOT_PATH . '/Private' .  DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR;
+			$upload_dir = ROOT_PATH .  DIRECTORY_SEPARATOR . 'Files' . DIRECTORY_SEPARATOR;
 			$file = $upload_dir . $this->getParams["ruta"];
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
 			$mime = self::getMimeType($ext);

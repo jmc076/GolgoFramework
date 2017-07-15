@@ -18,7 +18,7 @@ class PAGPrivateAdministracionFileManager extends PAGPrivateAdministracionBase {
 
 		$dir = "Files";
 		// Run the recursive function
-		$filesArray = $this->fileScan(ROOT_PATH. "/Private/Modules/GFFileManager/Files");
+		$filesArray = $this->fileScan(ROOT_PATH. "/Modules/GFFileManager/Files");
 		$fileResult = json_encode(array(
 				"name" => "Files",
 				"type" => "folder",
@@ -30,7 +30,7 @@ class PAGPrivateAdministracionFileManager extends PAGPrivateAdministracionBase {
 
 
 	protected function setTplFile() {
-		$this->tpl = "Private/Modules/GFFileManager/Views/tpls" . '/private/dashboard/file-manager.tpl';
+		$this->tpl = "Modules/GFFileManager/Views/tpls" . '/private/dashboard/file-manager.tpl';
 
 	}
 

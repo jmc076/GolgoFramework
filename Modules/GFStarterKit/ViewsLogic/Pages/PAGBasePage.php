@@ -52,8 +52,8 @@ use Controllers\ExceptionController;
 
 			$this->smarty = new \Smarty();
 			$this->smarty
-			->setCompileDir(ROOT_PATH .'/Private/Modules/GFStarterKit/templates_c')
-			->setCacheDir(ROOT_PATH .'/Private/Modules/GFStarterKit/cache');
+			->setCompileDir(ROOT_PATH .'/Modules/GFStarterKit/templates_c')
+			->setCacheDir(ROOT_PATH .'/Modules/GFStarterKit/cache');
 			$this->smarty->setCaching(false);
 			$this->assignTplVars();
 			$this->setTplFile();
