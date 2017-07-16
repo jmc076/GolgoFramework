@@ -4,17 +4,16 @@ RewriteEngine on
 
 
 RewriteCond %{ENV:REDIRECT_STATUS} !200
-RewriteRule modules/([^/.]*)?/(.+)$ Private/Modules/$1/Public/$2 [NC,L]
+RewriteRule modules/([^/.]*)?/(.+)$ Modules/$1/Public/$2 [NC,L]
 
-RewriteCond %{REQUEST_URI} ^((?!Private/Modules).)*$ [NC]
+RewriteCond %{REQUEST_URI} ^((?!Modules).)*$ [NC]
 RewriteRule (css|js|images|img|fonts|vendors|assets)/(.+)$ Public/$1/$2 [NC,L]
-
 
 
 RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|robots\.txt)$ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f  
 RewriteCond %{REQUEST_FILENAME} !-d 
-RewriteRule .*  index.php
+RewriteRule ^(.*)$  index.php
 
 #RewriteCond %{HTTPS} off
 #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}

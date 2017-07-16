@@ -15,10 +15,9 @@
 	Demo page
 -------------------------*/
 
-body {
+.filemanager-color {
 	background-color: #23232e;
 	font: 14px normal Arial, Helvetica, sans-serif;
-	z-index: -4;
 }
 
 
@@ -89,28 +88,15 @@ body {
 	height: 40px;
 }
 
-.filemanager .search:before {
-	content: '';
-	position: absolute;
-	margin-top:12px;
-	width: 10px;
-	height: 11px;
-	border-radius: 50%;
-	border: 2px solid #ffffff;
-	right: 8px;
-}
 
-.filemanager .search:after {
-	content: '';
+
+.filemanager i {
 	width: 3px;
 	height: 10px;
-	background-color: #ffffff;
-	border-radius: 2px;
 	position: absolute;
-	top: 23px;
-	right: 6px;
-	-webkit-transform: rotate(-45deg);
-	transform: rotate(-45deg);
+	top: 10px;
+	right: 0px;
+	
 }
 
 .filemanager .search input[type=search] {
