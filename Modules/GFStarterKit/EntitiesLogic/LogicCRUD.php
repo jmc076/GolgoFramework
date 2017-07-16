@@ -12,9 +12,9 @@ use Modules\GFStarterKit\Controllers\PermissionsController;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\UserController;
 use Controllers\CacheController;
-use Modules\GFStarterKit\Controllers\JWTAuthentication;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Helpers\HelperUtils;
+use Controllers\JWTController;
 
 class LogicCRUD implements CRUDInterface {
 
@@ -144,7 +144,7 @@ class LogicCRUD implements CRUDInterface {
 		if ($authHeader) {
 			list($jwt) = sscanf( $authHeader, 'Bearer %s');
 			if ($jwt) {
-				$token = JWTAuthentication::decodeToken($jwt);
+				$token = JWTController::decodeToken($jwt);
 				if($token !== false) {
 					$model = new UserRegistered();
 					$this->userModel = $model->loadByToken($token->data->token);
@@ -159,7 +159,7 @@ class LogicCRUD implements CRUDInterface {
 				$userModel->persistNow();
 				$sessionModel = $this->session->getSessionModel();
 				$sessionModel->setStatus(true)->setUserId($userModel->getId())->setUserModel($userModel->getModelNameWithNamespace());
-				$jwt = new JWTAuthentication();
+				$jwt = new JWTController();
 				$jwt->initializeToken(array("token"=>$userModel->getToken()));
 
 			} else {

@@ -1,10 +1,10 @@
 <?php
-namespace Modules\GFStarterKit\Controllers;
+namespace Controllers;
 
 use Controllers\GFSessions\GFSessionController;
 use Firebase\JWT\JWT;
 
-class JWTAuthentication {
+class JWTController {
 
 	private static $key = "example_key";
 	private $token;

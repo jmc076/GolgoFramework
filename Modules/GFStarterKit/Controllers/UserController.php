@@ -8,6 +8,7 @@ use Modules\GFStarterKit\GFDoctrineManager;
 use Helpers\HelperUtils;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Controllers\ExceptionController;
+use Controllers\JWTController;
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
 	require("password.php");
@@ -44,7 +45,7 @@ class UserController {
 	}
 
 	public static function getCurrentUserModelWithJWT($jwtToken)  {
-		$jwt = new JWTAuthentication();
+		$jwt = new JWTController();
 		$data = $jwt->decodeToken($jwtToken);
 		if($data === false) ExceptionController::jwtError();
 		$token = $data->data->token;

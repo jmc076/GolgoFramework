@@ -4,7 +4,7 @@ namespace Controllers\Router;
 use Controllers\Http\Request;
 use Controllers\GFEvents\GFEventController;
 
-class Router implements RouterInterface{
+class Router {
 
 	private $routeCollection;
     private $namedRoutes = null;
@@ -16,11 +16,11 @@ class Router implements RouterInterface{
     public function __construct(RouteCollection $routesCollection, Request $request) {
         $this->routeCollection = $routesCollection;
         $this->request = $request;
-        $this->requestUrl = $request->getRequestUrl();
     }
 
 
     public function matchRequest() {
+    	$this->requestUrl = $this->request->getRequestUrl();
         if (($pos = strpos($this->requestUrl, '?')) !== false) {
            $this->requestUrl = substr($this->requestUrl, 0, $pos);
         }

@@ -2,14 +2,13 @@
 namespace Modules\GFStarterKit\EntitiesLogic\UserManagementLogic;
 
 use Controllers\ExceptionController;
-use Controllers\FileController;
 use Modules\GFStarterKit\Controllers\UserController;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
-use Modules\GFStarterKit\Controllers\JWTAuthentication;
 use Helpers\HelperUtils;
 use Modules\GFStarterKit\Utils\Serializor;
 use Modules\GFStarterKit\Entities\UserManagement\Permissions;
+use Controllers\JWTController;
 
 
 class BaseUserLogic extends LogicCRUD {
@@ -45,7 +44,7 @@ class BaseUserLogic extends LogicCRUD {
 							$userModel->persistNow();
 							$sessionModel = $this->session->getSessionModel();
 							$sessionModel->setStatus(true)->setUserId($userModel->getId())->setUserModel($userModel->getModelNameWithNamespace());
-							$jwt = new JWTAuthentication();
+							$jwt = new JWTController();
 							$jwt->initializeToken(array("token"=>$userModel->getToken()));
 							$cadena = $jwt->encodeToken();
 							return array("result"=>true, "token"=>$cadena);
