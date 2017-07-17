@@ -1,15 +1,16 @@
 <?php
 
-use Controllers\Router\RouteCollection;
-use Controllers\Router\RouteModel;
 
-require_once __DIR__ .'/Private/Configs/Constants.php';
+use Core\Controllers\Router\RouteCollection;
+use Core\Controllers\Router\RouteModel;
+use Core\Controllers\Http\Request;
+
+require_once __DIR__ .'/Core/Configs/Constants.php';
 require_once 'GFStarter.php';
 require_once 'GFAutoload.php';
 
-if(file_exists( __DIR__ .'/Private/Vendors/autoload.php'))
-	require_once __DIR__ .'/Private/Vendors/autoload.php';
-
+if(file_exists( __DIR__ .'/Core/Vendors/autoload.php'))
+	require_once __DIR__ .'/Core/Vendors/autoload.php';
 
 setShowError(true);
 
@@ -43,6 +44,12 @@ function attachCustomRoutes(RouteCollection &$routerCollection) {
 
 	$config["targetClass"] = "Modules\GFStarterKit\ViewsLogic\Pages\PAGAssignGenerator";
 	$route = RouteModel::withConfig("/generador", $config);
+	$routerCollection->attachRoute($route);
+
+	$route = RouteModel::withFunction("/func", function() {
+		$request = Request::getInstance();
+		$request->setResponseBody("<b>It Works!</b>");
+	});
 	$routerCollection->attachRoute($route);
 }
 

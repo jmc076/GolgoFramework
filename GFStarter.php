@@ -1,12 +1,13 @@
 <?php
-use Controllers\Http\Request;
-use Controllers\Router\Router;
-use Controllers\Router\RouteCollection;
-use Controllers\RedisCacheController;
-use Controllers\GFSessions\GFSessionController;
-use Controllers\GFEvents\GFEventController;
-use Controllers\i18nController;
 
+
+use Core\Controllers\Router\RouteCollection;
+use Core\Controllers\GFSessions\GFSessionController;
+use Core\Controllers\i18nController;
+use Core\Controllers\RedisCacheController;
+use Core\Controllers\Http\Request;
+use Core\Controllers\GFEvents\GFEventController;
+use Core\Controllers\Router\Router;
 
 class GFStarter {
 

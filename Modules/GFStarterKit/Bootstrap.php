@@ -1,12 +1,13 @@
 <?php
 namespace Modules\GFStarterKit;
 
+use Core\Controllers\Router\RouteCollection;
+use Core\Controllers\GFEvents\GFEventController;
+use Core\Controllers\Router\RouteModel;
+
 require_once 'vendor/autoload.php';
 
 
-use Controllers\Router\RouteCollection;
-use Controllers\Router\RouteModel;
-use Controllers\GFEvents\GFEventController;
 
 
 define('GF_SMARTY_TEMPLATE_FOLDER', 'Modules/GFStarterKit/Views/tpls');
@@ -37,10 +38,14 @@ class Bootstrap {
 
 	function __construct(RouteCollection $routerCollection) {
 
+		if(file_exists( __DIR__ .'/vendor/autoload.php'))
+			require_once __DIR__ .'/vendor/autoload.php';
+
 		GFDoctrineManager::getEntityManager();
 
 		$this->setRoutes($routerCollection);
 		$this->startEventListeners();
+
 	}
 
 	private function startEventListeners() {

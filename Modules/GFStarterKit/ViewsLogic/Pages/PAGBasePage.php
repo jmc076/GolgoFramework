@@ -2,13 +2,13 @@
 namespace Modules\GFStarterKit\ViewsLogic\Pages;
 
 
-use Controllers\Http\Request;
-use Controllers\i18nController;
-use Controllers\GFSessions\GFSessionController;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\UserController;
 use Modules\GFStarterKit\Controllers\PermissionsController;
-use Controllers\ExceptionController;
+use Core\Controllers\GFSessions\GFSessionController;
+use Core\Controllers\Http\Request;
+use Core\Controllers\ExceptionController;
+use Core\Controllers\i18nController;
 
 
  abstract class PAGBasePage {

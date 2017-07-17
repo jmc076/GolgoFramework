@@ -1,14 +1,14 @@
 <?php
 namespace Modules\GFStarterKit\EntitiesLogic\UserManagementLogic;
 
-use Controllers\ExceptionController;
 use Modules\GFStarterKit\Controllers\UserController;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
 use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
-use Helpers\HelperUtils;
 use Modules\GFStarterKit\Utils\Serializor;
 use Modules\GFStarterKit\Entities\UserManagement\Permissions;
-use Controllers\JWTController;
+use Core\Controllers\JWTController;
+use Core\Controllers\ExceptionController;
+use Core\Helpers\Utils;
 
 
 class BaseUserLogic extends LogicCRUD {
@@ -40,7 +40,7 @@ class BaseUserLogic extends LogicCRUD {
 						$result = $this->userController->login($dataArray["user"], $dataArray["password"]);
 						if($result["error"] == false) {
 							$userModel =  $result["user_model"];
-							$userModel->setToken(HelperUtils::getRandomKey());
+							$userModel->setToken(Utils::getRandomKey());
 							$userModel->persistNow();
 							$sessionModel = $this->session->getSessionModel();
 							$sessionModel->setStatus(true)->setUserId($userModel->getId())->setUserModel($userModel->getModelNameWithNamespace());

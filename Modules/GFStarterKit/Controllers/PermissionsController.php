@@ -2,8 +2,6 @@
 namespace Modules\GFStarterKit\Controllers;
 
 
-use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
-use Modules\GFStarterKit\GFDoctrineManager;
 
 class PermissionsController {
 

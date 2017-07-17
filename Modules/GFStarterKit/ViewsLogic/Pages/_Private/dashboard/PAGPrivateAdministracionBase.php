@@ -4,7 +4,7 @@ namespace Modules\GFStarterKit\ViewsLogic\Pages\_Private\dashboard;
 
 
 use Modules\GFStarterKit\ViewsLogic\Pages\PAGBasePage;
-use Controllers\GFSessions\GFSessionController;
+use Core\Controllers\GFSessions\GFSessionController;
 
 abstract class PAGPrivateAdministracionBase extends PAGBasePage {
 

@@ -2,9 +2,9 @@
 namespace Modules\GFFileManager;
 
 
-use Controllers\Router\RouteCollection;
-use Controllers\Router\RouteModel;
 use Modules\GFStarterKit\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministracionBase;
+use Core\Controllers\Router\RouteCollection;
+use Core\Controllers\Router\RouteModel;
 
 
 class Bootstrap {

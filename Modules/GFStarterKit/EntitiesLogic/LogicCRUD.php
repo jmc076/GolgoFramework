@@ -2,19 +2,19 @@
 
 namespace Modules\GFStarterKit\EntitiesLogic;
 
-use Controllers\ExceptionController;
-use Controllers\Http\Request;
-use Controllers\GFEvents\GFEventController;
-use Controllers\GFSessions\GFSessionController;
 use Modules\GFStarterKit\Utils\AssignGenerator;
-use Controllers\Http\Decorators\RequestJSONDecorator;
 use Modules\GFStarterKit\Controllers\PermissionsController;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\UserController;
-use Controllers\CacheController;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
-use Helpers\HelperUtils;
-use Controllers\JWTController;
+use Core\Controllers\GFSessions\GFSessionController;
+use Core\Controllers\Http\Request;
+use Core\Controllers\GFEvents\GFEventController;
+use Core\Controllers\ExceptionController;
+use Core\Controllers\Http\Decorators\RequestJSONDecorator;
+use Core\Controllers\JWTController;
+use Core\Helpers\Utils;
+use Core\Controllers\CacheController;
 
 class LogicCRUD implements CRUDInterface {
 
@@ -155,7 +155,7 @@ class LogicCRUD implements CRUDInterface {
 			$result = $userController->login($username, $password);
 			if($result["error"] == false) {
 				$userModel =  $result["user_model"];
-				$userModel->setToken(HelperUtils::getRandomKey());
+				$userModel->setToken(Utils::getRandomKey());
 				$userModel->persistNow();
 				$sessionModel = $this->session->getSessionModel();
 				$sessionModel->setStatus(true)->setUserId($userModel->getId())->setUserModel($userModel->getModelNameWithNamespace());

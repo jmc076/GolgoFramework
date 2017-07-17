@@ -3,7 +3,8 @@
     "description": "PHP framework for simple use. With a module for fast start with MySQL, Doctrine and Smarty",
     "type": "project",
     "require": {
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "monolog/monolog": "^1.23"
     },
     "license": "Apache 2.0",
     "authors": [

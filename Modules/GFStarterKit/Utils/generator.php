@@ -4,9 +4,9 @@ namespace Modules\GFStarterKit\Utils;
 
 use Doctrine\ORM\Tools\EntityGenerator;
 ini_set("display_errors", "On");
-$libPath = __DIR__ . "/Private/"; // Set this to where you have doctrine2 installed
+$libPath = __DIR__ . "/Core/"; // Set this to where you have doctrine2 installed
 // autoloaders
-require_once './Private/Doctrine/Common/ClassLoader.php';
+require_once './Core/Doctrine/Common/ClassLoader.php';
 include_once '../Entities/BasicModel.php';
 
 $classLoader = new \Doctrine\Common\ClassLoader('Doctrine', $libPath);
@@ -56,7 +56,7 @@ $generator->setUpdateEntityIfExists(true);
 $generator->setGenerateStubMethods(true);
 $generator->setGenerateAnnotations(true);
 $generator->setClassToExtend("Entities\BasicModel");
-$generator->generate($metadata, __DIR__ . '/Private/Entities/newEntities');
+$generator->generate($metadata, __DIR__ . '/Core/Entities/newEntities');
 print 'Done!';
 
 ?>

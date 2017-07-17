@@ -2,7 +2,8 @@
 
 namespace Modules\GFStarterKit\ViewsLogic\Pages\_Private\dashboard;
 
-use Controllers\GFSessions\GFSessionController;
+
+use Core\Controllers\GFSessions\GFSessionController;
 
 class PAGPrivateAdministracionLockscreen extends PAGPrivateAdministracionBase {
 

@@ -1,14 +1,14 @@
 <?php
 namespace Modules\GFStarterKit\Controllers;
 
-use Controllers\GFSessions\GFSessionController;
 
 use Modules\GFStarterKit\Entities\UserManagement\UserAnonym;
 use Modules\GFStarterKit\GFDoctrineManager;
-use Helpers\HelperUtils;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
-use Controllers\ExceptionController;
-use Controllers\JWTController;
+use Core\Controllers\GFSessions\GFSessionController;
+use Core\Controllers\JWTController;
+use Core\Controllers\ExceptionController;
+use Core\Helpers\Utils;
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
 	require("password.php");
@@ -258,7 +258,7 @@ class UserController {
 	 * @return string
 	 **/
 	public function isBlocked() {
-		$ip = HelperUtils::getIp();
+		$ip = Utils::getIp();
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
 
 		$this->deleteAttempts($ip, false);
@@ -283,7 +283,7 @@ class UserController {
 	 **/
 	private function addAttempt() {
 		$dbal = GFDoctrineManager::getDoctrineDBAL();
-		$ip = HelperUtils::getIp();
+		$ip = Utils::getIp();
 
 		$attempt_expiredate = date("Y-m-d H:i:s", strtotime(LOGIN_ATTEMPTS_MITIGATION_TIME));
 
