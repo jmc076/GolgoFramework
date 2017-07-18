@@ -24,6 +24,7 @@ define('EMAIL_MAX_LENGTH','100');
 define('EMAIL_MIN_LENGTH','5');
 define('PASSWORD_MIN_LENGTH','5');
 define('PASSWORD_BCRYPT_COST','10');
+
 define('ERROR_USER_BLOCKED', "user_blocked");
 define('ERROR_USER_NAME_NOT_FOUND', "username_not_found");
 define('ERROR_USER_PASSWORD_MISSMATCH', "user_password_missmatch");

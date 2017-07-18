@@ -1,6 +1,6 @@
  {include file="../../head.tpl"}
  <link rel="stylesheet" href="modules/GFFileManager/css/styles-filemanager.css">
-      <main class="mdl-layout__content filemanager-color">
+      <main class="mdl-layout__content mdl-color--grey-100">
         <div class="mdl-grid">
           <div class="demo-cards mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid mdl-grid--no-spacing">
              	<div class="filemanager">

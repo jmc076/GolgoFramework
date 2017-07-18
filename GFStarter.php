@@ -39,6 +39,17 @@ class GFStarter {
 		$this->loadModules($modules);
 	}
 
+	/** Nuevo eventos
+	 *
+	 	$event = new GFEvent();
+		$event->setName("start");
+		$gfevent = new GFEventController();
+		$gfevent->attach($event, function($evento) {
+		$evento->stopPropagation(false);
+		print_r("llamado evento en se acaba!");
+		}, 0);
+		$gfevent->attach($event, function($args) {print_r("llamado evento en start222!"); die();}, 0);
+	 */
 	public function start() {
 		$request = Request::getInstance();
 

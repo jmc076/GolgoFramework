@@ -7,11 +7,15 @@
         </div>
 		<div class="mdl-grid fullwidth">
 			<div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col">
+						
+			
 				<div class="demo-avatar-dropdown mdl-typography--title mdl-color-text--grey-600">
-					<a id="js-new-user" class="mdl-button-mini mdl-js-button mdl-button--raised  mdl-js-ripple-effect">
-						<i class="md material-icons icon-mini">add</i>
-					</a> Listado de Usuarios
+					Listado de Usuarios
+					<button id="js-new-user" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary righted">
+					  Nuevo usuario
+					</button>
 				</div>
+				
 				<br>
 				<table id="data-table-users" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp fullwidth table-bordered">
 					<thead>
@@ -22,7 +26,7 @@
 							<th class="mdl-data-table__cell--non-numeric ">Nombre de Usuario</th>
 							<th class="mdl-data-table__cell--non-numeric ">User Type</th>
 							<th class="mdl-data-table__cell--non-numeric ">Fecha creación</th>
-							<th class="mdl-data-table__cell--non-numeric ">Acciones</th>
+							<th class="mdl-data-table__cell--non-numeric no-sort">Acciones</th>
 						</tr>
 					</thead>
 					<tbody>

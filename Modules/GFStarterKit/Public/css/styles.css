@@ -492,3 +492,10 @@ a.btn {
 	text-align: left;
 	padding: 0 0 0 18px;
 }
+.righted {
+	position: absolute;
+    top: 0;
+    right: 15px;
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);
+}
