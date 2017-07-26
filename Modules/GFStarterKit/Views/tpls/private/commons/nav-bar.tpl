@@ -11,6 +11,9 @@
               <label class="mdl-textfield__label" for="search">Enter your query...</label>
             </div>
           </div>
+          <a href="/avisos/logout" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+            	<i class="material-icons">power_settings_new</i>
+            </a>
            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon js-lock-screen"><i class="material-icons">lock_open</i>
 		 </button>
           <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">

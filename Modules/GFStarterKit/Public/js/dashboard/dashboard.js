@@ -3,7 +3,7 @@ $( document ).ready(function() {
 		 location.href = "/GolgoFramework/lockscreen";
 	 })
 	 /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
-
+if($('#emailsSubscriptionChart').length) {
 	 var dataEmailsSubscriptionChart = {
 	   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 	   series: [
@@ -33,6 +33,7 @@ $( document ).ready(function() {
 
 	 //start animation for the Emails Subscription Chart
 	 gf.startAnimationForBarChart(emailsSubscriptionChart);
+}
 	
 });
 

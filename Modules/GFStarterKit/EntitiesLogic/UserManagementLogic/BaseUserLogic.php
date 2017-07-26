@@ -47,10 +47,10 @@ class BaseUserLogic extends LogicCRUD {
 							$jwt = new JWTController();
 							$jwt->initializeToken(array("token"=>$userModel->getToken()));
 							$cadena = $jwt->encodeToken();
-							return array("result"=>true, "token"=>$cadena);
+							$return = array("result"=>true, "token"=>$cadena);
 
 						} else {
-								ExceptionController::customError("Login failed with code: " . $result["message"], 400);
+							ExceptionController::customError("Login failed with code: " . $result["message"], 400);
 						}
 					} else {
 						ExceptionController::customError("missing password and user in form", 400);
@@ -85,14 +85,14 @@ class BaseUserLogic extends LogicCRUD {
 					break;
 				default:
 					ExceptionController::noSOPFound();
-				break;
+					break;
 			}
 		} else {
 			ExceptionController::noSOPFound();
 		}
 
 
-			//$return = $model->loadAll($this->em, $getParams);
+		//$return = $model->loadAll($this->em, $getParams);
 		return $return;
 	}
 
@@ -100,18 +100,18 @@ class BaseUserLogic extends LogicCRUD {
 		$return = false;
 		if($this->checkPrivileges($dataArray)) {
 			if((isset($dataArray["email"]) && $this->userController->isEmailTaken($dataArray["email"]))
-			 || (isset($dataArray["user"]) && $this->userController->isUserTaken($dataArray["user"]))) {
-			 	ExceptionController::customError("email or user taken", 409);
-			}
-			$model = $this->getEntity();
-			try {
-				$this->assignParams($dataArray,$model);
-				$this->em->persist($model);
-				$this->em->flush();
-				$return = $model->getId();
-			} catch (Exception $e) {
-				$return = false;
-			}
+					|| (isset($dataArray["user"]) && $this->userController->isUserTaken($dataArray["user"]))) {
+						ExceptionController::customError("email or user taken", 409);
+					}
+					$model = $this->getEntity();
+					try {
+						$this->assignParams($dataArray,$model);
+						$this->em->persist($model);
+						$this->em->flush();
+						$return = $model->getId();
+					} catch (Exception $e) {
+						$return = false;
+					}
 
 		} else {
 			ExceptionController::PermissionDenied();
@@ -163,14 +163,14 @@ class BaseUserLogic extends LogicCRUD {
 						break;
 				}
 			} else {
-					try {
-						$this->assignParams($dataArray,$model);
-						$this->em->persist($model);
-						$this->em->flush();
-						$return = $model->getId();
-					} catch (Exception $e) {
-						$return = false;
-					}
+				try {
+					$this->assignParams($dataArray,$model);
+					$this->em->persist($model);
+					$this->em->flush();
+					$return = $model->getId();
+				} catch (Exception $e) {
+					$return = false;
+				}
 			}
 		} else {
 			ExceptionController::PermissionDenied();
@@ -198,104 +198,105 @@ class BaseUserLogic extends LogicCRUD {
 
 	public function assignParams($dataArray, &$model) {
 
-
-		if(isset($dataArray["userType"]) && !empty($dataArray["userType"]) &&  $dataArray["userType"] != $model->getUserType() && in_array($dataArray["userType"], $this->userTypes)) {
-			if(($dataArray["userType"] == USER_ADMIN || $dataArray["userType"] == USER_SUPERADMIN) && $this->isAdmin()) {
-				$model->setUserType($dataArray["userType"]);
-			} else {
-				$model->setUserType(USER_REGISTERED);
+		if(isset($dataArray["userType"]) && !empty($dataArray["userType"]) && in_array($dataArray["userType"], $this->userTypes)) {
+			if( $dataArray["userType"] != $model->getUserType()) {
+				if(($dataArray["userType"] == USER_ADMIN || $dataArray["userType"] == USER_SUPERADMIN) && $this->isAdmin()) {
+					$model->setUserType($dataArray["userType"]);
+				} else {
+					$model->setUserType(USER_REGISTERED);
+				}
 			}
-		} else {
+		} else  {
 			$model->setUserType(USER_REGISTERED);
 		}
 
 		if(isset($dataArray["isActive"]))
 			$model->setIsActive(1);
-		else
-			$model->setIsActive(0);
+			else
+				$model->setIsActive(0);
 
 
-		if(isset($dataArray["email"])) {
-			$model->setEmail($dataArray["email"]);
-		}
-
-		if(isset($dataArray["name"])) {
-			$model->setName($dataArray["name"]);
-		}
-
-
-		if(isset($dataArray["firstName"])) {
-			$model->setFirstName($dataArray["firstName"]);
-		}
-
-		if(isset($dataArray["lastName"])) {
-			$model->setLastName($dataArray["lastName"]);
-		}
-
-		if(isset($dataArray["bio"])) {
-			$model->setBio($dataArray["bio"]);
-		}
-
-		if(isset($dataArray["telephone"])) {
-			$model->setTelephone($dataArray["telephone"]);
-		}
-
-		if(isset($dataArray["user"]) && $dataArray["user"] != "") {
-			$model->setUserName($dataArray["user"]);
-		}
-
-		if(isset($dataArray["userName"])) {
-			$model->setUserName($dataArray["userName"]);
-		}
-
-		if(isset($dataArray["password"]) && $dataArray["password"] != "") {
-			if(isset($dataArray["repeat_pass"]) && $dataArray["repeat_pass"] != "") {
-				if($dataArray["password"] == $dataArray["repeat_pass"] ) {
-					$model->setPassword($this->userController->getHash($dataArray["password"]));
-				} else {
-					ExceptionController::passwordMissmatch();
+				if(isset($dataArray["email"])) {
+					$model->setEmail($dataArray["email"]);
 				}
-			} else {
-				ExceptionController::customError("To set new password please fill the repeat password field", 400);
-			}
 
-		}
+				if(isset($dataArray["name"])) {
+					$model->setName($dataArray["name"]);
+				}
 
-		if(isset($dataArray["lastIp"])) {
-			$model->setLastIp($dataArray["lastIp"]);
-		}
 
-		if(isset($dataArray["lastLogin"])) {
-			$model->setLastLogin($dataArray["lastLogin"]);
-		}
+				if(isset($dataArray["firstName"])) {
+					$model->setFirstName($dataArray["firstName"]);
+				}
 
-		if(isset($dataArray["sessionId"])) {
-			$model->setSessionId($dataArray["sessionId"]);
-		}
+				if(isset($dataArray["lastName"])) {
+					$model->setLastName($dataArray["lastName"]);
+				}
 
-		if(isset($dataArray["activationKey"])) {
-			$model->setActivationKey($dataArray["activationKey"]);
-		}
+				if(isset($dataArray["bio"])) {
+					$model->setBio($dataArray["bio"]);
+				}
 
-		if(isset($dataArray["userAvatar"])) {
-			$model->setUserAvatar($dataArray["userAvatar"]);
-		}
+				if(isset($dataArray["telephone"])) {
+					$model->setTelephone($dataArray["telephone"]);
+				}
 
-		if(isset($dataArray["shouldChangePassword"])) {
-			$model->setShouldChangePassword(1);
-		} else {
-			$model->setShouldChangePassword(0);
-		}
+				if(isset($dataArray["user"]) && $dataArray["user"] != "") {
+					$model->setUserName($dataArray["user"]);
+				}
 
-		if(isset($dataArray["token"]) && $dataArray["token"] != "") {
-			$model->setToken($dataArray["token"]);
-		}
+				if(isset($dataArray["userName"])) {
+					$model->setUserName($dataArray["userName"]);
+				}
 
-		if(isset($dataArray["permissions"]) && $dataArray["permissions"] != "") {
-			$pModel = new Permissions();
-			$pModel = $pModel->loadById($this->em, $dataArray["permissions"]);
-			$model->setPermissions($pModel);
-		}
+				if(isset($dataArray["password"]) && $dataArray["password"] != "") {
+					if(isset($dataArray["repeat_pass"]) && $dataArray["repeat_pass"] != "") {
+						if($dataArray["password"] == $dataArray["repeat_pass"] ) {
+							$model->setPassword($this->userController->getHash($dataArray["password"]));
+						} else {
+							ExceptionController::passwordMissmatch();
+						}
+					} else {
+						ExceptionController::customError("To set new password please fill the repeat password field", 400);
+					}
+
+				}
+
+				if(isset($dataArray["lastIp"])) {
+					$model->setLastIp($dataArray["lastIp"]);
+				}
+
+				if(isset($dataArray["lastLogin"])) {
+					$model->setLastLogin($dataArray["lastLogin"]);
+				}
+
+				if(isset($dataArray["sessionId"])) {
+					$model->setSessionId($dataArray["sessionId"]);
+				}
+
+				if(isset($dataArray["activationKey"])) {
+					$model->setActivationKey($dataArray["activationKey"]);
+				}
+
+				if(isset($dataArray["userAvatar"])) {
+					$model->setUserAvatar($dataArray["userAvatar"]);
+				}
+
+				if(isset($dataArray["shouldChangePassword"])) {
+					$model->setShouldChangePassword(1);
+				} else {
+					$model->setShouldChangePassword(0);
+				}
+
+				if(isset($dataArray["token"]) && $dataArray["token"] != "") {
+					$model->setToken($dataArray["token"]);
+				}
+
+				if(isset($dataArray["permissions"]) && $dataArray["permissions"] != "") {
+					$pModel = new Permissions();
+					$pModel = $pModel->loadById($this->em, $dataArray["permissions"]);
+					$model->setPermissions($pModel);
+				}
 
 
 
