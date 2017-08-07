@@ -21,7 +21,7 @@ class JWTController {
 		$this->issuedAt   = time();
 		$this->notBefore  = $this->issuedAt + 1;
 		$this->expire     = $this->notBefore + GF_JWT_AUTHENTICATION_EXPIRATION;
-		$this->issuer 	  = BASE_PATH;
+		$this->issuer 	  = DOMAIN_HOST;
 
 	}
 

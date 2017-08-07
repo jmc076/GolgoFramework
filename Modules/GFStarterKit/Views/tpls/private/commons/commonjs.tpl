@@ -20,6 +20,8 @@
  </div>
  
  <script>
+ var baseHost = "{$smarty.const.DOMAIN_PATH}";
+
  var gf = {
 			startAnimationForBarChart: function(chart){
 				seq = 0;

@@ -5,6 +5,8 @@ namespace Modules\GFStarterKit\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use Modules\GFStarterKit\Utils\DoctrineDataTablesHelper;
 use Modules\GFStarterKit\GFDoctrineManager;
+use JMS\Serializer\SerializerBuilder;
+use Modules\GFStarterKit\Controllers\SerializerController;
 
 
 abstract Class BasicModel
@@ -23,8 +25,8 @@ abstract Class BasicModel
 	}
 
 	/**
-	* Obtains an object class name without namespaces
-	*/
+	 * Obtains an object class name without namespaces
+	 */
 	function getModelName($obj = null) {
 		return (new \ReflectionClass($this))->getShortName();
 	}
@@ -63,30 +65,30 @@ abstract Class BasicModel
 
 			$dql .= " WHERE 1 = 1";
 			if (isset($dataArray['iDisplayStart']) || isset($dataArray['iDisplayLength'])) {
-	    		$limit = 10;
-	            if (isset($dataArray['iDisplayLength'])) {
-	                $limit = intval($dataArray['iDisplayLength']);
-	            }
+				$limit = 10;
+				if (isset($dataArray['iDisplayLength'])) {
+					$limit = intval($dataArray['iDisplayLength']);
+				}
 
-	            $first = 0;
-	            if (isset($dataArray['iDisplayStart'])) {
-	                $first = $dataArray['iDisplayStart'];
-	            }
+				$first = 0;
+				if (isset($dataArray['iDisplayStart'])) {
+					$first = $dataArray['iDisplayStart'];
+				}
 
-	    		$query = $em->createQuery($dql);
-	            $query->setMaxResults($limit);
-	            $query->setFirstResult($first);
-	            DoctrineDataTablesHelper::initializeRowsValues($em, $query);
+				$query = $em->createQuery($dql);
+				$query->setMaxResults($limit);
+				$query->setFirstResult($first);
+				DoctrineDataTablesHelper::initializeRowsValues($em, $query);
 
-    		} else {
-    			$query = $em->createQuery($dql);
-    		}
+			} else {
+				$query = $em->createQuery($dql);
+			}
 
-    		if($hydrated) {
-    			$models = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-    		} else {
-    			$models = $query->getResult();
-    		}
+			if($hydrated) {
+				$models = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+			} else {
+				$models = $query->getResult();
+			}
 
 		} catch (NoResultException $ex) {
 			$models =  null;
@@ -145,6 +147,10 @@ abstract Class BasicModel
 		$em = GFDoctrineManager::getEntityManager();
 		$em->persist($this);
 		$em->flush();
+	}
+
+	public function toJSON() {
+		return SerializerController::serializeJSON($this);
 	}
 
 }

@@ -16,8 +16,8 @@
           </div>
         </header>
         <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
-          <a class="mdl-navigation__link {$inicioActive}" href="/GolgoFramework/dashboard"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
-          <a class="mdl-navigation__link {$usuariosActive}" href="/GolgoFramework/dashboard/users"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">people</i>Users</a>
+          <a class="mdl-navigation__link {$inicioActive}" href="/{$smarty.const.DOMAIN_PATH}/dashboard"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
+          <a class="mdl-navigation__link {$usuariosActive}" href="/{$smarty.const.DOMAIN_PATH}/dashboard/users"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">people</i>Users</a>
           <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i>nothing here</a>
           
           {foreach from=$menuItems item=menu}

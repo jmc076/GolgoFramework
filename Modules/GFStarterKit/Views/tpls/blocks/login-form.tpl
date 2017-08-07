@@ -13,7 +13,7 @@
 										</span>
 										<div class="form-group label-floating is-empty">
 											<label class="control-label">{$i18n["admin-login"].usuario}</label>
-											<input id="user" type="text" class="form-control" name="user"> 
+											<input id="user" type="text" class="form-control" name="user" autocomplete="off"> 
 											<span class="material-input"></span>
 										</div>
 									</div>
@@ -22,7 +22,7 @@
 										</span>
 										<div class="form-group label-floating is-empty">
 											<label class="control-label">{$i18n["admin-login"].contrasena}</label> 
-											<input id="userpass" type="password" class="form-control" name="password">
+											<input id="userpass" type="password" class="form-control" name="password" autocomplete="off">
 											<span class="material-input"></span>
 										</div>
 									</div>

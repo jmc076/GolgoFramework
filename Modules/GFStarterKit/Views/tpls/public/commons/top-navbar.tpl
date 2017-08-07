@@ -7,7 +7,7 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href=" ../dashboard.html ">
+			<a class="navbar-brand" href="#">
 				GolgoFramework Starter Kit
 				<div class="ripple-container"></div>
 			</a>

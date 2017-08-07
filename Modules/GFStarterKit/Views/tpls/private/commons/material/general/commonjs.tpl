@@ -1,4 +1,4 @@
-<script>var basePath = "/{$smarty.const.BASE_PATH_DIRECTORY}";</script>
+<script>var baseHost = "{$smarty.const.DOMAIN_PATH}";</script>
 <!-- for IE support -->
 <script src="modules/GFStarterKit/components/es6-promise/es6-promise.auto.min.js"></script>
 

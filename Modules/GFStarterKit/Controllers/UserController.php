@@ -18,7 +18,7 @@ class UserController {
 
 	public static function logout() {
 		GFSessionController::getInstance()->exitSession();
-		header("Location: /" . BASE_PATH_DIRECTORY . "/");
+		header("Location: /" . DOMAIN_PATH . "/");
 		die();
 	}
 
@@ -103,10 +103,10 @@ class UserController {
 	}
 
 	/**
-	* Gets user data for a given UID and returns an array
-	* @param int $uid
-	* @return array $data
-	*/
+	 * Gets user data for a given UID and returns an array
+	 * @param int $uid
+	 * @return array $data
+	 */
 	private function getUser($uid)
 	{
 

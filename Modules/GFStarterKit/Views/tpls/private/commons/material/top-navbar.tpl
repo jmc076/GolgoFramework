@@ -7,14 +7,14 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href=" /GolgoFramework/dashboard">
+			<a class="navbar-brand" href=" /{$smarty.const.DOMAIN_PATH}/dashboard">
 				GolgoFramework Starter Kit
 				<div class="ripple-container"></div>
 			</a>
 		</div>
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
-			<li class=""><a href="/GolgoFramework/logout">  <i class="material-icons">power_settings_new</i>Logout
+			<li class=""><a href="/{$smarty.const.DOMAIN_PATH}/logout">  <i class="material-icons">power_settings_new</i>Logout
 				</a></li>
 			</ul>
 		</div>

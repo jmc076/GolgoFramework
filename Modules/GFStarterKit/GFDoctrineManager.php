@@ -6,6 +6,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 
 class GFDoctrineManager
 {
@@ -24,6 +25,9 @@ class GFDoctrineManager
 			$cache = new ArrayCache();
 			$useSimpleAnnotationReader = false;
 			$config = Setup::createAnnotationMetadataConfiguration($entityPath, $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
+				
+			AnnotationRegistry::registerAutoloadNamespace(
+					'JMS\Serializer\Annotation', ROOT_PATH.'/Modules/GFStarterKit/vendor/jms/serializer/src');
 
 			$connectionOptions = array(
 					'driver' => DB_DRIVER,
@@ -63,14 +67,6 @@ class GFDoctrineManager
 
 	public static function getDoctrineDBAL(){
 		if(!self::$dbal || self::$dbal == null) {
-			//(array $paths, $isDevMode = false, $proxyDir = null, Cache $cache = null, $useSimpleAnnotationReader = true)
-
-			$entityPath = array();
-			$entityPath[] = __DIR__ . '/Entities';
-			$proxyDir = __DIR__ . '/Proxies';
-			$isDevMode = true;
-			$cache = new ArrayCache();
-			$useSimpleAnnotationReader = false;
 
 			$connectionOptions = array(
 					'driver' => DB_DRIVER,

@@ -5,6 +5,7 @@ namespace Modules\GFStarterKit\Entities\UserManagement\Abstracts;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Modules\GFStarterKit\GFDoctrineManager;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * BaseUser
@@ -56,6 +57,7 @@ trait BaseUserTrait {
 	/**
 	 *
 	 * @var string $password @ORM\Column(name="password", type="string", length=255, nullable=false)
+	 * @Exclude()
 	 */
 	private $password;
 
@@ -118,6 +120,12 @@ trait BaseUserTrait {
 	 * @var string $nombre @ORM\Column(name="token", type="string", length=255, nullable=true)
 	 */
 	protected $token;
+
+	/**
+	 *
+	 * @var string $nombre @ORM\Column(name="push_token", type="string", nullable=true)
+	 */
+	protected $pushToken;
 
 	/**
 	 * @ORM\ManyToMany(targetEntity="Modules\GFStarterKit\Entities\UserManagement\Permissions", cascade={"persist"})
@@ -271,6 +279,17 @@ trait BaseUserTrait {
 		$this->token = $token;
 		return $this;
 	}
+
+	public function getPushToken() {
+		return $this->pushToken;
+	}
+	public function setPushToken($pushToken) {
+		$this->pushToken = $pushToken;
+		return $this;
+	}
+
+
+
 	public function loadByToken($token, $hydrated = false) {
 		$model = null;
 		try {
@@ -288,4 +307,6 @@ trait BaseUserTrait {
 		}
 		return $model;
 	}
+
+
 }

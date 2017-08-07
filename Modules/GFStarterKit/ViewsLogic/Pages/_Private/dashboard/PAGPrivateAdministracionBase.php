@@ -21,11 +21,11 @@ abstract class PAGPrivateAdministracionBase extends PAGBasePage {
 		$this->request->setHeader("Cache-Control","no-cache, no-store, must-revalidate");
 		if(!$this->isAdmin() && !$this->isSuperAdmin()) {
 			GFSessionController::getInstance()->exitSession();
-			$this->redirectTo("/".BASE_PATH_DIRECTORY."/login");
+			$this->redirectTo("/".DOMAIN_PATH."/login");
 		}
 
 		if(GFSessionController::getInstance()->get("lockedScreen") && !$this instanceof PAGPrivateAdministracionLockscreen ) {
-			$this->redirectTo("/".BASE_PATH_DIRECTORY."/lockscreen");
+			$this->redirectTo("/".DOMAIN_PATH."/lockscreen");
 		} else {
 			if(strpos($_SERVER['REQUEST_URI'], "lockscreen") === false){
 				$this->session->put("previousUrl", $_SERVER['REQUEST_URI']);

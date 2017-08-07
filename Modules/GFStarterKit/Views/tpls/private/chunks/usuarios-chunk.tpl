@@ -74,7 +74,7 @@ function initChunkUsuarios() {
 		 var form = $('#js-form-new-user').serialize();
 		 var verb =  ($('#js-model-id').val() == 0) ? 'POST' : 'PUT';
 		 $.ajax({
-	 	        url: "/GolgoFramework/api/Users",
+	 	        url: "/{$smarty.const.DOMAIN_PATH}/api/Users",
 	 	        type: verb,
 	 	        data: form,
 	 	        beforeSend: function() {

@@ -40,7 +40,7 @@ use Core\Controllers\i18nController;
 	protected function init() {
 
 		if($this->isPrivate() == true && !$this->isUserLogged()) {
-			$this->redirectTo("/".BASE_PATH_DIRECTORY);
+			$this->redirectTo("/".DOMAIN_PATH);
 		} else if ($this->hasRouteAccess()) {
 			$this->em = GFDoctrineManager::getEntityManager();
 
@@ -62,7 +62,7 @@ use Core\Controllers\i18nController;
 		} else {
 			if($this->isChunk())
 				ExceptionController::routeBlocked();
-			else $this->redirectTo("/".BASE_PATH_DIRECTORY);
+			else $this->redirectTo("/".DOMAIN_PATH);
 		}
 
 	}
@@ -83,7 +83,7 @@ use Core\Controllers\i18nController;
 	protected abstract function setTplFile();
 
 	protected function assignTplVars() {
-		$this->smarty->assign("basePath", BASE_PATH);
+		$this->smarty->assign("BASE_URL", DOMAIN_HOST . '/' . DOMAIN_PATH);
 		$this->smarty->assign("csrfdata", '<input id="csrf" type="hidden" name="'.$this->session->getSessionCsrfName().'" value="'.$this->session->getSessionCsrfValue().'" />');
 		if(LOCALIZATION_ENABLED) {
 			$this->smarty->assign("i18n", i18nController::localization());
