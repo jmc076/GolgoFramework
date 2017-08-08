@@ -31,7 +31,7 @@ const GF_DEFAULT_SESSION = "gf_default";
 
 
 //HOST CONFIGURATION
-define("DOMAIN_HOST","localhost/GolgoFramework");
+define("DOMAIN_HOST","localhost");
 define("DOMAIN_PATH","GolgoFramework");
 
 

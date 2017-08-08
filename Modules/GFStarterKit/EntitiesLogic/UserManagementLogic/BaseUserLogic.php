@@ -9,6 +9,7 @@ use Modules\GFStarterKit\Entities\UserManagement\Permissions;
 use Core\Controllers\JWTController;
 use Core\Controllers\ExceptionController;
 use Core\Helpers\Utils;
+use Core\Controllers\MonoLog\LoggerController;
 
 
 class BaseUserLogic extends LogicCRUD {
@@ -48,7 +49,7 @@ class BaseUserLogic extends LogicCRUD {
 							$jwt->initializeToken(array("token"=>$userModel->getToken()));
 							$cadena = $jwt->encodeToken();
 							$return = array("result"=>true, "token"=>$cadena);
-
+							LoggerController::get()->logInfo("user loged in..." , array("userID"=>$userModel->getId() ));
 						} else {
 							ExceptionController::customError("Login failed with code: " . $result["message"], 400);
 						}

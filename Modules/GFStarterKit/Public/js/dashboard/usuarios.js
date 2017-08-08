@@ -3,7 +3,7 @@ $( document ).ready(function() {
 	 tableUsers = $('#data-table-users').DataTable({
 		 "responsive": true,
 		 "ajax": {
-			 "url": "/GolgoFramework/api/Users?op=read&sop=loadAll",
+			 "url": '/'+ baseHost +"/api/Users?op=read&sop=loadAll",
 	         "dataSrc": "result"
 	     },
 	     "columns": [
@@ -84,9 +84,9 @@ $( document ).ready(function() {
 	 function getChunkUsuario(id,isAdmin) {
 			var url;
 			if (id == 0)
-				var url = "/GolgoFramework/chunks/usuarios";
+				var url = '/'+ baseHost +"/chunks/usuarios";
 			else
-				url = "/GolgoFramework/chunks/usuarios?id=" + id;
+				url = '/'+ baseHost +"/chunks/usuarios?id=" + id;
 			$.ajax({
 				url : url,
 				type : 'GET',
@@ -137,7 +137,7 @@ $( document ).ready(function() {
 						};
 	    		 
 		    	 $.ajax({
-		 	        url: "/GolgoFramework/api/Users",
+		 	        url: '/'+ baseHost +"/api/Users",
 		 	        type: 'POST',
 		 	        data: postData,
 		 	        success: function (data) {
@@ -181,7 +181,7 @@ $( document ).ready(function() {
 						};
 	    		 
 				    	 $.ajax({
-				 	        url: "/GolgoFramework/api/Users" ,
+				 	        url: '/'+ baseHost +"/api/Users" ,
 				 	        type: 'POST',
 				 	       data: postData,
 				 	        success: function (data) {
@@ -232,7 +232,7 @@ $( document ).ready(function() {
 						};
 	    		 
 		    	 $.ajax({
-		 	        url: "/GolgoFramework/api/Users",
+		 	        url: '/'+ baseHost +"/api/Users",
 		 	        type: 'POST',
 		 	       data: postData,
 		 	        success: function (data) {

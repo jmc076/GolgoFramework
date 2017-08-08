@@ -12,7 +12,7 @@ $(window, document, undefined).ready(function() {
 	  
 	  $('.js-login-button').on('click',function(e) {
 		  	e.preventDefault();
-		  	var url = basePath + "/api/Users";
+		  	var url = '/'+ baseHost + "/api/Users";
 			$.ajax({
 		        url:   url,
 		        type:  'POST',
@@ -27,7 +27,7 @@ $(window, document, undefined).ready(function() {
 		        	console.log(response);
 		        	if(response && response.result != null) {
 		        		if(response.result.result === true) {
-		        			window.location.href = basePath + "/dashboard";
+		        			window.location.href = '/'+ baseHost + "/dashboard";
 		        		} else {
 		        			if(response.result.error)
 		        				alert(response.result.error);

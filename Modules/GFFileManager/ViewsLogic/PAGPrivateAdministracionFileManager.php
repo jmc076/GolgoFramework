@@ -18,7 +18,7 @@ class PAGPrivateAdministracionFileManager extends PAGPrivateAdministracionBase {
 
 		$dir = "Files";
 		// Run the recursive function
-		$filesArray = $this->fileScan(ROOT_PATH. "/Files");
+		$filesArray = $this->fileScan(FILES_FOLDER);
 		$fileResult = json_encode(array(
 				"name" => "Files",
 				"type" => "folder",
@@ -63,7 +63,7 @@ class PAGPrivateAdministracionFileManager extends PAGPrivateAdministracionBase {
 						$files[] = array(
 								"name" => $f,
 								"type" => "file",
-								"path" => "/".BASE_PATH_DIRECTORY. "/Files".explode("Files",$dir)[1] . '/' . $f,
+								"path" => "/".DOMAIN_PATH. "/Files".explode("Files",$dir)[1] . '/' . $f,
 								"size" => filesize($dir . '/' . $f) // Gets the size of this file
 						);
 					}

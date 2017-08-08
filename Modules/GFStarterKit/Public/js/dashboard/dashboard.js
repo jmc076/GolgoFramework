@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 	 $('.js-lock-screen').click(function(e) {
-		 location.href = "/GolgoFramework/lockscreen";
+		 location.href = '/'+ baseHost+ "/lockscreen";
 	 })
 	 /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
 if($('#emailsSubscriptionChart').length) {

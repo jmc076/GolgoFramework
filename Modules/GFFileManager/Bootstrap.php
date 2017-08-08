@@ -6,6 +6,7 @@ use Modules\GFStarterKit\ViewsLogic\Pages\_Private\dashboard\PAGPrivateAdministr
 use Core\Controllers\Router\RouteCollection;
 use Core\Controllers\Router\RouteModel;
 
+define("FILES_FOLDER", dirname(__FILE__) .DS. "Files");
 
 class Bootstrap {
 

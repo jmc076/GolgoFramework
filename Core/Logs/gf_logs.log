@@ -1,0 +1,6 @@
+[2017-08-08 14:09:19] GF_LOGGER.INFO: user loged in: 11 [] []
+[2017-08-08 14:10:13] GF_LOGGER.INFO: user loged in: 11 [] []
+[2017-08-08 14:12:39] GF_LOGGER.INFO: user loged in... {"userID":11} []
+[2017-08-08 14:15:29] GF_LOGGER.INFO: user loged in... {"userID":11} []
+[2017-08-08 14:21:18] GF_LOGGER.INFO: user loged in... {"userID":11} []
+[2017-08-08 14:24:45] GF_LOGGER.INFO: user loged in... {"userID":11} []
