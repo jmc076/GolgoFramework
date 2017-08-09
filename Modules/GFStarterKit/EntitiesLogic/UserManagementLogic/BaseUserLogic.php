@@ -10,6 +10,8 @@ use Core\Controllers\JWTController;
 use Core\Controllers\ExceptionController;
 use Core\Helpers\Utils;
 use Core\Controllers\MonoLog\LoggerController;
+use Modules\GFStarterKit\FormModels\LoginModel;
+use JMS\Serializer\SerializerBuilder;
 
 
 class BaseUserLogic extends LogicCRUD {
@@ -37,6 +39,9 @@ class BaseUserLogic extends LogicCRUD {
 			switch ($dataArray["sop"]) {
 				case "doLogin":
 					if(isset($dataArray["user"]) && isset($dataArray["password"])) {
+						
+						/*$serializer = SerializerBuilder::create()->build();
+						 $object = $serializer->deserialize(json_encode($dataArray), 'Modules\GFStarterKit\FormModels\LoginModel', 'json');*/
 
 						$result = $this->userController->login($dataArray["user"], $dataArray["password"]);
 						if($result["error"] == false) {
