@@ -14,8 +14,8 @@ class i18nController {
 		static $localeData = NULL;
 		if (is_null($localeData)) {
 			$localization = GFSessionController::getInstance()->getSessionModel()->getUserLang();
-			$langFile = dirname( __FILE__ ).'/../Localization/' . $localization . '.json';
-			$langBase = dirname( __FILE__ ).'/../Localization/'.DEFAULT_LOCALIZATION.'.json';
+			$langFile = ROOT_PATH . '/App/Localization/' . $localization . ' .json';
+			$langBase = ROOT_PATH . '/App/Localization/' . DEFAULT_LOCALIZATION . ' .json';
 			if (!file_exists($langFile) || $localization == DEFAULT_LOCALIZATION) {
 				$jsonLang = file_get_contents($langBase);
 				$langData = json_decode($jsonLang, true);
