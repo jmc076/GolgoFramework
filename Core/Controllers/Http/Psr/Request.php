@@ -533,7 +533,6 @@ class Request extends Message implements ServerRequestInterface
     public function getContentType()
     {
         $result = $this->getHeader('Content-Type');
-
         return $result ? $result[0] : null;
     }
 
@@ -886,7 +885,6 @@ class Request extends Message implements ServerRequestInterface
         }
 
         $mediaType = $this->getMediaType();
-
         // look for a media type with a structured syntax suffix (RFC 6839)
         $parts = explode('+', $mediaType);
         if (count($parts) >= 2) {

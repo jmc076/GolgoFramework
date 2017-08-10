@@ -6,6 +6,21 @@ use Core\Helpers\Collection;
 
 class Headers extends Collection {
 
+	public static function createFromGlobals()
+	{
+		$data = [];
+		$globals = getallheaders();
+		foreach ($globals as $key => $value) {
+			$key = strtoupper($key);
+				if ($key !== 'HTTP_CONTENT_LENGTH') {
+					$data[self::reconstructOriginalKey($key)] =  $value;
+				}
+		}
+		return new static($data);
+	}
+
+
+
 
 	public static function getAuthorization() {
 		$authorization = null;
@@ -121,7 +136,31 @@ class Headers extends Collection {
 	 */
 	public function normalizeKey($key) {
 		$key = strtr(strtolower($key),'_','-');
+        if (strpos($key, 'http-') === 0) {
+            $key = substr($key, 5);
+        }
 
 		return $key;
+	}
+
+	/**
+	 * Reconstruct original header name
+	 *
+	 * This method takes an HTTP header name from the Environment
+	 * and returns it as it was probably formatted by the actual client.
+	 *
+	 * @param string $key An HTTP header key from the $_SERVER global variable
+	 *
+	 * @return string The reconstructed key
+	 *
+	 * @example CONTENT_TYPE => Content-Type
+	 * @example HTTP_USER_AGENT => User-Agent
+	 */
+	private static function reconstructOriginalKey($key)
+	{
+		if (strpos($key, 'HTTP_') === 0) {
+			$key = substr($key, 5);
+		}
+		return strtr(ucwords(strtr(strtolower($key), '_', ' ')), ' ', '-');
 	}
 }

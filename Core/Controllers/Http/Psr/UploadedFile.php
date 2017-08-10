@@ -11,6 +11,7 @@ namespace Core\Controllers\Http\Psr;
 use RuntimeException;
 use InvalidArgumentException;
 use Core\Controllers\Http\Psr\Interfaces\UploadedFileInterface;
+use Core\Helpers\Collection;
 
 /**
  * Represents Uploaded Files.
@@ -77,6 +78,22 @@ class UploadedFile implements UploadedFileInterface
      * @var bool
      */
     protected $moved = false;
+
+    /**
+     * Create a normalized tree of UploadedFile instances from the Environment.
+     *
+     * @param array $globals The global server variables.
+     *
+     * @return array|null A normalized tree of UploadedFile instances or null if none are provided.
+     */
+    public static function createFromGlobals()
+    {
+        if (isset($_FILES)) {
+            return static::parseUploadedFiles($_FILES);
+        }
+
+        return [];
+    }
 
     /**
      * Parse a non-normalized, i.e. $_FILES superglobal, tree of uploaded file data.
