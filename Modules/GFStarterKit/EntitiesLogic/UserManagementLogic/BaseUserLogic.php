@@ -1,17 +1,16 @@
 <?php
 namespace Modules\GFStarterKit\EntitiesLogic\UserManagementLogic;
 
-use Modules\GFStarterKit\Controllers\UserController;
-use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
-use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
-use Modules\GFStarterKit\Utils\Serializor;
-use Modules\GFStarterKit\Entities\UserManagement\Permissions;
-use Core\Controllers\JWTController;
 use Core\Controllers\ExceptionController;
-use Core\Helpers\Utils;
+use Core\Controllers\JWTController;
 use Core\Controllers\MonoLog\LoggerController;
-use Modules\GFStarterKit\FormModels\LoginModel;
-use JMS\Serializer\SerializerBuilder;
+use Core\Helpers\Utils;
+use Modules\GFStarterKit\Controllers\UserController;
+use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
+use Modules\GFStarterKit\Entities\UserManagement\Permissions;
+use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
+use Modules\GFStarterKit\Utils\Serializor;
+use Exception;
 
 
 class BaseUserLogic extends LogicCRUD {

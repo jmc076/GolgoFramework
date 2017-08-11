@@ -2,10 +2,9 @@
 
 namespace Modules\GFStarterKit\Entities\UserManagement\Abstracts;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NoResultException;
 use Modules\GFStarterKit\GFDoctrineManager;
-use JMS\Serializer\Annotation\Exclude;
+use Exception;
 
 /**
  * BaseUser
@@ -14,7 +13,8 @@ trait BaseUserTrait {
 
 	/**
 	 *
-	 * @var string $nombre @ORM\Column(name="name", type="string", length=255, nullable=true)
+	 * @var string $nombre 
+	 * @ORM\Column(name="name", type="string", length=255, nullable=true)
 	 */
 	protected $name;
 

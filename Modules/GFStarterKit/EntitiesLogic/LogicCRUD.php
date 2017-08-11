@@ -7,6 +7,7 @@ use Modules\GFStarterKit\Controllers\PermissionsController;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\UserController;
 use Modules\GFStarterKit\Entities\UserManagement\UserRegistered;
+use Exception;
 use Core\Controllers\GFSessions\GFSessionController;
 use Core\Controllers\Http\Request;
 use Core\Controllers\GFEvents\GFEventController;

@@ -2,8 +2,9 @@
 
 namespace Modules\GFStarterKit\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\NoResultException;
 use Modules\GFStarterKit\Utils\DoctrineDataTablesHelper;
+use Exception;
 
 
 abstract Class BasicModelEmptyFields

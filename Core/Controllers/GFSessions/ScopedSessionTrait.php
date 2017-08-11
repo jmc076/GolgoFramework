@@ -1,6 +1,8 @@
 <?php
 namespace Core\Controllers\GFSessions;
 
+use Exception;
+
 
 trait ScopedSessionTrait {
 

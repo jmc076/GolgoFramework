@@ -1,9 +1,9 @@
 <?php
 namespace Modules\GFStarterKit\EntitiesLogic\UserManagementLogic;
 
-use Controllers\ExceptionController;
-use Modules\GFStarterKit\Entities\UserManagement\Permissions;
+use Core\Controllers\ExceptionController;
 use Modules\GFStarterKit\EntitiesLogic\LogicCRUD;
+use Modules\GFStarterKit\Entities\UserManagement\Permissions;
 
 class PermissionsLogic extends LogicCRUD {
 

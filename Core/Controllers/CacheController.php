@@ -1,6 +1,8 @@
 <?php
 namespace Core\Controllers;
 
+use Exception;
+
 class CacheController {
 
 	protected $redisClient;

@@ -2,11 +2,11 @@
 
 namespace Modules\GFStarterKit\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
-use Modules\GFStarterKit\Utils\DoctrineDataTablesHelper;
+use Doctrine\ORM\NoResultException;
 use Modules\GFStarterKit\GFDoctrineManager;
-use JMS\Serializer\SerializerBuilder;
 use Modules\GFStarterKit\Controllers\SerializerController;
+use Modules\GFStarterKit\Utils\DoctrineDataTablesHelper;
+use Exception;
 
 
 abstract Class BasicModel
