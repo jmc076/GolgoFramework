@@ -143,8 +143,7 @@ trait BaseUserTrait {
 
 
 	public function callback($params) {
-		print_r ( "callback called" );
-		die (); // TODO: Diego pre
+		print_r("callback called"); die(); // TODO: Diego pre
 	}
 	public function getName() {
 		return $this->name;
