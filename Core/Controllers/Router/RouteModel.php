@@ -9,14 +9,11 @@ class RouteModel
      */
     public $url;
 
-
     /**
      * The name of this route, used to get url from route name
      * @var string
      */
     public $name;
-
-
 
     /**
      * The method of the class that should be called
@@ -30,13 +27,11 @@ class RouteModel
      */
     public $targetClass;
 
-
     /**
      * If CSRF check is needed (Only with POST method i guess)
      * @var boolean
      */
-    public $checkCSRF;
-
+    public $isCSRFProtected;
 
     /**
      * Accepted HTTP verb, empty array for all.
@@ -48,8 +43,8 @@ class RouteModel
      * function to run when route match. if set, ignores all other variables
      * @var function
      */
-
     public $function;
+    
 
     private function __construct() {
 
@@ -68,7 +63,7 @@ class RouteModel
     	$instance->targetClassMethod	= isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
     	$instance->targetClass 			= isset($config['targetClass']) ? $config['targetClass'] : null;
     	$instance->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
-    	$instance->checkCSRF			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
+    	$instance->isCSRFProtected		= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
 
         return $instance;
     }
@@ -81,7 +76,7 @@ class RouteModel
     	$instance->name					= $name;
     	$instance->targetClass 			= $class;
     	$instance->targetClassMethod	= $method;
-    	$instance->checkCSRF			= $checkcsrf;
+    	$instance->isCSRFProtected			= $checkcsrf;
 
     	return $instance;
     }
@@ -94,7 +89,7 @@ class RouteModel
     	$instance->function				= $function;
     	$instance->targetClass 			= null;
     	$instance->targetClassMethod	= null;
-    	$instance->checkCSRF			= null;
+    	$instance->isCSRFProtected			= null;
     	return $instance;
     }
 
@@ -106,7 +101,7 @@ class RouteModel
         $this->targetClassMethod	= isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
         $this->targetClass 			= isset($config['targetClass']) ? $config['targetClass'] : null;
         $this->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
-        $this->checkCSRF			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
+        $this->isCSRFProtected			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
     }
 
 
@@ -170,10 +165,10 @@ class RouteModel
 
 
 	public function getCheckCSRF() {
-		return $this->checkCSRF;
+		return $this->isCSRFProtected;
 	}
 	public function setCheckCSRF($checkCSRF) {
-		$this->checkCSRF = $checkCSRF;
+		$this->isCSRFProtected = $checkCSRF;
 	}
 
 

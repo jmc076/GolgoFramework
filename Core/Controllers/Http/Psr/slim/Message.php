@@ -6,11 +6,11 @@
  * @copyright Copyright (c) 2011-2017 Josh Lockhart
  * @license   https://github.com/slimphp/Slim-Http/blob/master/LICENSE (MIT License)
  */
-namespace Core\Controllers\Http\Psr;
+namespace Slim\Http;
 
 use InvalidArgumentException;
-use Core\Controllers\Http\Psr\Interfaces\MessageInterface;
-use Core\Controllers\Http\Psr\Interfaces\StreamInterface;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Abstract message (base class for Request and Response)
@@ -22,7 +22,8 @@ use Core\Controllers\Http\Psr\Interfaces\StreamInterface;
  * @see Slim\Http\Request
  * @see Slim\Http\Response
  */
-abstract class Message implements MessageInterface {
+abstract class Message implements MessageInterface
+{
     /**
      * Protocol version
      *
@@ -35,25 +36,34 @@ abstract class Message implements MessageInterface {
      *
      * @var array
      */
-    protected static $validProtocolVersions = array(
+    protected static $validProtocolVersions = [
         '1.0' => true,
         '1.1' => true,
         '2.0' => true,
-    );
+    ];
 
     /**
      * Headers
-     * @var Headers
+     *
+     * @var \Slim\Http\HeadersInterface
      */
     protected $headers;
 
     /**
      * Body object
-     * @var Body
+     *
+     * @var \Psr\Http\Message\StreamInterface
      */
     protected $body;
 
 
+    /**
+     * Disable magic setter to ensure immutability
+     */
+    public function __set($name, $value)
+    {
+        // Do nothing
+    }
 
     /*******************************************************************************
      * Protocol

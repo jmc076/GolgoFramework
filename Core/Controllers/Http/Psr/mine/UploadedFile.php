@@ -80,13 +80,13 @@ class UploadedFile implements UploadedFileInterface
     protected $moved = false;
 
     /**
-     * Create a normalized tree of UploadedFile instances from the Environment.
+     * Create a normalized tree of UploadedFile instances from the Request.
      *
      * @param array $globals The global server variables.
      *
      * @return array|null A normalized tree of UploadedFile instances or null if none are provided.
      */
-    public static function createFromGlobals()
+    public static function parseRequestFiles()
     {
         if (isset($_FILES)) {
             return static::parseUploadedFiles($_FILES);

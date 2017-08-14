@@ -6,11 +6,11 @@
  * @copyright Copyright (c) 2011-2017 Josh Lockhart
  * @license   https://github.com/slimphp/Slim-Http/blob/master/LICENSE (MIT License)
  */
-namespace Core\Controllers\Http\Psr;
+namespace Slim\Http;
 
 use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
-use Core\Controllers\Http\Psr\Interfaces\StreamInterface;
 
 /**
  * Represents a data stream as defined in PSR-7.

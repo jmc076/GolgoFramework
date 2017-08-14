@@ -86,7 +86,15 @@ abstract class Message implements MessageInterface {
 	 * ****************************************************************************
 	 */
 	
-	
+	/**
+	 * Sets the header of the message.
+	 *
+	 * The body MUST be a Headers object.
+	 * Setting the header to null REMOVES the header object.
+	 *
+	 * @param Headers|null $header
+	 * @return void
+	 */
 	public function setHeader($header) {
 		$this->headers = $header;
 	}
@@ -252,6 +260,21 @@ abstract class Message implements MessageInterface {
 	 */
 	
 	/**
+	* Sets the body of the message.
+	*
+	* The body MUST be a StreamInterface object. Setting the body to null MUST
+	* remove the existing body.
+	*
+	* @param StreamableInterface|null $body Body.
+	* @return void
+	*/
+	function setBody(StreamInterface $body = null) {
+	
+		$this->body = $body;
+	
+	}
+	
+	/**
 	 * Gets the body of the message.
 	 *
 	 * @return StreamInterface Returns the body as a stream.
@@ -279,4 +302,5 @@ abstract class Message implements MessageInterface {
 		
 		return $clone;
 	}
+	
 }

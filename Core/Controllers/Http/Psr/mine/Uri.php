@@ -1,12 +1,6 @@
 <?php
-/**
- * Slim Framework (https://slimframework.com)
- *
- * @link      https://github.com/slimphp/Slim-Http
- * @copyright Copyright (c) 2011-2017 Josh Lockhart
- * @license   https://github.com/slimphp/Slim-Http/blob/master/LICENSE (MIT License)
- */
-namespace Core\Controllers\Http\Psr;
+namespace Core\Controllers\Http\Psr\mine;
+
 
 use InvalidArgumentException;
 use Core\Controllers\Http\Psr\Interfaces\UriInterface;
@@ -88,6 +82,7 @@ class Uri implements UriInterface
      * @var string
      */
     protected $fragment = '';
+    
 
     /**
      * Create new Uri.
@@ -149,7 +144,6 @@ class Uri implements UriInterface
     }
 
 
-
     /********************************************************************************
      * Scheme
      *******************************************************************************/
@@ -208,11 +202,10 @@ class Uri implements UriInterface
      */
     protected function filterScheme($scheme)
     {
-        static $valid = [
-            '' => true,
+        static $valid = array('' => true,
             'https' => true,
             'http' => true,
-        ];
+        );
 
         if (!is_string($scheme) && !method_exists($scheme, '__toString')) {
             throw new InvalidArgumentException('Uri scheme must be a string');
@@ -353,7 +346,12 @@ class Uri implements UriInterface
      */
     public function getPort()
     {
-        return $this->port && !$this->hasStandardPort() ? $this->port : null;
+    	if(($this->scheme === 'http' && $this->port === 80) || ($this->scheme === 'https' && $this->port === 443)) {
+    		return null;
+    	} else {
+    		return $this->port ? $this->port : null;
+    	}
+       
     }
 
     /**
@@ -382,15 +380,6 @@ class Uri implements UriInterface
         return $clone;
     }
 
-    /**
-     * Does this Uri use a standard port?
-     *
-     * @return bool
-     */
-    protected function hasStandardPort()
-    {
-        return ($this->scheme === 'http' && $this->port === 80) || ($this->scheme === 'https' && $this->port === 443);
-    }
 
     /**
      * Filter Uri port.
@@ -572,6 +561,14 @@ class Uri implements UriInterface
             $query
         );
     }
+    
+    public function parseUrlParams($argument_keys, $matches) {
+    	foreach ($argument_keys as $key => $name) {
+    		if (isset($matches[$key])) {
+    			$this->urlRouteParams[$name] = $matches[$key];
+    		}
+    	}
+    }
 
     /********************************************************************************
      * Fragment
@@ -668,21 +665,4 @@ class Uri implements UriInterface
             . ($fragment ? '#' . $fragment : '');
     }
 
-    /**
-     * Return the fully qualified base URL.
-     *
-     * Note that this method never includes a trailing /
-     *
-     * This method is not part of PSR-7.
-     *
-     * @return string
-     */
-    public function getBaseUrl()
-    {
-        $scheme = $this->getScheme();
-        $authority = $this->getAuthority();
-
-        return ($scheme ? $scheme . ':' : '')
-            . ($authority ? '//' . $authority : '');
-    }
 }
