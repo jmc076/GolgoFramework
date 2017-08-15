@@ -62,6 +62,9 @@ class Headers extends Collection {
 	 *        	The header value
 	 */
 	public function set($key, $value) {
+		if (!is_array($value)) {
+			$value = array($value);
+		}
 		parent::set($this->normalizeKey($key), $value);
 	}
 
@@ -95,9 +98,9 @@ class Headers extends Collection {
 	 *        	The new header value(s)
 	 */
 	public function add($key, $value) {
-		$oldValues = $this->get($key, array ());
+		$oldValues = $this->get($this->normalizeKey($key), array ());
 		$newValues = is_array($value) ? $value : array ($value);
-		$this->set($key, array_merge($oldValues, $newValues));
+		$this->set($this->normalizeKey($key), array_merge($oldValues, $newValues));
 	}
 
 	/**

@@ -3,6 +3,8 @@ namespace Core\Controllers;
 
 
 use Core\Helpers\Utils;
+use Modules\GFStarterKit\ViewsLogic\Pages\PAGPublic404;
+use Core\Controllers\Http\Psr\mine\Response;
 
 /**
  * UNDER DEVELOPMENT
@@ -127,23 +129,21 @@ class ExceptionController {
 		self::$msg = utf8_encode("Password missmatch");
 		self::showMessage();
 	}
+	
+
+	public static function show404() {
+		new PAGPublic404();
+	}
 
 	private static function showMessage() {
-
-		if (!function_exists('http_response_code'))
-		{
-			header('X-PHP-Response-Code: '.self::$code, true, self::$code);
-
-		} else {
-			http_response_code(self::$code);
-		}
-
-		header('Content-type: application/json');
-		echo json_encode(array(
+		$response = new Response();
+		$response->withStatus(self::$code, self::$msg)
+		->withAddedHeader("Content-type", "application/json")
+		->writeToBody(json_encode(array(
 				"code" => self::$code,
 				"msg" => self::$msg)
-				);
-		exit();
+				))
+		->sendResponse();
 	}
 
 }

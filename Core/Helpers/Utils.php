@@ -165,7 +165,7 @@ class Utils {
 			}
 		} else {
 			$data = htmlspecialchars($data,ENT_QUOTES | ENT_HTML401);
-			return self::stringToUTF8($data);
+			return $data;
 		}
 
 	}
@@ -260,4 +260,5 @@ class Utils {
 			$url = '/' . $url;
 		}
 	}
+	
 }
