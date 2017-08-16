@@ -257,6 +257,27 @@ class Stream implements StreamInterface
 	}
 	
 	/**
+	 * Write data to the stream.
+	 *
+	 * @param string $string
+	 *        	The string that is to be written.
+	 *
+	 * @return int Returns the number of bytes written to the stream.
+	 *
+	 */
+	public function writeSized($string, $size) {
+		if(!$this->isWritable() || ($data = fwrite($this->stream, $string, $size)) === false) {
+			throw new RuntimeException('Could not write to stream');
+		}
+	
+		return $data;
+	}
+	
+	public function flush() {
+		fflush($this->stream);
+	}
+	
+	/**
 	 * Returns whether or not the stream is readable.
 	 *
 	 * @return bool

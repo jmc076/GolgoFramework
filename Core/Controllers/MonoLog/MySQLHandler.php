@@ -105,7 +105,7 @@ class MySQLHandler extends AbstractProcessingHandler
                                         'channel' => $record['channel'],
                                         'level' => $record['level'],
                                         'message' => $record['message'],
-                                        'time' => $record['datetime']->format('U'),
+                                        'time' => $record['datetime']->format('Y-m-d H:i:s'),
         								'context'=> json_encode($record["context"])
                                     ), $record['context']);
         // unset array keys that are passed put not defined to be stored, to prevent sql errors

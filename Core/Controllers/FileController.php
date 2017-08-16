@@ -4,6 +4,8 @@ namespace Core\Controllers;
 
 
 use Core\Helpers\Utils;
+use Core\Controllers\Http\Psr\Response;
+use Core\Controllers\Http\Psr\Stream;
 
 /**
  * UNDER DEVELOPMENT
@@ -87,5 +89,44 @@ class FileController {
 		}
 		return false;
 	}
+	
+	
+	public function sendFile() {
+		$file = ROOT_PATH . '/App/largevid.mp4';
+		if (is_file($file)) {
+			$fileResponse = new Response();
+			$this->sendFileHeaders($fileResponse,$file, 'video/mpg4', 'largevid.mp4');
+			$chunkSize = 1024 * 1024;
+			$fileStream = new Stream(fopen($file, 'rb'));
+			while (!$fileStream->eof())
+			{
+				$buffer = $fileStream->read($chunkSize);
+				$fileResponse->getBody()->writeSized($buffer, $chunkSize);
+				$fileResponse->getBody()->flush();
+				//$this->request->getResponse()->getBody()->flush();
+			}
+			$fileStream->close();
+		}
+		
+		
+		
+	}
+	
+	function sendFileHeaders(Response $fileResponse,$file, $type, $name=NULL) {
+		if (empty($name))
+		{
+			$name = basename($file);
+		}
+		$fileResponse->putHeaderValue("Pragma", "public");
+		$fileResponse->putHeaderValue("Expires", "0");
+		$fileResponse->putHeaderValue("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+		$fileResponse->putHeaderValue("Cache-Control", "");
+		$fileResponse->putHeaderValue("Content-Transfer-Encoding", "binary");
+		$fileResponse->putHeaderValue("Content-Disposition", 'attachment; filename="'.$name.'";');
+		$fileResponse->putHeaderValue("Content-Type", $type);
+		$fileResponse->putHeaderValue("Content-Length", filesize($file));
+		$fileResponse->sendHeaders();
+	}
+		
 
 }
