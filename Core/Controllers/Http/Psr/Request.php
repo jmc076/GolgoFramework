@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Controllers\Http\Psr\mine;
+namespace Core\Controllers\Http\Psr;
 
 use Core\Helpers\Collection;
 use Core\Controllers\Http\Psr\Interfaces\RequestInterface;
@@ -8,6 +8,8 @@ use Core\Controllers\Http\Psr\Interfaces\UriInterface;
 use Core\Controllers\Http\Psr\Interfaces\StreamInterface;
 use Core\Controllers\Http\Psr\UploadedFile;
 use Core\Controllers\ExceptionController;
+use Core\Helpers\Utils;
+use Core\Controllers\Http\Psr\Interfaces\CookiesInterface;
 
 /**
  * Headers
@@ -59,8 +61,10 @@ class Request extends Message implements RequestInterface {
 	 */
 	protected $matchedRoute;
 	
+	protected $response;
 	
-	public function __construct($method, UriInterface $uri, Headers $headers, array $cookies, StreamInterface $body, array $uploadedFiles = array()) {
+	
+	public function __construct($method, UriInterface $uri, Headers $headers, CookiesInterface $cookies, StreamInterface $body, array $uploadedFiles = array()) {
 		$this->method = $method;
 		$this->uri = $uri;
 		$this->headers = $headers;
@@ -69,6 +73,9 @@ class Request extends Message implements RequestInterface {
 		$this->uploadedFiles = !is_null($uploadedFiles) ? $uploadedFiles : array();
 		
 		$this->isApiRequest = strpos($this->uri->getPath(), "/api/") !== false ? true : false;
+		
+		$this->addInitialBodyParsers();
+		$this->response = new Response();
 	}
 	
 	public static function parseRequest() {
@@ -88,15 +95,114 @@ class Request extends Message implements RequestInterface {
 		$escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
 		$uri = Uri::createFromString($escaped_url);
 		
-		$headerCookies = getallheaders()['Cookie'];
-		$cookieData = Cookies::parseHeader($headerCookies);
-		$cookie = new Cookies($cookieData);
+		$allHeaders = getallheaders();
+		if(isset($allHeaders['Cookie'])) {
+			$cookieHeader = $allHeaders['Cookie'];
+			$cookieData = Cookies::parseHeader($cookieHeader);
+			$cookie = new Cookies($cookieData);
+		} else {
+			$cookie = new Cookies();
+		}
+	
 		
 		$files = UploadedFile::parseRequestFiles();
 		
 		return new static($method, $uri, $header, $cookie, $streamBody, $files);
 		
-	}
+	}
+	
+	protected function addInitialBodyParsers() {
+		$this->bodyParsers['application/json'] = function($body) {
+			$result = json_decode($body, true);
+			if (!is_array($result)) {
+				return null;
+			}
+			return $result;
+		};
+		
+		$this->bodyParsers['application/xml'] = function($body) {
+			$backup = libxml_disable_entity_loader(true);
+			$backup_errors = libxml_use_internal_errors(true);
+			$result = simplexml_load_string($body);
+			libxml_disable_entity_loader($backup);
+			libxml_clear_errors();
+			libxml_use_internal_errors($backup_errors);
+			if ($result === false) {
+				return null;
+			}
+			return $result;
+		};
+		$this->bodyParsers['text/xml'] = function($body) {
+			$backup = libxml_disable_entity_loader(true);
+			$backup_errors = libxml_use_internal_errors(true);
+			$result = simplexml_load_string($body);
+			libxml_disable_entity_loader($backup);
+			libxml_clear_errors();
+			libxml_use_internal_errors($backup_errors);
+			if ($result === false) {
+				return null;
+			}
+			return $result;
+		};
+		$this->bodyParsers['application/x-www-form-urlencoded'] = function($body) {
+			parse_str($body, $data);
+			return $data;
+		};
+		$this->bodyParsers['application/x-www-form-urlencoded; charset=UTF-8'] = function($body) {
+			parse_str($body, $data);
+			return $data;
+		};
+		
+		$this->bodyParsers['default'] = function($body) {
+			$postvars = $_POST;
+			foreach($postvars as $field => $value) {
+				$this->postParams[$field] = $value;
+			}
+		};
+		
+	}
+	
+	public function parseRouteParams($argument_keys, $matches) {
+		foreach ($argument_keys as $key => $name) {
+			if (isset($matches[$key])) {
+				$this->routeParams[$name] = $matches[$key];
+			}
+		}
+	}
+	
+	
+	public function parseIncomingParams() {
+		$this->parseGetParams();
+		$this->parsePostParams();
+	}
+	
+	public function parseGetParams() {
+		if ($query = $this->uri->getQuery()) {
+			parse_str($query, $this->getParams);
+			foreach($this->getParams as $field => $value) {
+				$this->getParams[$field] = Utils::xssafe($value);
+		
+			}
+		}
+	}
+	
+	public function parsePostParams() {
+		if (isset($_SERVER["CONTENT_TYPE"]) && $contentType = strtolower($_SERVER["CONTENT_TYPE"])) {
+			$body = (string)$this->getBody()->__toString();
+			
+			if (isset($this->bodyParsers[$contentType]) === true) {
+				$parsed = $this->bodyParsers[$contentType]($body);
+				$this->postParams = $parsed;
+			} else {
+				$parsed = $this->bodyParsers["default"]($body);
+				$this->postParams = $parsed;
+			}
+		}
+		
+		
+	}
+	
+	
 	/**
 	 * {@inheritDoc}
 	 * @see \Core\Controllers\Http\Psr\Interfaces\RequestInterface::getRequestTarget()
@@ -204,15 +310,15 @@ class Request extends Message implements RequestInterface {
 		} else {
 			$matchedRoute = $this->getMatchedRoute();
 			if($matchedRoute->function != null) {
-				call_user_func($matchedRoute->function);
+				call_user_func_array($matchedRoute->function, array($this));
 			} else {
 				$class = $matchedRoute->getTargetClass();
 	
 				if ($matchedRoute->getTargetClassMethod() != null) {
-					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
+					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array($this));
 				} else {
 					if(class_exists($class))
-						new $class;
+						new $class($this);
 					else ExceptionController::classNotFound();
 				}
 			}
@@ -220,6 +326,11 @@ class Request extends Message implements RequestInterface {
 	
 		}
 	}
+	
+	public function sendResponse() {
+		$this->response->sendResponse();
+	}
+	
 	public function setMethod($method) {
 		$this->method = $method;
 		return $this;
@@ -295,6 +406,14 @@ class Request extends Message implements RequestInterface {
 		$this->matchedRoute = $matchedRoute;
 		return $this;
 	}
+	public function getResponse() {
+		return $this->response;
+	}
+	public function setResponse($response) {
+		$this->response = $response;
+		return $this;
+	}
+	
 	
 
 }

@@ -1,9 +1,8 @@
 <?php
 
-namespace Core\Controllers\Http\Psr\mine;
+namespace Core\Controllers\Http\Psr;
 
 use Core\Helpers\Collection;
-use Core\Controllers\Http\Psr\Interfaces\RequestInterface;
 use Core\Controllers\Http\Psr\Interfaces\ResponseInterface;
 use Core\Controllers\Http\Psr\Interfaces\StreamInterface;
 

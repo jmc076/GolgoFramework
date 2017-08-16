@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Controllers\Http\Psr\mine;
+namespace Core\Controllers\Http\Psr;
 
 use Core\Helpers\Collection;
 

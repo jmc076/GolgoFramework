@@ -12,13 +12,13 @@ class PAGPrivateAdministracionLockscreen extends PAGPrivateAdministracionBase {
 	protected function preLoad() {
 		parent::preLoad();
 
-		if($this->request->getVerb() ==  "POST") {
+		if($this->request->getMethod() ==  "POST") {
 			$isValidPass = $this->userController->comparePasswords($this->userModel->getId(), $this->postParams["password"]);
 			if($isValidPass) {
 				GFSessionController::getInstance()->put("lockedScreen", false);
 				$this->redirectTo(GFSessionController::getInstance()->get("previousUrl"));
 			}
-		} else if($this->request->getVerb() ==  "GET") {
+		} else if($this->request->getMethod() ==  "GET") {
 			GFSessionController::getInstance()->put("lockedScreen", true);
 			GFSessionController::getInstance()->put("lastUrl", $_SERVER['REQUEST_URI']);
 		}

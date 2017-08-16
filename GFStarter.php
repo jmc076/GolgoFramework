@@ -7,15 +7,8 @@ use Core\Controllers\i18nController;
 use Core\Controllers\RedisCacheController;
 //use Core\Controllers\Http\Request;
 use Core\Controllers\GFEvents\GFEventController;
-use Core\Controllers\Router\Router;
-use Core\Controllers\Http\Psr\Body;
-use Core\Controllers\Http\Psr\Stream;
-use Core\Controllers\Http\Psr\Uri;
-use Core\Controllers\Http\Psr\Headers;
-use Core\Controllers\Http\Psr\RequestBody;
-use Core\Controllers\Http\Psr\UploadedFile;
 use Core\Controllers\Http\Psr\Request;
-use Core\Controllers\Http\Psr\Response;
+use Core\Controllers\Router\Router;
 
 class GFStarter {
 
@@ -59,24 +52,9 @@ class GFStarter {
 		$gfevent->attach($event, function($args) {print_r("llamado evento en start222!"); die();}, 0);
 	 */
 	public function start() {
-		$url =  "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-		$escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
-		$uri = Uri::createFromString($escaped_url);
+		
+		$request = Request::parseRequest();
 
-
-		$headers = Headers::createFromGlobals();
-		$body = new RequestBody();
-		$uploadedFiles = UploadedFile::createFromGlobals();
-		$request = new Request($_SERVER['REQUEST_METHOD'], $uri, $headers, array(), $body, $uploadedFiles);
-		$body = $request->getParams();
-		$string = "has escrito <b>mola mucho</b>";
-		$response = new Response();
-		$response->write($string);
-
-
-
-
-		/*$request = Request::getInstance();
 
 		$router = new Router($this->routerCollection, $request);
 
@@ -87,7 +65,7 @@ class GFStarter {
 		$request->executeRequest();
 
 		GFEventController::dispatch("Router.beforeSendResponse", null);
-		$request->sendResponse();*/
+		$request->sendResponse();
 		exit();
 
 

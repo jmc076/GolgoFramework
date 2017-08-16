@@ -6,10 +6,10 @@ use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\UserController;
 use Modules\GFStarterKit\Controllers\PermissionsController;
 use Core\Controllers\GFSessions\GFSessionController;
-use Core\Controllers\Http\Request;
 use Core\Controllers\ExceptionController;
 use Core\Controllers\i18nController;
-
+use Core\Controllers\Http\Psr\Request;
+	
 
  abstract class PAGBasePage {
 
@@ -28,8 +28,8 @@ use Core\Controllers\i18nController;
 
 	protected $sessionModel;
 
-	public function __construct() {
-		$this->request = Request::getInstance();
+	public function __construct(Request $request) {
+		$this->request = $request;
 		$this->session = GFSessionController::getInstance();
 		$this->userController = new UserController();
 		$this->sessionModel = $this->session->getSessionModel();
@@ -44,7 +44,7 @@ use Core\Controllers\i18nController;
 		} else if ($this->hasRouteAccess()) {
 			$this->em = GFDoctrineManager::getEntityManager();
 
-			$this->routeParams = $this->request->getUrlRouteParams();
+			$this->routeParams = $this->request->getRouteParams();
 			$this->getParams = $this->request->getGetParams();
 			$this->postParams = $this->request->getPostParams();
 
@@ -91,8 +91,8 @@ use Core\Controllers\i18nController;
 	}
 
 	protected function displayTpl() {
-		$this->request->setHeader("Content-type", "text/html; charset=UTF-8");
-		$this->request->setResponseBody($this->smarty->fetch($this->tpl));
+		$this->request->getResponse()->putHeaderValue("Content-type", "text/html; charset=UTF-8");
+		$this->request->getResponse()->getBody()->write($this->smarty->fetch($this->tpl));
 	}
 
 	protected function simpleDisplayTpl() {
@@ -122,7 +122,7 @@ use Core\Controllers\i18nController;
 
 
 	public function redirectTo($location) {
-		$this->request->setHeader("Location", $location);
+		$this->request->getResponse()->putHeaderValue("Location", $location);
 	}
 
 	public function isUserLogged() {

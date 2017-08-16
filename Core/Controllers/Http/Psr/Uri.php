@@ -1,5 +1,5 @@
 <?php
-namespace Core\Controllers\Http\Psr\mine;
+namespace Core\Controllers\Http\Psr;
 
 
 use InvalidArgumentException;
@@ -656,7 +656,7 @@ class Uri implements UriInterface
         $query = $this->getQuery();
         $fragment = $this->getFragment();
 
-        $path = '/' . ltrim($path, '/');
+        $path = ltrim($path, '/');
 
         return ($scheme ? $scheme . ':' : '')
             . ($authority ? '//' . $authority : '')

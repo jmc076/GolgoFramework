@@ -2,8 +2,8 @@
 namespace Core\Controllers\Router;
 
 
-use Core\Controllers\Http\Request;
 use Core\Controllers\GFEvents\GFEventController;
+use Core\Controllers\Http\Psr\Request;
 
 class Router {
 
@@ -21,7 +21,7 @@ class Router {
 
 
 	public function matchRequest() {
-		$this->requestUrl = $this->request->getRequestUrl();
+		$this->requestUrl = $this->request->getUri()->__toString();
 		if (($pos = strpos($this->requestUrl, '?')) !== false) {
 			$this->requestUrl = substr($this->requestUrl, 0, $pos);
 		}
@@ -31,9 +31,8 @@ class Router {
 
 	public function findMatch($requestUrl) {
 		$allRoutes = $this->routeCollection->getAllRoutes();
-
 		foreach ($allRoutes as $route) {
-			if(count($route->getVerbs()) == 0 || in_array($this->request->getVerb(), $route->getVerbs())) {
+			if(count($route->getVerbs()) == 0 || in_array($this->request->getMethod(), $route->getVerbs())) {
 				$stringRoute = rtrim($route->getRegex(), '/');
 				if($stringRoute != "" && $stringRoute != "/" && strpos($stringRoute ,"/") !== 0) {
 					$stringRoute = '/'.$stringRoute;
@@ -52,12 +51,10 @@ class Router {
 					if(count($argument_keys) != count($matches)) {
 						continue;
 					}
-
-					$this->request->parseUrlParams($argument_keys, $matches);
+					$this->request->parseRouteParams($argument_keys, $matches);
 
 				}
 
-				$this->request->setNeedCheckCSRF($route->getCheckCSRF());
 				$this->request->setHasMatch(true);
 				$this->request->setMatchedRoute($route);
 				$this->request->parseIncomingParams();

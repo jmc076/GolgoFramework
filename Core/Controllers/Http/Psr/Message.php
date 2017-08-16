@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Controllers\Http\Psr\mine;
+namespace Core\Controllers\Http\Psr;
 
 use InvalidArgumentException;
 use Core\Controllers\Http\Psr\Interfaces\MessageInterface;
@@ -85,6 +85,11 @@ abstract class Message implements MessageInterface {
 	 * Headers
 	 * ****************************************************************************
 	 */
+	
+	public function putHeaderValue($name, $value) {
+		$this->headers->add($name, $value);
+	
+	}
 	
 	/**
 	 * Sets the header of the message.
