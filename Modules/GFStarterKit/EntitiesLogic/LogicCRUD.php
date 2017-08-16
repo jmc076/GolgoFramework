@@ -38,18 +38,18 @@ class LogicCRUD implements CRUDInterface {
 		GFEventController::dispatch("LogicCRUD.__construct", null);
 
 		$this->session = GFSessionController::getInstance();
-		$this->request = Request::getInstance();
+		$this->request = \GFStarter::$request;
 		$this->em = GFDoctrineManager::getEntityManager();
-		$this->checkCSRF = $this->request->getNeedCheckCSRF();
+		$this->checkCSRF = $this->request->getMatchedRoute()->isCSRFProtected;
 
-		$this->routeParams = $this->request->getUrlRouteParams();
+		$this->routeParams = $this->request->getRouteParams();
+		
 		if(count($this->request->getGetParams()) > 0) {
 			$this->dataArray = $this->request->getGetParams();
 		}
 		if(count($this->request->getPostParams()) > 0) {
 			$this->dataArray = $this->request->getPostParams();
 		}
-
 		$op = isset($this->dataArray['op']) ? $this->dataArray['op'] : null;
 		if($op == null) {
 			$this->getOPFromVerb($op);
@@ -63,41 +63,37 @@ class LogicCRUD implements CRUDInterface {
 
 		$this->preload();
 
-
 		if($this->checkCSRF) {
 			if(!$this->session->isValidCSRF($this->dataArray)) {
 				ExceptionController::invalidCSRF();
 			};
 		}
-
-		if($this->result == null) {
-			switch ($op) {
-				case "create":
-					$this->result = $this->create($this->dataArray);
-					break;
-				case "read":
-					$this->result = $this->read($this->dataArray);
-					break;
-				case "update":
-					$this->result = $this->update($this->dataArray);
-					break;
-				case "delete":
-					$this->result = $this->delete($this->dataArray);
-					break;
-				default:
-					ExceptionController::noOPFound();
-					break;
-			}
+		switch ($op) {
+			case "create":
+				$this->result = $this->create($this->dataArray);
+				break;
+			case "read":
+				$this->result = $this->read($this->dataArray);
+				break;
+			case "update":
+				$this->result = $this->update($this->dataArray);
+				break;
+			case "delete":
+				$this->result = $this->delete($this->dataArray);
+				break;
+			default:
+				ExceptionController::noOPFound();
+				break;
 		}
-		$this->request->setResponseBody($this->result);
 		GFEventController::dispatch(get_class($this)."_".$op, null);
+		$this->request->getResponse()->setResponseBody($this->result);
 		$responseJSon = new RequestJSONDecorator($this->request);
 		$responseJSon->setJSONResponse();
 
 	}
 
 	function getOPFromVerb(&$op) {
-		$method = $this->request->getVerb();
+		$method = $this->request->getMethod();
 
 		switch ($method) {
 			case 'PUT':
@@ -141,7 +137,7 @@ class LogicCRUD implements CRUDInterface {
 				list($username,$password) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
 		}
 
-		$authHeader = $this->request->getHeaderAsString('authorization');
+		$authHeader = $this->request->getHeaderLine('authorization');
 		if ($authHeader) {
 			list($jwt) = sscanf( $authHeader, 'Bearer %s');
 			if ($jwt) {
@@ -275,7 +271,7 @@ class LogicCRUD implements CRUDInterface {
 	 * @see \Modules\GFStarterKit\EntitiesLogic\CRUDInterface::getEntity()
 	 */
 	function getEntity() {
-		return end(explode("/", $this->request->getRequestUrl()));
+		return end(explode("/", $this->request->getUri()->getPath()));
 
 	}
 

@@ -18,7 +18,7 @@ abstract class PAGPrivateAdministracionBase extends PAGBasePage {
 			$this->modelId = $this->routeParams["modelId"];
 		}
 
-		$this->request->$this->request->getResponse()->putHeaderValue("Cache-Control","no-cache, no-store, must-revalidate");
+		$this->request->getResponse()->putHeaderValue("Cache-Control","no-cache, no-store, must-revalidate");
 		if(!$this->isAdmin() && !$this->isSuperAdmin()) {
 			GFSessionController::getInstance()->exitSession();
 			$this->redirectTo("/".DOMAIN_PATH."/login");

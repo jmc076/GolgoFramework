@@ -48,6 +48,13 @@ class Response extends Message implements ResponseInterface {
 	 *
 	 * @var array
 	 */
+	
+	/**
+	 * Response body content to send back;
+	 * @var string $responseBody
+	 */
+	protected $responseBody;
+	
 	protected static $messages = [
 			//Informational 1xx
 			100 => 'Continue',
@@ -208,10 +215,10 @@ class Response extends Message implements ResponseInterface {
 	 * @return void
 	 */
 	public function sendResponse($dataBody = null) {
-		if($dataBody != null) {
-			$this->writeToBody($dataBody);
-		}
 		$this->sendHeaders();
+		if($dataBody == null) {
+			$this->writeToBody($this->responseBody);
+		}
 		$this->getBody()->close();
 		exit();
 		
@@ -235,5 +242,14 @@ class Response extends Message implements ResponseInterface {
 	
 		}
 	}
+	
+	public function getResponseBody() {
+		return $this->responseBody;
+	}
+	public function setResponseBody($responseBody) {
+		$this->responseBody = $responseBody;
+		return $this;
+	}
+	
 	
 }

@@ -5,7 +5,7 @@ date_default_timezone_set("Europe/Madrid");
 if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
 }
-define("ROOT_PATH", $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) );
+
 
 //MYSQL DATABASE
 define("MYSQL_HOST", 'localhost');

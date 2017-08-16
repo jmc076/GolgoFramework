@@ -10,6 +10,7 @@ use Core\Controllers\Http\Psr\UploadedFile;
 use Core\Controllers\ExceptionController;
 use Core\Helpers\Utils;
 use Core\Controllers\Http\Psr\Interfaces\CookiesInterface;
+use Core\Controllers\Router\RouteModel;
 
 /**
  * Headers
@@ -56,8 +57,8 @@ class Request extends Message implements RequestInterface {
 	protected $hasMatch = false;
 	
 	/**
-	 * @var Route
-	 * @see	Route
+	 * @var RouteModel
+	 * @see	RouteModel
 	 */
 	protected $matchedRoute;
 	
@@ -148,7 +149,7 @@ class Request extends Message implements RequestInterface {
 			parse_str($body, $data);
 			return $data;
 		};
-		$this->bodyParsers['application/x-www-form-urlencoded; charset=UTF-8'] = function($body) {
+		$this->bodyParsers['application/x-www-form-urlencoded; charset=utf-8'] = function($body) {
 			parse_str($body, $data);
 			return $data;
 		};
@@ -178,7 +179,7 @@ class Request extends Message implements RequestInterface {
 	
 	public function parseGetParams() {
 		if ($query = $this->uri->getQuery()) {
-			parse_str($query, $this->getParams);
+			parse_str(html_entity_decode($query), $this->getParams);
 			foreach($this->getParams as $field => $value) {
 				$this->getParams[$field] = Utils::xssafe($value);
 		
@@ -189,7 +190,6 @@ class Request extends Message implements RequestInterface {
 	public function parsePostParams() {
 		if (isset($_SERVER["CONTENT_TYPE"]) && $contentType = strtolower($_SERVER["CONTENT_TYPE"])) {
 			$body = (string)$this->getBody()->__toString();
-			
 			if (isset($this->bodyParsers[$contentType]) === true) {
 				$parsed = $this->bodyParsers[$contentType]($body);
 				$this->postParams = $parsed;
@@ -310,15 +310,15 @@ class Request extends Message implements RequestInterface {
 		} else {
 			$matchedRoute = $this->getMatchedRoute();
 			if($matchedRoute->function != null) {
-				call_user_func_array($matchedRoute->function, array($this));
+				call_user_func($matchedRoute->function);
 			} else {
 				$class = $matchedRoute->getTargetClass();
 	
 				if ($matchedRoute->getTargetClassMethod() != null) {
-					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array($this));
+					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
 				} else {
 					if(class_exists($class))
-						new $class($this);
+						new $class;
 					else ExceptionController::classNotFound();
 				}
 			}

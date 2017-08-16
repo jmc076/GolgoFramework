@@ -13,6 +13,7 @@ use Core\Controllers\Router\Router;
 class GFStarter {
 
 	private $routerCollection;
+	public static $request;
 
 	function __construct(RouteCollection $routerCollection) {
 
@@ -53,19 +54,19 @@ class GFStarter {
 	 */
 	public function start() {
 		
-		$request = Request::parseRequest();
+		self::$request = Request::parseRequest();
 
 
-		$router = new Router($this->routerCollection, $request);
+		$router = new Router($this->routerCollection, self::$request);
 
 		GFEventController::dispatch("Router.beforeMatch", null);
 		$router->matchRequest();
 
 		GFEventController::dispatch("Router.beforeExecute", null);
-		$request->executeRequest();
+		self::$request->executeRequest();
 
 		GFEventController::dispatch("Router.beforeSendResponse", null);
-		$request->sendResponse();
+		self::$request->sendResponse();
 		exit();
 
 

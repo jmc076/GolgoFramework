@@ -4,7 +4,7 @@ namespace Core\Controllers;
 
 use Core\Helpers\Utils;
 use Modules\GFStarterKit\ViewsLogic\Pages\PAGPublic404;
-use Core\Controllers\Http\Psr\mine\Response;
+use Core\Controllers\Http\Psr\Response;
 
 /**
  * UNDER DEVELOPMENT
@@ -139,7 +139,7 @@ class ExceptionController {
 		$response = new Response();
 		$response->withStatus(self::$code, self::$msg)
 		->withAddedHeader("Content-type", "application/json")
-		->writeToBody(json_encode(array(
+		->setResponseBody(json_encode(array(
 				"code" => self::$code,
 				"msg" => self::$msg)
 				))

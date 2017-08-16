@@ -28,8 +28,8 @@ use Core\Controllers\Http\Psr\Request;
 
 	protected $sessionModel;
 
-	public function __construct(Request $request) {
-		$this->request = $request;
+	public function __construct() {
+		$this->request = \GFStarter::$request;
 		$this->session = GFSessionController::getInstance();
 		$this->userController = new UserController();
 		$this->sessionModel = $this->session->getSessionModel();
@@ -92,7 +92,7 @@ use Core\Controllers\Http\Psr\Request;
 
 	protected function displayTpl() {
 		$this->request->getResponse()->putHeaderValue("Content-type", "text/html; charset=UTF-8");
-		$this->request->getResponse()->getBody()->write($this->smarty->fetch($this->tpl));
+		$this->request->getResponse()->setResponseBody($this->smarty->fetch($this->tpl));
 	}
 
 	protected function simpleDisplayTpl() {

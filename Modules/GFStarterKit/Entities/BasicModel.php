@@ -7,6 +7,7 @@ use Modules\GFStarterKit\GFDoctrineManager;
 use Modules\GFStarterKit\Controllers\SerializerController;
 use Modules\GFStarterKit\Utils\DoctrineDataTablesHelper;
 use Exception;
+use Doctrine\ORM\Mapping as ORM;
 
 
 abstract Class BasicModel
@@ -50,9 +51,9 @@ abstract Class BasicModel
 			}
 
 		} catch (NoResultException $ex) {
-			$model = null;
+			$model = $ex->getMessage();
 		} catch (Exception $ex) {
-			$model = null;
+			$model = $ex->getMessage();
 		}
 		return $model;
 	}

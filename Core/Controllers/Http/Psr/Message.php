@@ -36,7 +36,7 @@ abstract class Message implements MessageInterface {
 	/**
 	 * Body object
 	 *
-	 * @var \Psr\Http\Message\StreamInterface
+	 * @var StreamInterface
 	 */
 	protected $body;
 

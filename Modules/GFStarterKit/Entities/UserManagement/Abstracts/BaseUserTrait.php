@@ -5,6 +5,9 @@ namespace Modules\GFStarterKit\Entities\UserManagement\Abstracts;
 use Doctrine\ORM\NoResultException;
 use Modules\GFStarterKit\GFDoctrineManager;
 use Exception;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+
 
 /**
  * BaseUser
@@ -13,7 +16,7 @@ trait BaseUserTrait {
 
 	/**
 	 *
-	 * @var string $nombre 
+	 * @var string $nombre
 	 * @ORM\Column(name="name", type="string", length=255, nullable=true)
 	 */
 	protected $name;
@@ -57,7 +60,7 @@ trait BaseUserTrait {
 	/**
 	 *
 	 * @var string $password @ORM\Column(name="password", type="string", length=255, nullable=false)
-	 * @Exclude()
+	 * @Exclude
 	 */
 	private $password;
 

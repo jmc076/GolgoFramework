@@ -4,7 +4,7 @@
 use Core\Controllers\Router\RouteCollection;
 use Core\Controllers\Router\RouteModel;
 use Core\Controllers\Http\Request;
-
+define("ROOT_PATH", __DIR__);
 require_once __DIR__ .'/Core/Configs/Constants.php';
 require_once 'GFStarter.php';
 require_once 'GFAutoload.php';

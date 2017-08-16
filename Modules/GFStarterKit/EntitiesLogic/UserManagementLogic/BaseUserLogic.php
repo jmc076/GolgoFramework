@@ -41,7 +41,6 @@ class BaseUserLogic extends LogicCRUD {
 						
 						/*$serializer = SerializerBuilder::create()->build();
 						 $object = $serializer->deserialize(json_encode($dataArray), 'Modules\GFStarterKit\FormModels\LoginModel', 'json');*/
-
 						$result = $this->userController->login($dataArray["user"], $dataArray["password"]);
 						if($result["error"] == false) {
 							$userModel =  $result["user_model"];
