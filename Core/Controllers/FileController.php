@@ -89,13 +89,15 @@ class FileController {
 		}
 		return false;
 	}
-	
-	
-	public function sendFile() {
-		$file = ROOT_PATH . '/App/largevid.mp4';
+
+
+	public function sendFile($path) {
+		$file = $path;
 		if (is_file($file)) {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+
 			$fileResponse = new Response();
-			$this->sendFileHeaders($fileResponse,$file, 'video/mpg4', 'largevid.mp4');
+			$this->sendFileHeaders($fileResponse,$file, finfo_file($finfo, $file), basename($file));
 			$chunkSize = 1024 * 1024;
 			$fileStream = new Stream(fopen($file, 'rb'));
 			while (!$fileStream->eof())
@@ -106,12 +108,14 @@ class FileController {
 				//$this->request->getResponse()->getBody()->flush();
 			}
 			$fileStream->close();
+		} else {
+			ExceptionController::customError("File not found", 400);
 		}
-		
-		
-		
+
+
+
 	}
-	
+
 	function sendFileHeaders(Response $fileResponse,$file, $type, $name=NULL) {
 		if (empty($name))
 		{
@@ -127,6 +131,6 @@ class FileController {
 		$fileResponse->putHeaderValue("Content-Length", filesize($file));
 		$fileResponse->sendHeaders();
 	}
-		
+
 
 }

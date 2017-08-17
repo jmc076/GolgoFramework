@@ -1,8 +1,9 @@
 <?php
 
 
-namespace Modules\GFStarterKit\Entities;
+namespace Modules\GFFileManager\Entities;
 use Doctrine\ORM\Mapping as ORM;
+use Modules\GFStarterKit\Entities\BasicModel;
 
 /**
  * Files
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="gf_files")
  * @ORM\Entity
  */
-class FilesModel extends BasicModel
+class Files extends BasicModel
 {
 
     /**

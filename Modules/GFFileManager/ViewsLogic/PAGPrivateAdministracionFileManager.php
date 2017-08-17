@@ -63,7 +63,7 @@ class PAGPrivateAdministracionFileManager extends PAGPrivateAdministracionBase {
 						$files[] = array(
 								"name" => $f,
 								"type" => "file",
-								"path" => "/".DOMAIN_PATH. "/Files".explode("Files",$dir)[1] . '/' . $f,
+								"path" => "/".DOMAIN_PATH. "/Files?sop=downloadFile&path=".urlencode(explode("Files",$dir)[1] . '/' . $f),
 								"size" => filesize($dir . '/' . $f) // Gets the size of this file
 						);
 					}

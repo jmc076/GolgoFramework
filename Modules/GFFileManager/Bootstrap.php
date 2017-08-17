@@ -10,6 +10,7 @@ define("FILES_FOLDER", dirname(__FILE__) .DS. "Files");
 
 class Bootstrap {
 
+	public static $baseNamespace = 'Modules'.DS.'GFFileManager';
 
 	function __construct(RouteCollection $routerCollection) {
 		PAGPrivateAdministracionBase::addItemMenu(array("url"=>"/GolgoFramework/dashboard/filemanager", "title"=>"File Manager", "icon"=>"folder", "isActive"=> ""));
@@ -19,7 +20,6 @@ class Bootstrap {
 
 	private function setRoutes(RouteCollection $routerCollection) {
 
-		$baseNamespace = "Modules\GFFileManager";
 
 
 		$config = array();
@@ -30,8 +30,12 @@ class Bootstrap {
 		 * PAGE ROUTES
 		 */
 
-		$config["targetClass"] = $baseNamespace."\ViewsLogic\PAGPrivateAdministracionFileManager";
+		$config["targetClass"] = self::$baseNamespace."\ViewsLogic\PAGPrivateAdministracionFileManager";
 		$route = RouteModel::withConfig("/dashboard/filemanager", $config);
+		$routerCollection->attachRoute($route);
+
+		$config["targetClass"] = self::$baseNamespace."\EntitiesLogic\FilesLogic";
+		$route = RouteModel::withConfig("/Files", $config);
 		$routerCollection->attachRoute($route);
 
 
@@ -39,8 +43,8 @@ class Bootstrap {
 		/**
 		 * API ROUTES
 		 */
-		$config["targetClass"] = $baseNamespace."\EntitiesLogic\UserManagementLogic\BaseUserLogic";
-		$route = RouteModel::withConfig("/api/Users", $config);
+		$config["targetClass"] = self::$baseNamespace."\EntitiesLogic\FilesLogic";
+		$route = RouteModel::withConfig("/api/Files", $config);
 		$routerCollection->attachRoute($route);
 
 
