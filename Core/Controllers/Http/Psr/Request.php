@@ -11,6 +11,7 @@ use Core\Controllers\ExceptionController;
 use Core\Helpers\Utils;
 use Core\Controllers\Http\Psr\Interfaces\CookiesInterface;
 use Core\Controllers\Router\RouteModel;
+use Core\Controllers\GFSessions\GFSessionController;
 
 /**
  * Headers
@@ -302,27 +303,37 @@ class Request extends Message implements RequestInterface {
 	
 	}
 	
+	public function isValidCSRF() {
+		if($this->getMatchedRoute()->isCSRFProtected && CSRF_ENABLED) {
+			GFSessionController::getInstance()->isValidCSRF($this->postParams);
+		} else {
+			return true;
+		}
+	}
+	
 	public function executeRequest() {
 	
 		if(!$this->hasMatch) {
 			$this->dispatchNoMatch();
-	
 		} else {
-			$matchedRoute = $this->getMatchedRoute();
-			if($matchedRoute->function != null) {
-				call_user_func($matchedRoute->function);
-			} else {
-				$class = $matchedRoute->getTargetClass();
-	
-				if ($matchedRoute->getTargetClassMethod() != null) {
-					call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
+			if($this->isValidCSRF()) {
+				$matchedRoute = $this->getMatchedRoute();
+				if($matchedRoute->function != null) {
+					call_user_func($matchedRoute->function);
 				} else {
-					if(class_exists($class))
-						new $class;
-					else ExceptionController::classNotFound();
+					$class = $matchedRoute->getTargetClass();
+				
+					if ($matchedRoute->getTargetClassMethod() != null) {
+						call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
+					} else {
+						if(class_exists($class))
+							new $class;
+						else ExceptionController::classNotFound();
+					}
 				}
+			} else {
+				ExceptionController::invalidCSRF();
 			}
-	
 	
 		}
 	}

@@ -1,6 +1,8 @@
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /
+Options -Indexes
+
+RewriteEngine on
+
+
 RewriteCond %{ENV:REDIRECT_STATUS} !200
 RewriteRule modules/([^/.]*)?/(.+)$ Modules/$1/Public/$2 [NC,L]
 
@@ -12,4 +14,6 @@ RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|robots\.txt)$ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f  
 RewriteCond %{REQUEST_FILENAME} !-d 
 RewriteRule ^(.*)$  index.php
-</IfModule>
+
+#RewriteCond %{HTTPS} off
+#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}

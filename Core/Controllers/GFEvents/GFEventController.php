@@ -164,7 +164,6 @@ class GFEventController implements GFEventControllerInterface, EventManagerInter
 						break 2;
 					}
 				}
-				print_r("12"); die(); //TODO: Diego pre
 
 			}
 		}

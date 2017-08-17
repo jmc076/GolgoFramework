@@ -34,7 +34,7 @@ abstract class Message implements MessageInterface {
 	protected $headers;
 
 	/**
-	 * Body object
+	 * Stream body object
 	 *
 	 * @var Stream
 	 */
@@ -282,7 +282,7 @@ abstract class Message implements MessageInterface {
 	/**
 	 * Gets the body of the message.
 	 *
-	 * @return StreamInterface Returns the body as a stream.
+	 * @return Stream Returns the body as a stream.
 	 */
 	public function getBody() {
 		return $this->body;

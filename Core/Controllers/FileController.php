@@ -100,12 +100,10 @@ class FileController {
 			$this->sendFileHeaders($fileResponse,$file, finfo_file($finfo, $file), basename($file));
 			$chunkSize = 1024 * 1024;
 			$fileStream = new Stream(fopen($file, 'rb'));
-			while (!$fileStream->eof())
-			{
+			while (!$fileStream->eof()) {
 				$buffer = $fileStream->read($chunkSize);
 				$fileResponse->getBody()->writeSized($buffer, $chunkSize);
 				$fileResponse->getBody()->flush();
-				//$this->request->getResponse()->getBody()->flush();
 			}
 			$fileStream->close();
 		} else {

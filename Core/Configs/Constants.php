@@ -46,3 +46,7 @@ define("SMTP_USER","");
 define("SMTP_PASS","");
 define("SMTP_FROM","");
 define("SMTP_FROM_NAME","");
+
+//SECURITY
+
+define("CSRF_ENABLED", true);

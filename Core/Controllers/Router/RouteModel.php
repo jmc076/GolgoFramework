@@ -101,7 +101,7 @@ class RouteModel
         $this->targetClassMethod	= isset($config['targetClassMethod']) ? $config['targetClassMethod'] : null;
         $this->targetClass 			= isset($config['targetClass']) ? $config['targetClass'] : null;
         $this->verbs 				= isset($config['verbs']) ? (array) $config['verbs'] : array();
-        $this->isCSRFProtected			= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
+        $this->isCSRFProtected		= isset($config['checkCSRF']) ? $config['checkCSRF'] : true;
     }
 
 

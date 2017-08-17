@@ -261,6 +261,8 @@ class Stream implements StreamInterface
 	 *
 	 * @param string $string
 	 *        	The string that is to be written.
+	 * @param int $size
+	 * 			The lenght to write.
 	 *
 	 * @return int Returns the number of bytes written to the stream.
 	 *
