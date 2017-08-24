@@ -13,6 +13,7 @@ use Core\Controllers\Router\Router;
 class GFStarter {
 
 	private $routerCollection;
+
 	public static $request;
 
 	function __construct(RouteCollection $routerCollection) {
@@ -53,7 +54,7 @@ class GFStarter {
 		$gfevent->attach($event, function($args) {print_r("llamado evento en start222!"); die();}, 0);
 	 */
 	public function start() {
-		
+
 		self::$request = Request::parseRequest();
 
 

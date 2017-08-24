@@ -58,6 +58,26 @@ abstract Class BasicModel
 		return $model;
 	}
 
+	public function loadByCustomField($em, $fieldName, $fieldValue, $hydrated = false) {
+
+	    $model = null;
+	    try {
+	        $dql = 'SELECT t FROM ' . get_class($this) . ' t WHERE t.'.$fieldName.' = "' . $fieldValue .'"';
+	        $query = $em->createQuery($dql);
+	        if($hydrated) {
+	            $model = $query->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+	        } else {
+	            $model = $query->getOneOrNullResult();
+	        }
+
+	    } catch (NoResultException $ex) {
+	        $model = $ex->getMessage();
+	    } catch (Exception $ex) {
+	        $model = $ex->getMessage();
+	    }
+	    return $model;
+	}
+
 	public function loadAll($em , $dataArray, $hydrated = false) {
 		$models = null;
 
