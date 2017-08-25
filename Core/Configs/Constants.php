@@ -11,7 +11,7 @@ if (!defined('DS')) {
 define("MYSQL_HOST", 'localhost');
 define("DB_NAME", 'golgo_framework');
 define("DB_USER", 'root');
-define("DB_PASS", 'golgo2007');
+define("DB_PASS", 'AAAAA');
 define("DB_PORT", '3306');
 define("DB_DRIVER", 'pdo_mysql');
 
