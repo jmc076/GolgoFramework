@@ -70,6 +70,7 @@ class LogicCRUD implements CRUDInterface {
 		}
 		switch ($op) {
 			case "create":
+			    $this->dataArray = array_filter($this->dataArray);
 				$this->result = $this->create($this->dataArray);
 				break;
 			case "read":

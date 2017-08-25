@@ -174,4 +174,12 @@ abstract Class BasicModel
 		return SerializerController::serializeJSON($this);
 	}
 
+	/**
+	 *
+	 * @return $this
+	 */
+	public function toObject(array $arrayData) {
+	    return SerializerController::deserialize(json_encode($arrayData),$this);
+	}
+
 }

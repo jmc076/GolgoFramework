@@ -129,8 +129,11 @@ class BaseUserLogic extends LogicCRUD
         $return = false;
         $model = $this->getEntity();
         try {
+            $model = $model->toObject($dataArray);
             $this->assignParams($dataArray, $model);
             $model->setActivationKey(Utils::getRandomKey());
+            $model->validateFormObject("create");
+
             $this->em->persist($model);
             $this->em->flush();
             $return = $model->getId();
@@ -234,7 +237,7 @@ class BaseUserLogic extends LogicCRUD
     }
 
     public function sendActivationKey($key, $email) {
-
+      // SendmailController::sendBasicEmail($to, $subject, $body, $from)
     }
 
     public function assignParams($dataArray, &$model)

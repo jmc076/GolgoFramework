@@ -32,5 +32,9 @@ class SerializerController {
 
 	}
 
+	public static function deserialize($jsonData, $class) {
+	   return self::get()->deserialize($jsonData, get_class($class), 'json');
+	}
+
 
 }
