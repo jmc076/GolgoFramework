@@ -9,23 +9,25 @@ use Core\Controllers\RedisCacheController;
 use Core\Controllers\GFEvents\GFEventController;
 use Core\Controllers\Http\Psr\Request;
 use Core\Controllers\Router\Router;
+use Core\Controllers\Router\RouteModel;
+
+require_once __DIR__ .'/Core/Configs/Constants.php';
+require_once 'GFAutoload.php';
+if(file_exists( __DIR__ .'/Core/Vendors/autoload.php'))
+	require_once __DIR__ .'/Core/Vendors/autoload.php';
 
 class GFStarter {
 
-	private $routerCollection;
+	private static $routerCollection = RouteCollection::getInstance();
 
 	public static $request;
 
-	function __construct(RouteCollection $routerCollection) {
+	function __construct() {
 
 		GFSessionController::startManagingSession();
 		$session = GFSessionController::getInstance();
 
 		$session->getSessionModel()->setUserLang(i18nController::getDefaultLanguage());
-
-
-
-		$this->routerCollection = $routerCollection;
 
 		if(REDIS_CACHE_ENABLED) {
 		    $redis = RedisCacheController::getRedisClient();
@@ -34,13 +36,14 @@ class GFStarter {
 		    $redis->expire($redisKey, 60);
 		}
 
-
-
+	}
+	
+	public function loadModules($modules) {
+		foreach ($modules as $loader) {
+			new $loader($this->routerCollection);
+		}
 	}
 
-	public function initModules($modules) {
-		$this->loadModules($modules);
-	}
 
 	/** Nuevo eventos
 	 *
@@ -74,13 +77,22 @@ class GFStarter {
 	}
 
 
-	protected function loadModules($modules) {
-
-		foreach ($modules as $loader) {
-			new $loader($this->routerCollection);
-		}
+	
+	
+	public static function withRoute($method, $url, $class, $classMethod = null, $csrf = false) {
+		$config = array();
+		$config["name"] = "";
+		$config["checkCSRF"] = $csrf;
+		$config["targetClass"] = $class;
+		
+		// "Modules\GFStarterKit\ViewsLogic\Pages\PAGAssignGenerator";
+		$route = RouteModel::withConfig("/generador", $config);
+		self::$routerCollection->attachRoute($route);
 	}
-
+	
+	public static function withRoute($method, $url, $func) {
+	
+	}
 
 }
 

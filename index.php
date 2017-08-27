@@ -1,22 +1,19 @@
 <?php
 
-
 use Core\Controllers\Router\RouteCollection;
 use Core\Controllers\Router\RouteModel;
 use Core\Controllers\Http\Request;
+
 define("ROOT_PATH", __DIR__);
-require_once __DIR__ .'/Core/Configs/Constants.php';
 require_once 'GFStarter.php';
-require_once 'GFAutoload.php';
-
-if(file_exists( __DIR__ .'/Core/Vendors/autoload.php'))
-	require_once __DIR__ .'/Core/Vendors/autoload.php';
-
 setShowError(true);
+
+
+
 
 $routerCollection = RouteCollection::getInstance();
 attachCustomRoutes($routerCollection);
-$modules = array();
+$activeModules = array();
 
 
 
@@ -28,11 +25,12 @@ $modules[] = "Modules\GFFileManager\Bootstrap";
 
 
 
-$gfStarter = new GFStarter($routerCollection);
+$App = new GFStarter();
+$App->attachCustomRoutes()
 
-$gfStarter->initModules($modules);
+$App->initModules($modules);
 
-$gfStarter->start();
+$App->start();
 
 
 function attachCustomRoutes(RouteCollection &$routerCollection) {
