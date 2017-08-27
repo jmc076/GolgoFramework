@@ -38,7 +38,7 @@ class LogicCRUD implements CRUDInterface {
 		GFEventController::dispatch("LogicCRUD.__construct", null);
 
 		$this->session = GFSessionController::getInstance();
-		$this->request = \GFStarter::$request;
+		$this->request = \Core\Controllers\Http\Psr\Request::getInstance();
 		$this->em = GFDoctrineManager::getEntityManager();
 		$this->checkCSRF = $this->request->getMatchedRoute()->isCSRFProtected;
 

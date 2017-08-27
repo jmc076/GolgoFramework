@@ -65,6 +65,8 @@ class Request extends Message implements RequestInterface {
 	
 	protected $response;
 	
+	public static $requestInstance;
+	
 	
 	public function __construct($method, UriInterface $uri, Headers $headers, CookiesInterface $cookies, StreamInterface $body, array $uploadedFiles = array()) {
 		$this->method = $method;
@@ -108,9 +110,15 @@ class Request extends Message implements RequestInterface {
 	
 		
 		$files = UploadedFile::parseRequestFiles();
+		if(self::$requestInstance == null) {
+			self::$requestInstance = new static($method, $uri, $header, $cookie, $streamBody, $files);
+		}
+		return self::$requestInstance;
 		
-		return new static($method, $uri, $header, $cookie, $streamBody, $files);
-		
+	}
+	
+	public static function getInstance() {
+		return self::$requestInstance;
 	}
 	
 	protected function addInitialBodyParsers() {

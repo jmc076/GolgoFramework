@@ -251,5 +251,9 @@ class Response extends Message implements ResponseInterface {
 		return $this;
 	}
 	
+	public static function getResponseInstance() {
+		return Request::getInstance()->getResponse();
+	}
+	
 	
 }

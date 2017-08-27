@@ -18,29 +18,30 @@ if(file_exists( __DIR__ .'/Core/Vendors/autoload.php'))
 
 class GFStarter {
 
-	private static $routerCollection = RouteCollection::getInstance();
+	private static $routerCollection;
 
-	public static $request;
-
+	
 	function __construct() {
+		self::$routerCollection = RouteCollection::getInstance();
+	}
 
+	public function init() {
 		GFSessionController::startManagingSession();
 		$session = GFSessionController::getInstance();
-
+		
 		$session->getSessionModel()->setUserLang(i18nController::getDefaultLanguage());
-
+		
 		if(REDIS_CACHE_ENABLED) {
-		    $redis = RedisCacheController::getRedisClient();
-		    $redisKey = 'Redis::GolgoFramework::Test';
-		    $redis->set($redisKey, "TEST");
-		    $redis->expire($redisKey, 60);
+			$redis = RedisCacheController::getRedisClient();
+			$redisKey = 'Redis::GolgoFramework::Test';
+			$redis->set($redisKey, "TEST");
+			$redis->expire($redisKey, 60);
 		}
-
 	}
 	
 	public function loadModules($modules) {
 		foreach ($modules as $loader) {
-			new $loader($this->routerCollection);
+			new $loader(self::$routerCollection);
 		}
 	}
 
@@ -58,41 +59,60 @@ class GFStarter {
 	 */
 	public function start() {
 
-		self::$request = Request::parseRequest();
+		$request = Request::parseRequest();
 
 
-		$router = new Router($this->routerCollection, self::$request);
+		$router = new Router(self::$routerCollection, $request);
 
 		GFEventController::dispatch("Router.beforeMatch", null);
 		$router->matchRequest();
 
 		GFEventController::dispatch("Router.beforeExecute", null);
-		self::$request->executeRequest();
+		$request->executeRequest();
 
 		GFEventController::dispatch("Router.beforeSendResponse", null);
-		self::$request->sendResponse();
+		$request->sendResponse();
 		exit();
 
 
 	}
 
 
+	/**
+	 *
+	 * @param array $method use all for any method
+	 * @param string $url
+	 * @param string|callable $class
+	 * @param string $classMethod
+	 * @param string $csrf
+	 * @param string $name
+	 */
 	
-	
-	public static function withRoute($method, $url, $class, $classMethod = null, $csrf = false) {
+	public static function withRoute($method, $url, $class, $classMethod = null, $csrf = false, $name = "") {
 		$config = array();
-		$config["name"] = "";
-		$config["checkCSRF"] = $csrf;
-		$config["targetClass"] = $class;
+		if($method == "all") $method = array();
+		if(!is_array($method)) $method = array($method);
 		
-		// "Modules\GFStarterKit\ViewsLogic\Pages\PAGAssignGenerator";
-		$route = RouteModel::withConfig("/generador", $config);
+		$config["name"] = $name;
+		$config["checkCSRF"] = $csrf;
+		$config["verbs"] = $method;
+		
+		if(is_callable($class)) {
+			$config["targetClass"] = null;
+			$config['targetClassMethod'] = null;
+			$route = RouteModel::withConfig($url, $config);
+			$route->setFunction($class);
+		} else {
+			$config["targetClass"] = $class;
+			$config['targetClassMethod'] = $classMethod;
+			$route = RouteModel::withConfig($url, $config);
+		}
+		
 		self::$routerCollection->attachRoute($route);
 	}
 	
-	public static function withRoute($method, $url, $func) {
 	
-	}
+	
 
 }
 

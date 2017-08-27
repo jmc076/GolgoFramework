@@ -29,7 +29,7 @@ use Core\Controllers\Http\Psr\Request;
 	protected $sessionModel;
 
 	public function __construct() {
-		$this->request = \GFStarter::$request;
+		$this->request = Request::getInstance();
 		$this->session = GFSessionController::getInstance();
 		$this->userController = new UserController();
 		$this->sessionModel = $this->session->getSessionModel();
