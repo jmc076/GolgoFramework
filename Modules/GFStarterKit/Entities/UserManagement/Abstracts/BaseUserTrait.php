@@ -54,8 +54,8 @@ trait BaseUserTrait {
     protected $bio;
 
     /**
-     * @var bio
-     * @Type("telephone")
+     * @var telephone
+     * @Type("string")
      * @ORM\Column(name="telephone", type="string", length=255, nullable=true)
      */
     protected $telephone;

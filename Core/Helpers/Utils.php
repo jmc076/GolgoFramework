@@ -9,6 +9,10 @@ namespace Core\Helpers;
 class Utils {
 
 
+    private static $reform;
+
+
+
 	/**
 	 * Replace language-specific characters by ASCII-equivalents.
 	 * @param string $s
@@ -158,13 +162,14 @@ class Utils {
 	}
 
 	public static function xssafe($data,$encoding='UTF-8') {
+	    if(self::$reform == null) self::$reform = new Reform();
 		if(is_array($data)){
 			foreach ($data as &$value) {
 				if (!is_array($value)) { $value = self::xssafe($value); }
 				else { self::xssafe($value); }
 			}
 		} else {
-			$data = htmlspecialchars($data,ENT_QUOTES | ENT_HTML401);
+			$data = self::$reform->HtmlEncode($data);//htmlspecialchars($data,ENT_QUOTES | ENT_HTML401);
 			return $data;
 		}
 
@@ -260,5 +265,5 @@ class Utils {
 			$url = '/' . $url;
 		}
 	}
-	
+
 }

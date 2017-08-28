@@ -21,7 +21,7 @@ $activeModules[] = "Modules\GFFileManager\Bootstrap";
 
 
 /**
- * YOUR FAST ROUTES HERE
+ * YOU CAN ATTACH ROUTES HERE
  */
 $App->withRoute("all", "/generador", PAGAssignGenerator::class);
 $App->withRoute("all", "/func", function() {

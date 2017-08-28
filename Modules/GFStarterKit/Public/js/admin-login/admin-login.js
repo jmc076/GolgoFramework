@@ -30,9 +30,9 @@ $(window, document, undefined).ready(function() {
 		        			window.location.href = '/'+ baseHost + "/dashboard";
 		        		} else {
 		        			if(response.result.error)
-		        				alert(response.result.error);
+		        				 swal("¡Error!", response.result.error, "error");   
 		        			else
-		        				alert("Usuario o contraseña erroneos.");
+		        				 swal("¡Error!", "Wrong credentials", "error");   
 		        		}
 		        	}
 		        },
@@ -46,7 +46,7 @@ $(window, document, undefined).ready(function() {
 	});
 function handleAjaxError(xhr) {
 	console.log("error!")
-	  var message = "No se pudo procesar su solicitud en estos instantes.";
+	  var message = "Unable to process your request, try again later.";
 	  if(xhr.responseText != undefined && xhr.responseText != "") {
 		  message = JSON.parse(xhr.responseText);
 		  message = message.msg;

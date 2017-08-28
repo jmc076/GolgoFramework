@@ -28,46 +28,46 @@ use Core\Controllers\GFSessions\GFSessionController;
  */
 class Request extends Message implements RequestInterface {
 
-	
+
 	protected $method;
-	
+
 	protected $uri;
-	
+
 	protected $postParams;
-	
+
 	protected $getParams;
-	
+
 	/**
 	 * Uri parsed params from path
 	 * @var string
 	 */
 	protected $routeParams;
-	
+
 	protected $cookies;
-	
+
 	protected $bodyParsers = [];
-	
+
 	protected $uploadedFiles;
-	
+
 	protected $isApiRequest;
-	
+
 	/**
 	 * If the uri has a matched route
 	 * @var boolean
 	 */
 	protected $hasMatch = false;
-	
+
 	/**
 	 * @var RouteModel
 	 * @see	RouteModel
 	 */
 	protected $matchedRoute;
-	
+
 	protected $response;
-	
+
 	public static $requestInstance;
-	
-	
+
+
 	public function __construct($method, UriInterface $uri, Headers $headers, CookiesInterface $cookies, StreamInterface $body, array $uploadedFiles = array()) {
 		$this->method = $method;
 		$this->uri = $uri;
@@ -75,30 +75,30 @@ class Request extends Message implements RequestInterface {
 		$this->cookies = $cookies;
 		$this->body = $body;
 		$this->uploadedFiles = !is_null($uploadedFiles) ? $uploadedFiles : array();
-		
+
 		$this->isApiRequest = strpos($this->uri->getPath(), "/api/") !== false ? true : false;
-		
+
 		$this->addInitialBodyParsers();
 		$this->response = new Response();
 	}
-	
+
 	public static function parseRequest() {
-		
+
 		$stream = fopen('php://temp', 'w+');
 		stream_copy_to_stream(fopen('php://input', 'r'), $stream);
 		$streamBody = new Stream($stream);
 		$streamBody->rewind();
-		
+
 		$header = new Headers();
 		foreach (getallheaders() as $key => $value) {
 			$header->add($key, $value);
 		}
 		$method = $_SERVER['REQUEST_METHOD'];
-		
+
 		$url =  "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 		$escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
 		$uri = Uri::createFromString($escaped_url);
-		
+
 		$allHeaders = getallheaders();
 		if(isset($allHeaders['Cookie'])) {
 			$cookieHeader = $allHeaders['Cookie'];
@@ -107,20 +107,20 @@ class Request extends Message implements RequestInterface {
 		} else {
 			$cookie = new Cookies();
 		}
-	
-		
+
+
 		$files = UploadedFile::parseRequestFiles();
 		if(self::$requestInstance == null) {
 			self::$requestInstance = new static($method, $uri, $header, $cookie, $streamBody, $files);
 		}
 		return self::$requestInstance;
-		
+
 	}
-	
+
 	public static function getInstance() {
 		return self::$requestInstance;
 	}
-	
+
 	protected function addInitialBodyParsers() {
 		$this->bodyParsers['application/json'] = function($body) {
 			$result = json_decode($body, true);
@@ -129,7 +129,7 @@ class Request extends Message implements RequestInterface {
 			}
 			return $result;
 		};
-		
+
 		$this->bodyParsers['application/xml'] = function($body) {
 			$backup = libxml_disable_entity_loader(true);
 			$backup_errors = libxml_use_internal_errors(true);
@@ -162,16 +162,16 @@ class Request extends Message implements RequestInterface {
 			parse_str($body, $data);
 			return $data;
 		};
-		
+
 		$this->bodyParsers['default'] = function($body) {
 			$postvars = $_POST;
 			foreach($postvars as $field => $value) {
 				$this->postParams[$field] = $value;
 			}
 		};
-		
+
 	}
-	
+
 	public function parseRouteParams($argument_keys, $matches) {
 		foreach ($argument_keys as $key => $name) {
 			if (isset($matches[$key])) {
@@ -179,57 +179,61 @@ class Request extends Message implements RequestInterface {
 			}
 		}
 	}
-	
-	
+
+
 	public function parseIncomingParams() {
 		$this->parseGetParams();
 		$this->parsePostParams();
 	}
-	
+
 	public function parseGetParams() {
 		if ($query = $this->uri->getQuery()) {
 			parse_str(html_entity_decode($query), $this->getParams);
 			foreach($this->getParams as $field => $value) {
 				$this->getParams[$field] = Utils::xssafe($value);
-		
+
 			}
 		}
 	}
-	
+
 	public function parsePostParams() {
 		if (isset($_SERVER["CONTENT_TYPE"]) && $contentType = strtolower($_SERVER["CONTENT_TYPE"])) {
 			$body = (string)$this->getBody()->__toString();
 			if (isset($this->bodyParsers[$contentType]) === true) {
 				$parsed = $this->bodyParsers[$contentType]($body);
-				$this->postParams = $parsed;
+				foreach($parsed as $field => $value) {
+				    $this->postParams[$field] = Utils::xssafe($value);
+				}
 			} else {
 				$parsed = $this->bodyParsers["default"]($body);
-				$this->postParams = $parsed;
+				foreach($parsed as $field => $value) {
+				    $this->postParams[$field] = Utils::xssafe($value);
+				}
 			}
 		}
-		
-		
+
+
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 * @see \Core\Controllers\Http\Psr\Interfaces\RequestInterface::getRequestTarget()
 	 */
 	public function getRequestTarget() {
-		
+
 		if ($this->uri === null) {
 			return '/';
 		}
-		
+
 		$path = $this->uri->getPath();
 		$path = '/' . ltrim($path, '/');
-		
+
 		$query = $this->uri->getQuery();
 		if ($query) {
 			$path .= '?' . $query;
 		}
-		
+
 		return $path;
 
 	}
@@ -245,7 +249,7 @@ class Request extends Message implements RequestInterface {
 		$clone = clone $this;
 		$clone->requestTarget = $requestTarget;
 		$clone->uri = Uri::createFromString($requestTarget);
-		
+
 		return $clone;
 
 	}
@@ -266,7 +270,7 @@ class Request extends Message implements RequestInterface {
 	public function withMethod($method) {
 		$clone = clone $this;
 		$clone->method = $method;
-		
+
 		return $clone;
 
 	}
@@ -287,7 +291,7 @@ class Request extends Message implements RequestInterface {
 	public function withUri(UriInterface $uri, $preserveHost = false) {
 		$clone = clone $this;
 		$clone->uri = $uri;
-		
+
 		if (!$preserveHost) {
 			if ($uri->getHost() !== '') {
 				$clone->headers->set('Host', $uri->getHost());
@@ -297,20 +301,20 @@ class Request extends Message implements RequestInterface {
 				$clone->headers->set('Host', $uri->getHost());
 			}
 		}
-		
+
 		return $clone;
 
 	}
-	
+
 	public function dispatchNoMatch() {
 		if($this->isApiRequest) {
 			ExceptionController::routeNotFound();
 		} else {
 			ExceptionController::show404();
 		}
-	
+
 	}
-	
+
 	public function isValidCSRF() {
 		if($this->getMatchedRoute()->isCSRFProtected && CSRF_ENABLED) {
 			GFSessionController::getInstance()->isValidCSRF($this->postParams);
@@ -318,9 +322,9 @@ class Request extends Message implements RequestInterface {
 			return true;
 		}
 	}
-	
+
 	public function executeRequest() {
-	
+
 		if(!$this->hasMatch) {
 			$this->dispatchNoMatch();
 		} else {
@@ -330,7 +334,7 @@ class Request extends Message implements RequestInterface {
 					call_user_func($matchedRoute->function);
 				} else {
 					$class = $matchedRoute->getTargetClass();
-				
+
 					if ($matchedRoute->getTargetClassMethod() != null) {
 						call_user_func_array(array($class, $matchedRoute->getTargetClassMethod()), array());
 					} else {
@@ -342,14 +346,14 @@ class Request extends Message implements RequestInterface {
 			} else {
 				ExceptionController::invalidCSRF();
 			}
-	
+
 		}
 	}
-	
+
 	public function sendResponse() {
 		$this->response->sendResponse();
 	}
-	
+
 	public function setMethod($method) {
 		$this->method = $method;
 		return $this;
@@ -432,7 +436,7 @@ class Request extends Message implements RequestInterface {
 		$this->response = $response;
 		return $this;
 	}
-	
-	
+
+
 
 }
