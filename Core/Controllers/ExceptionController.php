@@ -7,7 +7,6 @@ use Modules\GFStarterKit\ViewsLogic\Pages\PAGPublic404;
 use Core\Controllers\Http\Psr\Response;
 
 /**
- * UNDER DEVELOPMENT
  * @author Diego Lopez Rivera <forgin50@gmail.com>
  * @version 0.0.1
  */
@@ -129,7 +128,7 @@ class ExceptionController {
 		self::$msg = utf8_encode("Password missmatch");
 		self::showMessage();
 	}
-	
+
 
 	public static function show404() {
 		new PAGPublic404();

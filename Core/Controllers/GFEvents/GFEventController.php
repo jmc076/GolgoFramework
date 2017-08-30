@@ -105,11 +105,11 @@ class GFEventController implements GFEventControllerInterface, EventManagerInter
 	 * @see \Core\Controllers\GFEvents\EventManagerInterface::attach()
 	 */
 	public function attach($event, $callback, $priority = 0) {
-		if(isset(self::$psrEvents[$event->getName()])) {
-			self::$psrEvents[$event->getName()][$priority][] = $callback;
+		if(isset(self::$psrEvents[$event])) {
+			self::$psrEvents[$event][$priority][] = $callback;
 			return true;
 		} else {
-			self::$psrEvents[$event->getName()][$priority][] = $callback;
+			self::$psrEvents[$event][$priority][] = $callback;
 			return true;
 		}
 		return false;
@@ -122,12 +122,12 @@ class GFEventController implements GFEventControllerInterface, EventManagerInter
 	 * @see \Core\Controllers\GFEvents\EventManagerInterface::detach()
 	 */
 	public function detach($event, $callback) {
-		if(isset(self::$psrEvents[$event->getName()])) {
+		if(isset(self::$psrEvents[$event])) {
 
-			foreach (self::$psrEvents[$event->getName()] as $priorities) {
+			foreach (self::$psrEvents[$event] as $priorities) {
 				foreach ($priorities as $key=>$listener) {
 					if($listener == $callback){
-						unset(self::$psrEvents[$event->getName()][$priorities][$key]);
+						unset(self::$psrEvents[$event][$priorities][$key]);
 					}
 				}
 			}
@@ -143,8 +143,8 @@ class GFEventController implements GFEventControllerInterface, EventManagerInter
 	 * @see \Core\Controllers\GFEvents\EventManagerInterface::clearListeners()
 	 */
 	public function clearListeners($event) {
-		if(isset(self::$psrEvents[$event->getName()])) {
-			self::$psrEvents[$event->getName()] = array();
+		if(isset(self::$psrEvents[$event])) {
+			self::$psrEvents[$event] = array();
 		}
 	}
 
@@ -153,22 +153,27 @@ class GFEventController implements GFEventControllerInterface, EventManagerInter
 	 * @see \Core\Controllers\GFEvents\EventManagerInterface::trigger()
 	 */
 	public function trigger($event, $target = null, $argv = []) {
-		$max = max(array_keys(self::$psrEvents[$event->getName()]));
-		$lastResult = null;
+	    if(isset(self::$psrEvents[$event->getName()])) {
+    		$max = max(array_keys(self::$psrEvents[$event->getName()]));
+    		$lastResult = null;
+    		for ($i = $max; $i >= 0; $i--) {
+    			if(isset(self::$psrEvents[$event->getName()][$i])) {
+    				foreach(self::$psrEvents[$event->getName()][$i] as $key=>$callbacks) {
+    					$lastResult = call_user_func_array($callbacks, array(&$event,  $argv, $lastResult));
+    					if($event->isPropagationStopped()){
+    						break 2;
+    					}
+    				}
+    			}
+    		}
+	    }
+	}
 
-		for ($i = $max; $i == 0; $i--) {
-			if(isset(self::$psrEvents[$event->getName()][$i])) {
-				foreach(self::$psrEvents[$event->getName()][$i] as $key=>$callbacks) {
-					$lastResult = call_user_func_array($callbacks, array(&$event,  $argv, $lastResult));
-					if($event->isPropagationStopped()){
-						break 2;
-					}
-				}
-
-			}
-		}
-
-
+	public static function triggerWithEventName($name) {
+	    $event = new GFEvent();
+	    $event->setName($name);
+	    $evento = new self();
+	    $evento->trigger($event);
 	}
 
 }

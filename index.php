@@ -1,7 +1,7 @@
 <?php
 
-use Modules\GFStarterKit\ViewsLogic\Pages\PAGAssignGenerator;
 use Core\Controllers\Http\Psr\Response;
+use Modules\GFStarterKit\ViewsLogic\Pages\PAGAssignGenerator;
 define("ROOT_PATH", __DIR__);
 setShowError(true);
 require_once 'GFStarter.php';
@@ -27,7 +27,6 @@ $App->withRoute("all", "/generador", PAGAssignGenerator::class);
 $App->withRoute("all", "/func", function() {
 	Response::getResponseInstance()->writeToBody("<b>It Works!</b>");
 });
-
 
 $App->loadModules($activeModules);
 

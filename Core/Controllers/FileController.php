@@ -90,7 +90,7 @@ class FileController {
 		return false;
 	}
 
-
+//NEW FILES CONTROLLER
 	public function sendFile($path) {
 		$file = $path;
 		if (is_file($file)) {

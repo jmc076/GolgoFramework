@@ -28,3 +28,5 @@
 [2017-08-28 10:57:21] GF_LOGGER.INFO: Login fail {"user":"admin"} []
 [2017-08-28 10:57:22] GF_LOGGER.INFO: Login fail {"user":"admin"} []
 [2017-08-28 10:57:24] GF_LOGGER.INFO: Login fail {"user":"admin"} []
+[2017-08-30 12:35:29] GF_LOGGER.INFO: Login fail {"user":"admin"} []
+[2017-08-30 12:35:41] GF_LOGGER.INFO: Login fail {"user":"qwer"} []

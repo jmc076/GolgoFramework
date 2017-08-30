@@ -175,7 +175,7 @@ class Request extends Message implements RequestInterface {
 	public function parseRouteParams($argument_keys, $matches) {
 		foreach ($argument_keys as $key => $name) {
 			if (isset($matches[$key])) {
-				$this->routeParams[$name] = $matches[$key];
+				$this->routeParams[$name] =  Utils::xssafe($matches[$key]);
 			}
 		}
 	}
