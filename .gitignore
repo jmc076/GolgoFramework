@@ -3,7 +3,7 @@
 .settings/org.eclipse.php.core.prefs
 .settings/org.eclipse.wst.common.project.facet.core.xml
 
-/vendor/
+Core/Vendors/
 
 /templates_c/
 /.settings/
